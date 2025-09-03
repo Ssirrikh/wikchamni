@@ -1,6 +1,7 @@
 
 # 12.0 hrs: dev trawler script
 # 6.0 hrs: trawl data; record/label unhandled datapoints and inconsistencies
+# 20 hrs: research mdf format, add mdf formatter
 # 4.0 hrs: nameserver/pages/dns/record research
 # 6.0 hrs: zoom meeting, powerpoint, email chain
 # 1.0 hrs: meetings
@@ -8,20 +9,26 @@
 #### NOTES ####
 
 # inconsistent treatment of word forms
-	# in some cases, there are large single entries with multiple labeled word forms/cases
+	# some large single entries with multiple labeled word forms/cases (generally n-theme/v-theme/etc)
 	# in other cases, each word form gets its own entry and identifies the form in the "morph" field
 	# some do both at once (duplicate data w/ no new info)
+	# ex. "blood" has "n-theme" entry with all other forms as labeled paradigms, then each form gets its own separate entry
+	# ex. "start" "čʼamna/" is labeled v instead of v-theme and has labeled forms
+		# ditto for "bird nest" "čʼapix/"
+	# chukchansi database stores all forms in one entry so they're easier to find/compare
 # possible inconsistent treatment of literal meanings
 	# some eng words translate into a multi-word phrase
 		# phrase appears as example sentence w/ "lit." section explaining literal meaning
 		# stored in the entry for one of the words in the sentence
-		# eng word and wik phrase may or may not have their own entries
+		# eng word + wik phrase may or may not have their own entries
 		# ex. "automobile" literally translates to "horse without a heart"
 			# appears as example sentence in entry "without"
 			# neither eng "automobile" or wikchamni phrase "horse without a heart" have their own entry
+		# ex. "diarrhea plant" got its own full entry
 	# sometimes a wikchamni word with a literal meaning is treated as a second word sense of that literal meaning
 		# ex. sense 1 is literal phrase "something to be carried under the arm"
 		# and sense 2 is "mountain balm" with literal meaning "something to be carried under the arm", since plant is carried under the arm as a deodorant
+# what does "non-singular plural" mean? is it different than "non-singular, plural"?
 
 #### TYPOS / MINOR ERRORS ####
 
@@ -196,7 +203,7 @@ class DataEntry:
 		self.variants = []    # \va variants
 		self.examples = []    # either (\xv \ge \lt) or (\xv \xe \lt) example sentence + eng translation (+ literal meaning)
 		self.linkedWords = [] # \mn main entry cross-reference
-		self.media = []       # \pc pictures; MDF/shoebox doesn't support audio by default, likely stores them in \pc
+		self.media = []       # \pc pictures; MDF/shoebox doesn't support audio by default, likely stores them in \pc or custom field
 		# debug
 		self.flagged = False
 		self.log = []
@@ -222,11 +229,39 @@ class DataEntry:
 		self.log.append(msg)
 		print(msg)
 	def getMDF(self):
-		# mandatory ordered components (\lx \ps)
-		mdf = f"\\lx {self.wikchamni}\\n"
-		mdf = f"{mdf}\\ps {self.catg}\\n"
-		mdf = f"{mdf}\\ge {self.english}\\n"
-		mdf = f"{mdf}\\id {self.entryId}\\n" # use unsupported field \id for old entry id number
+		# mandatory ordered components (\lx \ps), core entry
+		mdf = f"\\lx {self.wikchamni}\n"
+		mdf = f"{mdf}\\ps {self.catg}\n"
+		mdf = f"{mdf}\\ge {self.english}\n"
+		mdf = f"{mdf}\\id {self.entryId}\n" # use unsupported field \id for old entry id number
+		# notes and info
+		if self.notes != "": 			mdf = f"{mdf}\\nt {self.notes}\n"
+		if self.discourse != "": 		mdf = f"{mdf}\\nd {self.discourse}\n"
+		if self.grammar != "": 			mdf = f"{mdf}\\ng {self.grammar}\n"
+		if self.anthropology != "": 	mdf = f"{mdf}\\na {self.anthropology}\n"
+		if self.phonology != "": 		mdf = f"{mdf}\\np {self.phonology}\n"
+		if self.morphology != "": 		mdf = f"{mdf}\\mr {self.morphology}\n"
+		if self.borrowed != "": 		mdf = f"{mdf}\\bw {self.borrowed}\n"
+		if self.encyclopediaInfo != "": mdf = f"{mdf}\\ee {self.encyclopediaInfo}\n"
+		if self.scienceInfo != "": 		mdf = f"{mdf}\\sc {self.scienceInfo}\n"
+		if self.literalMeaning != "": 	mdf = f"{mdf}\\lt {self.literalMeaning}\n"
+		if self.underlying != "":
+			mdf = f"{mdf}\\pdl underlying\n"
+			mdf = f"{mdf}\\pdv {self.underlying}\n"
+		# forms and examples
+		for variant in self.variants:
+			mdf = f"{mdf}\\va {variant}\n"
+		for form in self.forms:
+			mdf = f"{mdf}\\pdl {form}\n"
+			mdf = f"{mdf}\\pdv {self.forms[form]}\n"
+		for wikchamni,english,literal in self.examples:
+			mdf = f"{mdf}\\xv {wikchamni}\n"
+			mdf = f"{mdf}\\ge {english}\n"
+			if literal != None: mdf = f"{mdf}\\lt {literal}\n"
+		for word in self.linkedWords:
+			mdf = f"{mdf}\\mn {word}\n"
+		for file in self.media:
+			mdf = f"{mdf}\\pc {file}\n"
 		return mdf
 	def print(self):
 		print(f"Entry #{self.entryId}")
@@ -241,6 +276,8 @@ class DataEntry:
 				print(f"        LIT {literal}")
 		for word in self.linkedWords:
 			print(f"    CROSSREF {word}")
+		for file in self.media:
+			print(f"    MEDIA {file}")
 		if self.notes != "":
 			print(f"    Notes: {self.notes}")
 		if self.discourse != "":
@@ -386,6 +423,11 @@ with codecs.open(FILE, encoding='utf-8') as f:
 			entry.print()
 			print(entry.log)
 			print("-----")
+	for entry in entries:
+		# if entry.catg != "v. " and entry.catg != "v-theme. ":
+		if entry.wikchamni != "tuʔ":
+			continue
+		print(entry.getMDF())
 	print("========")
 	print(f"{len(entries)} entries processed, {numEntriesFlagged} of which were flagged for a closer look.")
 
