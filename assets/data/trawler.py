@@ -1,6 +1,6 @@
 
 # 12.0 hrs: dev trawler script
-# 5.5 hrs: trawl data; record/label unhandled datapoints and inconsistencies
+# 6.0 hrs: trawl data; record/label unhandled datapoints and inconsistencies
 # 4.0 hrs: nameserver/pages/dns/record research
 # 6.0 hrs: zoom meeting, powerpoint, email chain
 # 1.0 hrs: meetings
@@ -174,28 +174,29 @@ wordForms = set() # set of word form names (ie "nominative")
 
 class DataEntry:
 	def __init__(self):
-		# singleton fields
+		# singleton fields: core entry
 		self.entryId = -1
-		self.english = ""   # \ge english gloss
-		self.catg = ""      # \ps part of speech
-		self.wikchamni = "" # \lx primary wikchamni form used to identify entry in lexicon; formname unknown
-		self.notes = ""     # \nt general note
-		self.discourse = "" # \nd discourse note
-		self.grammar = ""   # \ng grammar note
-		self.anthropology = "" # \na anthropology note
-		self.phonology = "" # \np phonology note
-		self.morphology = "" # \mr morpheme representation and underlying forms
-		self.borrowed = "" # \bw
-		self.encyclopediaInfo = "" # \ee
-		self.scienceInfo = "" # \sc
-		self.literalMeaning = "" # \lt
-		self.underlying = ""
+		self.english = ""          # \ge english gloss
+		self.catg = ""             # \ps part of speech
+		self.wikchamni = ""        # \lx primary wikchamni form used to identify entry in lexicon; formname may or may not be stored in morphology field
+		# singleton fields: notes and info
+		self.notes = ""            # \nt general note
+		self.discourse = ""        # \nd discourse note
+		self.grammar = ""          # \ng grammar note
+		self.anthropology = ""     # \na anthropology note
+		self.phonology = ""        # \np phonology note
+		self.morphology = ""       # \mr morpheme representation and underlying forms
+		self.borrowed = ""         # \bw borrowed word
+		self.encyclopediaInfo = "" # \ee encyclopedia entry
+		self.scienceInfo = ""      # \sc scientific name
+		self.literalMeaning = ""   # \lt literal meaning
+		self.underlying = ""       # \pd paradigm
 		# collection fields
-		self.forms = {} # \pd paradigms
-		self.variants = [] # \va variants
-		self.examples = []
+		self.forms = {}       # \pd paradigms
+		self.variants = []    # \va variants
+		self.examples = []    # either (\xv \ge \lt) or (\xv \xe \lt) example sentence + eng translation (+ literal meaning)
 		self.linkedWords = [] # \mn main entry cross-reference
-		self.media = [] # \pc pictures
+		self.media = []       # \pc pictures; MDF/shoebox doesn't support audio by default, likely stores them in \pc
 		# debug
 		self.flagged = False
 		self.log = []
@@ -220,6 +221,13 @@ class DataEntry:
 		self.flagged = True
 		self.log.append(msg)
 		print(msg)
+	def getMDF(self):
+		# mandatory ordered components (\lx \ps)
+		mdf = f"\\lx {self.wikchamni}\\n"
+		mdf = f"{mdf}\\ps {self.catg}\\n"
+		mdf = f"{mdf}\\ge {self.english}\\n"
+		mdf = f"{mdf}\\id {self.entryId}\\n" # use unsupported field \id for old entry id number
+		return mdf
 	def print(self):
 		print(f"Entry #{self.entryId}")
 		print(f"{self.english} {self.catg} {self.wikchamni}")
