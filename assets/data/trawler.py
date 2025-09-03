@@ -1,7 +1,7 @@
 
-# 12.0 hrs: dev trawler script
-# 6.0 hrs: trawl data; record/label unhandled datapoints and inconsistencies
-# 20 hrs: research mdf format, add mdf formatter
+# 13.0 hrs: dev trawler script
+# 6.5 hrs: trawl data; record/label unhandled datapoints and inconsistencies
+# 2.0 hrs: research mdf format, add mdf formatter
 # 4.0 hrs: nameserver/pages/dns/record research
 # 6.0 hrs: zoom meeting, powerpoint, email chain
 # 1.0 hrs: meetings
@@ -84,7 +84,11 @@ FILE_STUB = """<p align="center" class="lpTitlePara">L  -  l</p>
 <p class="lpLexEntryPara"><span class="lpLexEntryNameNew"></span><audio preload="none" id="dish" src="audio/dish.wav"></audio><a href="#" onclick="document.getElementById('dish').play(); return false"><img border="0" src="images/sound-icon.png" /></a> <span id="e1284" class="lpLexEntryName">la&middot;tuʔ</span><span class="lpSpAfterEntryName">&nbsp;&nbsp;&nbsp;</span><span class="lpPartOfSpeech">n. </span><span class="lpGlossEnglish">dish.</span> <span class="lpMiniHeading">From: </span><span class="lpBorrowedWord">Spanish plato</span><span class="lpPunctuation">.</span> <span class="lpMiniHeading">Note: </span><span class="lpNotes_general">Related language Chukchansi bila&middot;suʔ  (NAS)</span></p>
 """
 
-# tagFinder = /(?:<span(.*?)>(.*?)<\/span>)+?/gm
+
+
+#####################################
+
+#### HELPERS ####
 
 def listTags (text, tag='', attributes=''):
 	# $1 attribute list
@@ -111,6 +115,10 @@ def getId (attributes):
 		if type == "id":
 			return contents
 
+
+
+#### TOKENIZER ####
+
 def tokenize (text):
 	# isolate lexicon entries by unique class tag
 	entriesRaw = []
@@ -126,21 +134,41 @@ def tokenize (text):
 		entryData.append(spans)
 	return entryData
 
-# # isolate lexicon entries by unique class tag
-# entriesRaw = []
-# for attributes,contents in listTags(FILE_STUB, "p"):
-# 	if containsClass("lpLexEntryPara",listAttributes(attributes)):
-# 		entriesRaw.append(contents)
+#### tokenize() returns list of tokenstreams
+# [
+# 	[
+# 		([('class', 'lpLexEntryNameNew')], ''), 
+# 		([('id', 'e1280'), ('class', 'lpLexEntryName')], 'lame&middot;sa/'), 
+# 		([('class', 'lpSpAfterEntryName')], '&nbsp;&nbsp;&nbsp;'), 
+# 		([('class', 'lpPartOfSpeech')], 'n-theme. '), 
+# 		([('class', 'lpGlossEnglish')], 'table.'), 
+# 		([('class', 'lpMiniHeading')], 'nominative:&nbsp;'), 
+# 		([('class', 'lpParadigm')], 'lame&middot;saʔ'), 
+# 		([('class', 'lpPunctuation')], '.'), 
+# 		([('class', 'lpMiniHeading')], 'locative:&nbsp;'), 
+# 		([('class', 'lpParadigm')], 'lame&middot;saw'), 
+# 		([('class', 'lpPunctuation')], '.'), 
+# 		([('class', 'lpPunctuation')], ' '), 
+# 		([('class', 'lpMiniHeading')], 'From: '), 
+# 		([('class', 'lpBorrowedWord')], 'Spanish la mesa'), 
+# 		([('class', 'lpPunctuation')], '.'), 
+# 		([('class', 'lpMiniHeading')], 'Note: '), 
+# 		([('class', 'lpNotes_general')], 'Related language Yawelmani lame&middot;saʔ   Chukchansi lame&middot;saʔ  (NAS)')
+# 	], [
+#		...
+#	],
+#	...
+# ]
 
-# # break entries into data tokens
-# entryData = []
-# for entry in entriesRaw:
-# 	spans = []
-# 	for attributes,contents in listTags(entry,"span"):
-# 		spans.append( (listAttributes(attributes),contents) )
-# 	entryData.append(spans)
 
-#
+
+#### PARSER ####
+
+# capture unrecognized fields
+unknownFieldTypes = set() # set off CSS classes used to identify fields (ie "lpLexEntryName")
+unknownFieldNames = set() # set of shorthand names for fields (ie "underlying")
+
+# track recognized fields
 FIELD_IGNORE = ['lpLexEntryNameNew','lpSpAfterEntryName','lpPunctuation']
 FIELD_SINGLETON = ["english","catg","wikchamni", "notes","discourse","grmmar","anthropology","phonology","morphology","borrowed","encyclopediaInfo","scienceInfo","literalMeaning","underlying"]
 FIELD_TYPE_NAMES = {
@@ -174,10 +202,6 @@ FIELD_TYPE_GLOSS = "lpGlossEnglish"
 FIELD_TYPE_VARIANT = "lpMainCrossRef"
 FIELD_TYPE_LINKED_WORD = "lpCrossRef"
 FIELD_TYPE_LITERAL_MEANING = "lpLiteralMeaningEnglish"
-
-unknownFieldTypes = set() # set off CSS classes used to identify fields (ie "lpLexEntryName")
-unknownFieldNames = set() # set of 
-wordForms = set() # set of word form names (ie "nominative")
 
 class DataEntry:
 	def __init__(self):
@@ -301,8 +325,7 @@ class DataEntry:
 		if self.underlying != "":
 			print(f"    Underlying Form: {self.underlying}")
 
-parsedEntries = []
-def trawl (data):
+def parse (data):
 	entries = []
 	for tokenList in data:
 		entry = DataEntry()
@@ -398,62 +421,73 @@ def trawl (data):
 					# no-op
 			if len(currClasslist) > 1:
 				entry.flag(f"WARN MULTICLASS {currClasslist}")
+		if len(entries) > 0: print("-----")
 		entry.print()
-		print("-----")
 		entries.append(entry)
 	return entries
 
 
+
+######################################
+
+#### MAIN ####
+
 # stub_data = tokenize(FILE_STUB)
-# stub_entries = trawl(stub_data)
+# stub_entries = parse(stub_data)
 # for entry in stub_entries:
 # 	entry.print()
 # 	print("-----")
 
 with codecs.open(FILE, encoding='utf-8') as f:
+	# parse data (verbose by default)
+	print("=== Parsing Data... ===\n")
 	data = tokenize( f.read() )
-	entries = trawl(data)
-	print("========")
+	entries = parse(data)
+
+	# print flagged entries for diagnosis
+	print("\n=== Flagged Entries ===\n")
 	numEntriesFlagged = 0
 	for entry in entries:
-		# entry.print()
-		# print("-----")
 		if entry.flagged:
+			if numEntriesFlagged > 0: print("-----")
 			numEntriesFlagged += 1
 			entry.print()
 			print(entry.log)
-			print("-----")
+
+	# print MDF formatter output
+	print("\n=== MDF Formatting ===\n")
+	mdfTarget = "tuʔ"
+	print(f"Printing MDF for entries containing headword \"{mdfTarget}\"...\n")
 	for entry in entries:
 		# if entry.catg != "v. " and entry.catg != "v-theme. ":
 		if entry.wikchamni != "tuʔ":
 			continue
 		print(entry.getMDF())
-	print("========")
-	print(f"{len(entries)} entries processed, {numEntriesFlagged} of which were flagged for a closer look.")
 
-#### tokenize() returns parse as list of tokenstreams
-# [
-# 	[
-# 		([('class', 'lpLexEntryNameNew')], ''), 
-# 		([('id', 'e1280'), ('class', 'lpLexEntryName')], 'lame&middot;sa/'), 
-# 		([('class', 'lpSpAfterEntryName')], '&nbsp;&nbsp;&nbsp;'), 
-# 		([('class', 'lpPartOfSpeech')], 'n-theme. '), 
-# 		([('class', 'lpGlossEnglish')], 'table.'), 
-# 		([('class', 'lpMiniHeading')], 'nominative:&nbsp;'), 
-# 		([('class', 'lpParadigm')], 'lame&middot;saʔ'), 
-# 		([('class', 'lpPunctuation')], '.'), 
-# 		([('class', 'lpMiniHeading')], 'locative:&nbsp;'), 
-# 		([('class', 'lpParadigm')], 'lame&middot;saw'), 
-# 		([('class', 'lpPunctuation')], '.'), 
-# 		([('class', 'lpPunctuation')], ' '), 
-# 		([('class', 'lpMiniHeading')], 'From: '), 
-# 		([('class', 'lpBorrowedWord')], 'Spanish la mesa'), 
-# 		([('class', 'lpPunctuation')], '.'), 
-# 		([('class', 'lpMiniHeading')], 'Note: '), 
-# 		([('class', 'lpNotes_general')], 'Related language Yawelmani lame&middot;saʔ   Chukchansi lame&middot;saʔ  (NAS)')
-# 	], [
-#		...
-#	],
-#	...
-# ]
+	## print statistics
+
+	# counts
+	print("\n=== Statistics ===\n")
+	print(f"{len(entries)} entries processed, {numEntriesFlagged} of which were flagged for a closer look.\n")
+	# unrecognized fields
+	if len(unknownFieldTypes) > 0:
+		print(f"Encountered {len(unknownFieldTypes)} unsupported fields: {unknownFieldTypes}\n")
+		# for field in unknownFieldTypes:
+		# 	print(field)
+	# parts of speech and word forms
+	wordforms = {}
+	catgCounts = {}
+	for entry in entries:
+		if entry.catg not in wordforms:
+			wordforms[entry.catg] = set()
+			catgCounts[entry.catg] = 0
+		if entry.morphology != "":
+			wordforms[entry.catg].add(entry.morphology)
+			catgCounts[entry.catg] += 1
+	for catg in wordforms:
+		print(f"{len(wordforms[catg])} uniq word forms across {catgCounts[catg]} entries of catg \"{catg}\"")
+		for form in wordforms[catg]:
+			print(f"    {form}")
+
+
 
