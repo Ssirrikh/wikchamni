@@ -1,6 +1,6 @@
 
 # 12.0 hrs: dev trawler script
-# 5.0 hrs: trawl data; record/label unhandled datapoints and inconsistencies
+# 5.5 hrs: trawl data; record/label unhandled datapoints and inconsistencies
 # 4.0 hrs: nameserver/pages/dns/record research
 # 6.0 hrs: zoom meeting, powerpoint, email chain
 # 1.0 hrs: meetings
