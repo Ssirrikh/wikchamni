@@ -1,6 +1,6 @@
 
 # 13.0 hrs: dev trawler script
-# 6.5 hrs: trawl data; record/label unhandled datapoints and inconsistencies
+# 10.0 hrs: trawl data; record/label unhandled datapoints and inconsistencies
 # 2.0 hrs: research mdf format, add mdf formatter
 # 4.0 hrs: nameserver/pages/dns/record research
 # 6.0 hrs: zoom meeting, powerpoint, email chain
@@ -29,6 +29,10 @@
 		# ex. sense 1 is literal phrase "something to be carried under the arm"
 		# and sense 2 is "mountain balm" with literal meaning "something to be carried under the arm", since plant is carried under the arm as a deodorant
 # what does "non-singular plural" mean? is it different than "non-singular, plural"?
+# inconsistent catg labels and word form labels
+	# several entries seem to be "v" instead of "v-theme", etc
+	# some morph fields contain things like "nominative, accusative, locative case"
+# several word forms are referenced in a n-theme/v-theme entry, but don't have their own entry (or got typoed)
 
 #### TYPOS / MINOR ERRORS ####
 
@@ -464,6 +468,26 @@ with codecs.open(FILE, encoding='utf-8') as f:
 			continue
 		print(entry.getMDF())
 
+
+	# entries identifying roots
+	print("\n=== Word Forms ===\n")
+	themes = ["n-theme. ", "v-theme. ", "prn-theme. "]
+	themeForms = []
+	for entry in entries:
+		if entry.catg not in themes:
+			if len(entry.forms) > 0:
+				print(f"NOTE NON_THEME_FORMS Entry #{entry.entryId} \"{entry.english}\" of catg \"{entry.catg}\" was not labeled as a word-theme entry, but contained forms {entry.forms}")
+			continue
+		elif len(entry.forms) == 0:
+			print(f"NOTE THEME_NO_FORMS Entry #{entry.entryId} \"{entry.english}\" of catg \"{entry.catg}\" was labeled as a word-theme entry, but had no forms.")
+		formCollection = []
+		for form in entry.forms:
+			formCollection.append( (form,entry.forms[form]) )
+		themeForms.append( (entry.entryId, entry.catg, formCollection) )
+	print("")
+
+
+
 	## print statistics
 
 	# counts
@@ -472,11 +496,15 @@ with codecs.open(FILE, encoding='utf-8') as f:
 	# unrecognized fields
 	if len(unknownFieldTypes) > 0:
 		print(f"Encountered {len(unknownFieldTypes)} unsupported fields: {unknownFieldTypes}\n")
-		# for field in unknownFieldTypes:
-		# 	print(field)
 	# parts of speech and word forms
 	wordforms = {}
 	catgCounts = {}
+	catgCollectionCounts = {
+		'themes' : 0,
+		'nouns' : 0,
+		'verbs' : 0,
+		'misc' : 0
+	}
 	for entry in entries:
 		if entry.catg not in wordforms:
 			wordforms[entry.catg] = set()
@@ -488,6 +516,34 @@ with codecs.open(FILE, encoding='utf-8') as f:
 		print(f"{len(wordforms[catg])} uniq word forms across {catgCounts[catg]} entries of catg \"{catg}\"")
 		for form in wordforms[catg]:
 			print(f"    {form}")
+	for catg in catgCounts:
+		if catg in themes:
+			catgCollectionCounts['themes'] += catgCounts[catg]
+		elif catg == "n. ":
+			catgCollectionCounts['nouns'] += catgCounts[catg]
+		elif catg == "v. ":
+			catgCollectionCounts['verbs'] += catgCounts[catg]
+		else:
+			catgCollectionCounts['misc'] += catgCounts[catg]
+	print(f"\nDatabase contained {catgCollectionCounts['themes']} word-theme entries, {catgCollectionCounts['nouns']} nouns, {catgCollectionCounts['verbs']} verbs, and {catgCollectionCounts['misc']} misc entries.")
+
+	# word forms
+	foundForms = {}
+	numFormsFound = 0
+	for entryId,catg,forms in themeForms:
+		# print(f"Entry #{entryId} of catg \"{catg}\": {forms}")
+		for formName,wordForm in forms:
+			foundForms[wordForm] = False
+	for entry in entries:
+		if entry.wikchamni in foundForms:
+			foundForms[entry.wikchamni] = True
+	print("")
+	for form in foundForms:
+		if foundForms[form] == True:
+			numFormsFound += 1
+		else:
+			print(f"\"{form}\" was listed in a word-theme entry, but didn't have its own entry.")
+	print(f"\n{len(foundForms)-numFormsFound} out of {len(foundForms)} word-forms referenced in a word-theme entry don't have their own entry.\n")
 
 
 
