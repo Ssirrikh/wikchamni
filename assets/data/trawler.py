@@ -1,10 +1,13 @@
 
-# 13.0 hrs: dev trawler script
+# 13.5 hrs: dev trawler script
 # 10.0 hrs: trawl data; record/label unhandled datapoints and inconsistencies
 # 2.0 hrs: research mdf format, add mdf formatter
 # 4.0 hrs: nameserver/pages/dns/record research
-# 6.0 hrs: zoom meeting, powerpoint, email chain
-# 1.0 hrs: meetings
+# 7.0 hrs: zoom meeting, powerpoint, email chain
+# 2.0 hrs: meetings
+# 1.5 hrs: accessibility dev
+# 3.0 hrs: data format R&D
+# 1.0 hrs: electronJS
 
 #### NOTES ####
 
@@ -94,10 +97,24 @@ FILE_STUB = """<p align="center" class="lpTitlePara">L  -  l</p>
 
 #### HELPERS ####
 
-def listTags (text, tag='', attributes=''):
+def listTags (text, tag=''):
 	# $1 attribute list
 	# $2 innerHTML
 	pattern = fr"(?:<{tag}(.*?)>(.*?)<\/{tag}>)+?"
+	regex = re.compile(pattern, re.MULTILINE)
+	matches = regex.findall(text)
+	return matches
+def listMultiTags (text, tags=[]):
+	# $1 attribute list
+	# $2 innerHTML
+	tagseq = "|".join( map(re.escape, tags) )
+	pattern = rf"<(?P<tag>{tagseq})([^>]*)>(.*?)</(?P=tag)>"
+	# tagpatterns = []
+	# for tag in tags:
+	# 	tagpatterns.append( fr"(?:<{tag}(.*?)>(.*?)<\/{tag}>)" )
+	# print(tagpatterns)
+	# pattern = fr"(?:{"|".join(tagpatterns)})+?"
+	# print(pattern)
 	regex = re.compile(pattern, re.MULTILINE)
 	matches = regex.findall(text)
 	return matches
@@ -133,7 +150,10 @@ def tokenize (text):
 	entryData = []
 	for entry in entriesRaw:
 		spans = []
-		for attributes,contents in listTags(entry,"span"):
+		# for attributes,contents in listTags(entry,"span"):
+		# print( listTags(entry,"span") )
+		# print( listMultiTags(entry,["span","audio"]) )
+		for tag,attributes,contents in listMultiTags(entry,["span","audio"]):
 			spans.append( (listAttributes(attributes),contents) )
 		entryData.append(spans)
 	return entryData
@@ -441,6 +461,12 @@ def parse (data):
 # for entry in stub_entries:
 # 	entry.print()
 # 	print("-----")
+
+# stub_data = tokenize(FILE_STUB)
+# for tokenstream in stub_data:
+# 	print(f"STREAM of length {len(tokenstream)}:")
+# 	for token in tokenstream:
+# 		print(f"    TOKEN {token}")
 
 with codecs.open(FILE, encoding='utf-8') as f:
 	# parse data (verbose by default)
