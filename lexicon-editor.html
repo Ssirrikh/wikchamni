@@ -8,6 +8,7 @@
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
     <style>
 		:root {
+            --text-light: #f5f5f5;
             --text-dark: #323440;
             --text-subtitle: #636570;
             --bg-white: #ffffff;
@@ -15,15 +16,17 @@
             --bg-highlight: #65b9ff;
             --bg-medium: #3b454a;
             --bg-dark: #1a282f;
+            --border-light-unfocused: #484f58;
             --border-light: #e2e4e5;
             --border-medium: #cfcfcf;
             --text-error: #dc0019;
 
             /* from github.com */
             --border-highlight: #8c93fb;
-            --bg-light: #eae9f5;
+            --border-highlight: #d8dbff;
+            /* --bg-light: #eae9f5; */
             --bg-dark: #070942;
-            --border-highlight: #fff;
+            /* --border-highlight: #fff; */
 
             --fluid-font-size: max(2.5vh, calc(1rem + 1.0vw));
 		}
@@ -50,11 +53,14 @@
             font-weight: normal;
         }
 
-        label {
+        /* label {
             font-size: 0.5em;
-        }
+        } */
         input {
-            font-size: 0.5em;
+            font-size: 1em;
+        }
+        select {
+            padding: 0.2em 0.5em;
         }
 
 
@@ -96,7 +102,7 @@
 
         /**** SITE LAYOUT ****/
 
-        #main {
+        #main-floating {
             background-color: var(--bg-light);
             border: 1px solid var(--border-highlight);
             border-radius: 0.3em;
@@ -164,6 +170,154 @@
         }
 
 
+        /* reuseable components */
+        .subtitle {
+            color: var(--text-subtitle);
+        }
+        .subtitle-small {
+            color: var(--text-subtitle);
+            font-size: 0.8em;
+        }
+
+        /* from chill: text is #fff, border is #ccc, inactive text is opacity .4 */
+
+        .toggle-switch {
+            /* color: white; */
+            background: linear-gradient(180deg, #fff2 0%, #9992 100%);
+            border: 1px solid var(--border-light);
+            border-radius: 0.2em;
+            /* padding: 0.2em; */
+        }
+        .toggle-switch > button {
+            font-size: 1em;
+        }
+
+
+
+        /* word data entry */
+        #main {
+            /* border: 1px solid red; */
+            width: 100vw;
+            height: 100vh;
+            align-items: stretch;
+        }
+        #panel-lexicon {
+            /* border: 1px solid blue; */
+            background-color: var(--bg-white);
+            width: 30%;
+            width: 14em;
+            font-size: 0.8em;
+            flex-shrink: 0;
+        }
+        #panel-entry-editor {
+            /* border: 1px solid yellow; */
+            background-color: var(--bg-light);
+            border-left: 1px solid var(--border-medium);
+            padding: 0.3em;
+            font-size: 0.8em;
+            gap: 0.3em;
+            flex-grow: 1;
+        }
+
+        /* lexicon header */
+        #lexicon-header {
+            color: var(--text-light);
+            background-color: var(--bg-dark);
+        }
+        #lexicon-header > .flex-row {
+            padding: 0.2em;
+            align-items: center;
+            justify-content: space-between;
+        }
+        #lexicon-header h2 {
+            color: var(--border-highlight);
+        }
+        #lexicon-header .toggle-switch {
+            /* border: 1px solid red; */
+        }
+        #lexicon-header .toggle-switch > button {
+            color: var(--text-subtitle);
+            border-radius: 1em;
+            width: 3em;
+        }
+        #lexicon-header .toggle-switch > .toggle-selected {
+            /* background: linear-gradient(180deg, #fff2 0%, #9992 100%); */
+            /* border: 1px solid var(--text-light); */
+            color: var(--text-light);
+        }
+        #lexicon-header > p {
+            color: var(--bg-medium);
+        }
+        /* lexicon filters */
+        #lexicon-filters {
+            background-color: var(--bg-light);
+            border-bottom: 1px solid var(--border-medium);
+            font-size: 0.8em
+        }
+        #lexicon-search-wrapper {
+            padding: 0.3em;
+            gap: 0.3em;
+            align-items: center;
+        }
+        #lexicon-search-wrapper > input {
+            width: 100%;
+            font-size: 1em;
+        }
+        #lexicon-search-from {
+            border: 1px solid var(--border-medium);
+            border-radius: 0.2em;
+            position: relative;
+            width: fit-content;
+            padding: 0 0.2em;
+            font-size: 0.8em;
+            justify-content: center;
+        }
+        #lexicon-search-from > button {
+            color: var(--text-subtitle);
+            width: 4em;
+            font-size: 1em;
+        }
+        #lexicon-search-from > .option-selected {
+            color: var(--text-dark);
+        }
+        #lexicon-search-from-selector {
+            background-color: var(--bg-dark);
+            background-color: var(--bg-highlight);
+            transform: translate(-50%,0.25em);
+            position: absolute;
+            width: 3.5em;
+            height: 0.1em;
+            bottom: 0;
+            left: 50%;
+            transition: 0.2s ease;
+        }
+        .selector-left {
+            left: calc(50% - 4em) !important;
+        }
+        .selector-right {
+            left: calc(50% + 4em) !important;
+        }
+        #catg-filter-wrapper {
+            padding: 0.5em;
+        }
+        #lexicon-filter-catg-wrapper {
+            padding: 0.3em;
+            gap: 0.3em;
+        }
+
+
+
+        /* entry editor */
+        #entry-data-basic > label {
+            margin-top: 0.5em;
+            margin-bottom: 0.1em;
+        }
+        #entry-catg {
+            width: min(90%, 10em);
+            /* padding: 0.2em 0.5em; */
+        }
+
+
 
         /**** MEDIA QUERIES ****/
 
@@ -192,7 +346,7 @@
 </head>
 <body>
 
-<div id='main'>
+<!-- <div id='main-floating'>
     <h1>Language Data</h1>
     <div class='separator-line'></div>
     <div id='lang-data' class='flex-col'>
@@ -233,6 +387,74 @@
         <p> Verbs: 0</p>
         <p> Adjectives: 0</p>
     </div>
+</div> -->
+
+<div id='main' class='flex-row'>
+    <div id='panel-lexicon' class='flex-col'>
+        <div id='lexicon-header' class='flex-col'>
+            <div class='flex-row'>
+                <h2>Sort lexicon by:</h2>
+                <div class='flex-row toggle-switch'>
+                    <button>L1</button>
+                    <button class='toggle-selected'>L2</button>
+                </div>
+            </div>
+            <!-- <p class='subtitle-small'>L1 is the finder language (usually English) used to organize the database. L2 is the target language which data is being collected for.</p> -->
+        </div>
+        <div id='lexicon-filters' class='flex-col'>
+            <div id='lexicon-search-wrapper' class='flex-col'>
+                <div id='lexicon-search-from' class='flex-row'>
+                    <div id='lexicon-search-from-selector' class='selector-left'></div>
+                    <button class='option-selected'>Begins</button>
+                    <button>Contains</button>
+                    <button>Ends</button>
+                </div>
+                <input type='text' placeholder='Search...'>
+            </div>
+            <div id='lexicon-filter-catg-wrapper' class='flex-col'>
+                <p>Filter by part of speech:</p>
+                <div id='catg-filter-wrapper' class='flex-row'>
+                    <button class='toggle-enabler'>Noun</button>
+                    <button class='toggle-enabler'>Verb</button>
+                    <button class='toggle-enabler toggle-enabler-disabled'>Adjective</button>
+                </div>
+            </div>
+        </div>
+        <div id='lexicon-entries' class='flex-col'>
+            <div>Entry 1</div>
+            <div>Entry 2</div>
+            <div>Entry 3</div>
+            <div>Entry 4</div>
+            <div>Entry 5</div>
+        </div>
+    </div>
+    <div id='panel-entry-editor' class='flex-col'>
+        <!-- basic info -->
+        <div id='entry-data-basic' class='flex-col'>
+            <label for='entry-L1'>English Word(s)</label>
+            <input id='entry-L1' type='text'>
+            <p id='desc-entry-L1' class='subtitle-small'>Synonyms can be added using semicolons, ie "dash; run; sprint".</p>
+            <label for='entry-catg'>Part of Speech:</label>
+            <select id='entry-catg'>
+                <option value='n'>Noun</option>
+                <option value='v'>Verb</option>
+                <option value='adj'>Adjective</option>
+                <option value='+'>[+ add new]</option>
+            </select>
+        </div>
+        <div class='separator-line'></div>
+        <!-- L2 forms -->
+        <h3>Wikchamni Forms</h3>
+        <div class='flex-row entry-data-L2'>
+            <select>
+                <option value='subject'>Subject</option>
+                <option value='object'>Object</option>
+                <option value='locative'>Locative</option>
+                <option value='+'>[+ add new]</option>
+            </select>
+            <input type='text'>
+        </div>
+    </div>
 </div>
 
 
@@ -250,6 +472,9 @@
     // 7.0 hrs: design research, color palette, layout
     // 0.5 hrs: custom alphabetization research
     // 2.0 hrs: add Language object and JSON data format, misc bugfixes
+    // 1.5 hrs: data format and editor design
+    // 4.5 hrs: lexicon design
+    // 2.0 hrs: entry editor design
 
 
 
@@ -362,6 +587,9 @@
     L2_wik.fromJSON(`{"name":"Wikchamni","abbr":"wik","alphabet":"a c č e f h i k l m n ŋ o p s š t ṭ u w x y ʔ","usesForms":true,"forms":{}}`);
     console.log(L2_wik);
     loadLanguageData(L2_wik);
+
+    // // demo animated selection indicator
+    // document.getElementById('lexicon-search-from-selector').classList.remove('selector-left');
 
 </script>
 
