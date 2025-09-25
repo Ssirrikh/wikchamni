@@ -8,18 +8,24 @@
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
     <style>
 		:root {
+            --text-white: #ffffff;
             --text-light: #f5f5f5;
             --text-dark: #323440;
             --text-subtitle: #636570;
             --bg-white: #ffffff;
             --bg-light: #f5f5f5;
             --bg-highlight: #65b9ff;
+            --bg-highlight: #2f91ff;
             --bg-medium: #3b454a;
             --bg-dark: #1a282f;
             --border-light-unfocused: #484f58;
             --border-light: #e2e4e5;
             --border-medium: #cfcfcf;
-            --text-error: #dc0019;
+            --warning-white: #fee;
+            --warning-light: #fcc;
+            --warning-dark: #600;
+            --warning-highlight: #f00;
+            --warning-highlight-light: #f44;
 
             /* from github.com */
             --border-highlight: #8c93fb;
@@ -61,6 +67,7 @@
         }
         select {
             padding: 0.2em 0.5em;
+            font-size: 1em;
         }
 
 
@@ -178,6 +185,10 @@
             color: var(--text-subtitle);
             font-size: 0.8em;
         }
+        .subtitle-warning-small {
+            color: var(--warning-highlight);
+            font-size: 0.8em;
+        }
 
         /* from chill: text is #fff, border is #ccc, inactive text is opacity .4 */
 
@@ -213,9 +224,9 @@
             /* border: 1px solid yellow; */
             background-color: var(--bg-light);
             border-left: 1px solid var(--border-medium);
-            padding: 0.3em;
-            font-size: 0.8em;
-            gap: 0.3em;
+            padding: 0.5em;
+            font-size: 0.6em;
+            gap: 0.5em;
             flex-grow: 1;
         }
 
@@ -308,13 +319,75 @@
 
 
         /* entry editor */
+        #panel-entry-editor label, #panel-entry-editor h3 {
+            font-size: 1.2em;
+        }
+        /* #panel-entry-editor button {
+            font-size: 1em;
+        } */
+        #panel-entry-editor input {
+            padding: 0.2em 0.5em;
+        }
+        #panel-entry-editor select {
+            font-size: 0.8em;
+        }
         #entry-data-basic > label {
             margin-top: 0.5em;
             margin-bottom: 0.1em;
         }
+        #entry-catg-wrapper {
+            gap: 0.5em;
+        }
         #entry-catg {
             width: min(90%, 10em);
-            /* padding: 0.2em 0.5em; */
+        }
+        #entry-forms-wrapper {
+            gap: 0.3em;
+        }
+        .entry-data-L2 {
+            align-items: center;
+            gap: 0.5em;
+        }
+        #entry-add-wordform, #entry-add-note {
+            color: var(--text-white);
+            background-color: var(--bg-highlight);
+            border-radius: 0.25em;
+
+            padding: 0.3em 1em;
+            width: fit-content;
+            font-size: 1em;
+        }
+        #danger-zone-header {
+            color: var(--warning-highlight);
+            color: var(--warning-highlight-light);
+            background-color: var(--warning-dark);
+            border-radius: 0.5em 0.5em 0 0;
+
+            font-size: 1em;
+            padding: 0.5em 1em;
+            justify-content: space-between;
+        }
+        #entry-danger-zone {
+            color: var(--warning-dark);
+            background-color: var(--warning-light);
+            border-radius: 0 0 0.5em 0.5em;
+
+            padding: 0.5em;
+            gap: 0.5em;
+        }
+        #entry-delete-wrapper {
+            align-items: center;
+            gap: 0.5em;
+        }
+        #entry-delete-wrapper > p {
+            color: var(--warning-dark);
+        }
+        #entry-delete {
+            color: var(--warning-white);
+            background-color: var(--warning-highlight-light);
+            border-radius: 0.25em;
+
+            padding: 0.5em 1em;
         }
 
 
@@ -390,6 +463,7 @@
 </div> -->
 
 <div id='main' class='flex-row'>
+    <!-- left panel: lexicon -->
     <div id='panel-lexicon' class='flex-col'>
         <div id='lexicon-header' class='flex-col'>
             <div class='flex-row'>
@@ -428,12 +502,17 @@
             <div>Entry 5</div>
         </div>
     </div>
+
+    <!-- right panel: entry editor -->
     <div id='panel-entry-editor' class='flex-col'>
-        <!-- basic info -->
+        <!-- L1 forms, Part of Speech -->
         <div id='entry-data-basic' class='flex-col'>
             <label for='entry-L1'>English Word(s)</label>
             <input id='entry-L1' type='text'>
             <p id='desc-entry-L1' class='subtitle-small'>Synonyms can be added using semicolons, ie "dash; run; sprint".</p>
+        </div>
+        <!-- <div class='separator-line'></div> -->
+        <div id='entry-catg-wrapper' class='flex-row'>
             <label for='entry-catg'>Part of Speech:</label>
             <select id='entry-catg'>
                 <option value='n'>Noun</option>
@@ -445,15 +524,38 @@
         <div class='separator-line'></div>
         <!-- L2 forms -->
         <h3>Wikchamni Forms</h3>
-        <div class='flex-row entry-data-L2'>
-            <select>
-                <option value='subject'>Subject</option>
-                <option value='object'>Object</option>
-                <option value='locative'>Locative</option>
-                <option value='+'>[+ add new]</option>
-            </select>
-            <input type='text'>
+        <div id='entry-forms-wrapper' class='flex-col'>
+            <!--  -->
         </div>
+        <button id='entry-add-wordform' onclick='stub_addForm()'>+ New Form</button>
+        <div class='separator-line'></div>
+        <!-- Entry Notes -->
+        <h3>Notes</h3>
+        <div id='entry-notes-wrapper' class='flex-col'>
+            <p>[notes go here]</p>
+        </div>
+        <button id='entry-add-note' onclick=''>+ Add Note</button>
+        <div class='separator-line'></div>
+        <!-- The Danger Zone -->
+        <div id='entry-danger-zone-wrapper' class='flex-col'>
+            <button id='danger-zone-header' class='flex-col'>
+                <h3>The Danger Zone</h3>
+                <div class='arrow-down'></div>
+            </button>
+            <div id='entry-danger-zone' class='flex-col'>
+                <div id='entry-delete-wrapper' class='flex-row'>
+                    <button id='entry-delete'>Delete Entry</button>
+                    <p class='subtitle-warning-small'>This will delete the current entry PERMANENTLY. This action cannot be undone.</p>
+                </div>
+                <!-- <div class='flex-col'>
+                    <h4>Raw Data Entry</h4>
+                    <input type='text'>
+                </div> -->
+            </div>
+        </div>
+        <!-- <p class='subtitle-warning-small'>This section allows you to delete an entry PERMANENTLY, or directly edit the raw database data. Proceed with caution.</p> -->
+        
+        
     </div>
 </div>
 
@@ -474,7 +576,8 @@
     // 2.0 hrs: add Language object and JSON data format, misc bugfixes
     // 1.5 hrs: data format and editor design
     // 4.5 hrs: lexicon design
-    // 2.0 hrs: entry editor design
+    // 6.5 hrs: entry editor design
+    // 2.0 hrs: JSON data load/save
 
 
 
@@ -570,23 +673,132 @@
 
     //// site functionality ////
 
+    const RE_ESCAPE = /[&<>"']/g;
+    const RE_MAP_ESCAPE = { "&" : "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }; // all contexts support &#39; but not all support &apos;, so ignore it
+    function escapeHTML (s) {
+        return String(s).replace(RE_ESCAPE, c => RE_MAP_ESCAPE[c]);
+    }
+    // function escapeHTML (s) {
+    //     return String(s)
+    //         .replace(/&/g, '&amp;')
+    //         .replace(/'/g, '&#39;')
+    //         .replace(/"/g, '&quot;')
+    //         // .replace(/`/g, '&#96;')
+    //         .replace(/</g, '&lt;')
+    //         .replace(/>/g, '&gt;');
+    // }
+
+    function stub_loadL1 (entry) {
+        document.getElementById('entry-L1').value = escapeHTML(entry.L1);
+    }
+    function stub_loadCatg (entry) {
+        document.getElementById('entry-catg').value = escapeHTML(entry.catg);
+    }
+    function stub_loadForms (entry) {
+        // check if there's actually data to load
+        if (entry.L2.length === 0) return;
+        // reset parent container
+        const parent = document.getElementById('entry-forms-wrapper');
+        parent.innerHTML = '';
+        // dynamically construct datafield element for each wordform
+        // need to escape catgs and wordforms
+        for (let i = 0; i < entry.L2.length; i++) {
+            const vStr = `value='${escapeHTML(entry.L2[i].formId)}'`; // implicit type cast Number->String by escapeHTML()
+            let eStr = wordformSelectors[entry.catg].replace(vStr, `${vStr} selected`)
+                    + `<input type='text' value='${escapeHTML(entry.L2[i].content)}'>`;
+            let e = document.createElement('div');
+                e.id = `entry-form-${i}`;
+                e.classList.add('flex-row');
+                e.classList.add('entry-data-L2');
+                e.innerHTML = eStr;
+            console.log(eStr);
+            parent.appendChild(e);
+        }
+    }
+    function stub_addForm () {
+        // add to data structure
+        stub_activeEntry.L2.push({ formId : -1, content : `` });
+        // add to UI
+        let eStr = wordformSelectors[stub_activeEntry.catg] + `<input type='text'>`;
+        let e = document.createElement('div');
+            e.id = `entry-form-${stub_activeEntry.L2.length}`;
+            e.classList.add('flex-row');
+            e.classList.add('entry-data-L2');
+            e.innerHTML = eStr;
+        document.getElementById('entry-forms-wrapper').appendChild(e);
+    }
+
     function loadLanguageData (L) {
         document.getElementById('lang-name').value = L.name;
         document.getElementById('lang-abbr').value = L.abbr;
         document.getElementById('lang-alphabet').value = L.alphabet.join(ALPHABET_SPLITTER);
     }
 
+
+
+    //// data ////
+
+    const CATG_NAMES = {
+        'n' : 'Noun',
+        'v' : 'Verb',
+        'adj' : 'Adjective'
+    };
+    let stub_wordforms = {
+        'n' : ['Subject','Object','Locative','Supercalifragalisticexpialadocious'],
+        'v' : ['Past','Recent Past','Future','Fantastic','Supercalifragalisticexpialadocious']
+    };
+    let wordformSelectors = (() => {
+        // <select> elements for wordforms are highly reused, so cache constructor strings for them
+        // need to escape wordform names
+        let o = {};
+        for (let catg in stub_wordforms) {
+            let eStr = `<select>`;
+                eStr += `<option value='-1'>-- Choose One --</option>`;
+                for (let formNum = 0; formNum < stub_wordforms[catg].length; formNum++) {
+                    eStr += `<option value='${formNum}'>${escapeHTML(stub_wordforms[catg][formNum])}</option>`;
+                }
+                eStr += `<option value='+'>++ ADD NEW FORM ++</option>`;
+            eStr += `</select>`;
+            o[catg] = eStr;
+        }
+        return o;
+    })();
+
+    let stub_activeEntry = {
+        L1 : `dash; run; sprint`,
+        catg : `v`,
+        L2 : [
+            { formId : 0, content : `drundl` },
+            { formId : 1, content : `drundel` },
+            { formId : 2, content : `drund'rel` },
+            { formId : -1, content : `drundel\`lin&#96;` }
+        ],
+        notes : [
+            //
+        ]
+    };
+
+    // L1 English
     let L1_eng = new Language('English', 'eng', `a b c d e f g h i j k l m n o p q r s t u v w x y z`);
-    let L2_chk = new Language('Chukchansi', 'chk', `a b c d e f g h i j k l m n o p r s t u w x y ' ʔ`);
     let L1str = L1_eng.toJSON();
-    let L2str = L2_chk.toJSON();
     console.log(L1str);
+    // L2 Wikchamni
+    let L2_wik = new Language('Wikchamni', 'wik', `a c č e f h i k l m n ŋ o p s š t ṭ u w x y ʔ`);
+        L2_wik.usesForms = true;
+    // L2_wik.fromJSON(`{"name":"Wikchamni","abbr":"wik","alphabet":"a c č e f h i k l m n ŋ o p s š t ṭ u w x y ʔ","usesForms":true,"forms":{}}`);
+    let L2str = L2_wik.toJSON();
     console.log(L2str);
 
-    let L2_wik = new Language();
-    L2_wik.fromJSON(`{"name":"Wikchamni","abbr":"wik","alphabet":"a c č e f h i k l m n ŋ o p s š t ṭ u w x y ʔ","usesForms":true,"forms":{}}`);
-    console.log(L2_wik);
-    loadLanguageData(L2_wik);
+    // loadLanguageData(L2_wik);
+
+    stub_loadL1(stub_activeEntry);
+    stub_loadCatg(stub_activeEntry);
+    stub_loadForms(stub_activeEntry);
+    stub_addForm();
+    stub_addForm();
+    stub_addForm();
+
+
 
     // // demo animated selection indicator
     // document.getElementById('lexicon-search-from-selector').classList.remove('selector-left');
