@@ -54,7 +54,7 @@
 
     /* dynamic units calculated mobile-first; see media queries for desktop layout */
     --fluid-font-size: max(2.5vh, calc(1rem + 1.0vw));
-    --title-font-size: calc(1.17 * var(--fluid-font-size));
+    /* --title-font-size: calc(1.17 * var(--fluid-font-size)); */
 }
 
 
@@ -68,7 +68,7 @@
 body {
     background-color: var(--background-nav);
     font-size: var(--fluid-font-size);
-    overflow-x: hidden; /* 100vw overflows horizontally only on chrome; chrome scrollbars contribute to viewport size, but position themselves outside it, forcing it to expand */
+    /*overflow-x: hidden; /* 100vw overflows horizontally only on chrome; chrome scrollbars contribute to viewport size, but position themselves outside it, forcing it to expand */
 }
 button {
     color: var(--text-dark);
@@ -77,7 +77,11 @@ button {
     outline: none;
 }
 h1, h2, h3, h4, h5, h6 {
+    font-size: 1em;
     font-weight: normal;
+}
+input, select {
+    font-size: 1em;
 }
 
 
@@ -113,6 +117,13 @@ h1, h2, h3, h4, h5, h6 {
 .flex-centered {
     align-items: center;
     justify-content: center;
+}
+
+.flex-separated-row {
+    display: flex;
+    flex-direction: row !important;
+    align-items: start;
+    justify-content: space-between;
 }
 
 

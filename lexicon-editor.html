@@ -6,6 +6,7 @@
     <meta name='robots' content='index, follow'>
     <meta name='description' content="Work on your language's lexicon in a clean, modern interface with support for automated checks and formatting.">
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='assets/css/common.css'>
     <style>
 		:root {
             --text-white: #ffffff;
@@ -46,35 +47,18 @@
         body {
             color: var(--text-dark);
             background-color: var(--bg-dark);
+            /* background-color: var(--bg-light); */
             font-size: var(--fluid-font-size);
-        }
-        button {
-            color: var(--text-dark);
-            background-color: transparent;
-            border: none;
-            outline: none;
-        }
-        h1, h2, h3, h4, h5, h6 {
-            font-size: 1em;
-            font-weight: normal;
-        }
-
-        /* label {
-            font-size: 0.5em;
-        } */
-        input {
-            font-size: 1em;
         }
         select {
             padding: 0.2em 0.5em;
-            font-size: 1em;
         }
 
 
 
         /**** FLEXBOX UTILITY ****/
 
-        .flex-sep {
+        /* .flex-sep {
             width: 0;
             flex-grow: 1;
         }
@@ -86,24 +70,24 @@
         .flex-col {
             display: flex;
             flex-direction: column !important;
-        }
-        .flex-adapt {
+        } */
+        /* .flex-adapt { */
             /* column on mobile, row on desktop */
-            display: flex;
+            /* display: flex;
             flex-direction: column !important;
             align-items: center;
-        }
-        .flex-adapt-reverse {
+        } */
+        /* .flex-adapt-reverse { */
             /* row on mobile, column on desktop */
-            display: flex;
+            /* display: flex;
             flex-direction: row !important;
             align-items: normal;
             justify-content: center;
-        }
-        .flex-centered {
+        } */
+        /* .flex-centered {
             align-items: center;
             justify-content: center;
-        }
+        } */
 
 
 
@@ -136,9 +120,16 @@
             padding: 0.2em 0.5em;
         }
         .separator-line {
-            background-color: var(--text-subtitle);
+            /* for unknown reasons, this class was suddenly forced to have a height of 0px after adding common.css */
+                /* removing common.css did not reset the behavior, and it now persists */
+                /* removing the .flex-col class fixes this issue; no idea why */
+                /* adding display:list-item fixes the issue, but no other value of display works; no idea why */
+                /* we can't afford to spend more time diagnosing this, so we'll have to use borders instead */
+            /* background-color: var(--text-subtitle);
+            height: 1px; */
+
+            border-bottom: 1px solid var(--text-subtitle);
             width: 100%;
-            height: 1px;
             margin: 0.5em 0;
         }
         .input-subtitle {
@@ -215,8 +206,11 @@
         #panel-lexicon {
             /* border: 1px solid blue; */
             background-color: var(--bg-white);
+            /* position: fixed; */
+            /* top: 0; */
             width: 30%;
             width: 14em;
+            /* height: max(100%, 100vh); */
             font-size: 0.8em;
             flex-shrink: 0;
         }
@@ -225,6 +219,7 @@
             background-color: var(--bg-light);
             border-left: 1px solid var(--border-medium);
             padding: 0.5em;
+            overflow-y: scroll;
             font-size: 0.6em;
             gap: 0.5em;
             flex-grow: 1;
@@ -357,6 +352,10 @@
             width: fit-content;
             font-size: 1em;
         }
+        .entry-note > textarea {
+            padding: 0.25em;
+            resize: none;
+        }
         #danger-zone-header {
             color: var(--warning-highlight);
             color: var(--warning-highlight-light);
@@ -402,7 +401,7 @@
             :root {
                 /*  */
             }
-            .flex-adapt {
+            /* .flex-adapt {
                 display: flex;
                 flex-direction: row !important;
                 align-items: normal;
@@ -412,7 +411,7 @@
                 display: flex;
                 flex-direction: column !important;
                 align-items: center;
-            }
+            } */
         }
 		
 	</style>
@@ -523,7 +522,7 @@
         </div>
         <div class='separator-line'></div>
         <!-- L2 forms -->
-        <h3>Wikchamni Forms</h3>
+        <h3>Wikchamni Forms <span class='subtitle-small'>(13)</span></h3>
         <div id='entry-forms-wrapper' class='flex-col'>
             <!--  -->
         </div>
@@ -532,7 +531,10 @@
         <!-- Entry Notes -->
         <h3>Notes</h3>
         <div id='entry-notes-wrapper' class='flex-col'>
-            <p>[notes go here]</p>
+            <div class='flex-col entry-note'>
+                <p>Note #1</p>
+                <textarea rows='3'>Related language Chukchansi tʰixtʰinitʰ 'sick'</textarea>
+            </div>
         </div>
         <button id='entry-add-note' onclick=''>+ Add Note</button>
         <div class='separator-line'></div>
@@ -576,8 +578,8 @@
     // 2.0 hrs: add Language object and JSON data format, misc bugfixes
     // 1.5 hrs: data format and editor design
     // 4.5 hrs: lexicon design
-    // 6.5 hrs: entry editor design
-    // 2.0 hrs: JSON data load/save
+    // 8.5 hrs: entry editor design
+    // 4.0 hrs: JSON data load/save
 
 
 
@@ -688,6 +690,7 @@
     //         .replace(/>/g, '&gt;');
     // }
 
+    // LOAD //
     function stub_loadL1 (entry) {
         document.getElementById('entry-L1').value = escapeHTML(entry.L1);
     }
@@ -728,6 +731,20 @@
         document.getElementById('entry-forms-wrapper').appendChild(e);
     }
 
+    // UPDATE //
+
+    function stub_updateL1 () {
+        let synonyms = document.getElementById('entry-L1').value.split(/;\s*/).join('; ');
+        stub_activeEntry.L1 = synonyms;
+        if (document.getElementById('entry-L1').value !== synonyms) {
+            // TODO: using setRangeText() or input.value=v destroy undo buffer; execCommand() preserves it, but is deprecated and not supported in all browsers
+            document.getElementById('entry-L1').value = synonyms;
+            // document.getElementById('entry-L1').setRangeText(synonyms, 0,document.getElementById('entry-L1').value.length, 'end');
+        }
+        console.log(synonyms);
+    }
+    document.getElementById('entry-L1').addEventListener('blur', stub_updateL1);
+
     function loadLanguageData (L) {
         document.getElementById('lang-name').value = L.name;
         document.getElementById('lang-abbr').value = L.abbr;
@@ -745,7 +762,8 @@
     };
     let stub_wordforms = {
         'n' : ['Subject','Object','Locative','Supercalifragalisticexpialadocious'],
-        'v' : ['Past','Recent Past','Future','Fantastic','Supercalifragalisticexpialadocious']
+        // 'v' : ['Past','Recent Past','Future','Fantastic','Supercalifragalisticexpialadocious']
+        'v' : ['Past','Medio Passive','Durative Aorist','Future','Passive Gerundial','Durative Present','Neutral Verbal Noun','Causative','Neutral Agentive','UNDERLYING']
     };
     let wordformSelectors = (() => {
         // <select> elements for wordforms are highly reused, so cache constructor strings for them
@@ -764,17 +782,39 @@
         return o;
     })();
 
+    // let stub_activeEntry = {
+    //     L1 : `dash; run; sprint`,
+    //     catg : `v`,
+    //     L2 : [
+    //         { formId : 0, content : `drundl` },
+    //         { formId : 1, content : `drundel` },
+    //         { formId : 2, content : `drund'rel` },
+    //         { formId : -1, content : `drundel\`lin&#96;` }
+    //     ],
+    //     notes : [
+    //         //
+    //     ]
+    // };
     let stub_activeEntry = {
-        L1 : `dash; run; sprint`,
+        L1 : `get sick; get ill`,
         catg : `v`,
         L2 : [
-            { formId : 0, content : `drundl` },
-            { formId : 1, content : `drundel` },
-            { formId : 2, content : `drund'rel` },
-            { formId : -1, content : `drundel\`lin&#96;` }
+            { formId : 1, content : `čʰɨxčʰin/` },
+            { formId : 2, content : `čʰə·xačʰnaš` },
+            { formId : 3, content : `čʰɨxčʰin` },
+            { formId : 4, content : `cʰɨxčʰɨnšɨ` },
+            { formId : 5, content : `čʰə·xɨčʰin` },
+            { formId : 6, content : `čʰɨxčʰin/` },
+            { formId : 7, content : `čʰɨxa·čʰanʼši` },
+            { formId : 7, content : `čʰɨxa·čʰin` },
+            { formId : 7, content : `čʰɨxa·čʰantit` },
+            { formId : 7, content : `čʰɨxa·čʰanti` },
+            { formId : 7, content : `čʰɨxa·čʰantʰa` },
+            { formId : 8, content : `čʰɨxačʰničʼa` },
+            { formId : 9, content : `#čʰɨxičʰ -in` },
         ],
         notes : [
-            //
+            { type : '-1', content : `Related language Chukchansi tʰixtʰinitʰ 'sick'` }
         ]
     };
 
@@ -795,13 +835,18 @@
     stub_loadCatg(stub_activeEntry);
     stub_loadForms(stub_activeEntry);
     stub_addForm();
-    stub_addForm();
-    stub_addForm();
+    // stub_addForm();
+    // stub_addForm();
 
 
 
     // // demo animated selection indicator
     // document.getElementById('lexicon-search-from-selector').classList.remove('selector-left');
+
+    // TODO: gubbins toggles for users
+        // confirmation check for deleting form/note/etc
+        // confirmation check for deleting entry
+        // auto-clean synonym strings ("run;   dash" -> "run; dash")
 
 </script>
 
