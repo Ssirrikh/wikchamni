@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang='en' xml:lang='en'>
+<head>
+	<meta charset = 'utf-8'>
+	<title>Wikchamni Stories</title>
+    <meta name='robots' content='index, follow'>
+    <meta name='description' content="Read and listen to traditional Wikchamni stories with line-by-line translations.">
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='assets/css/common.css'>
+    <style>
+		:root {
+            /* --fluid-font-size: max(2.5vh, calc(1rem + 1.0vw)); */
+		}
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        body {
+            color: var(--text-dark);
+            background-color: var(--primary-black);
+            /* background-color: var(--bg-light); */
+            font-size: var(--fluid-font-size);
+            font-size: calc(0.6 * var(--fluid-font-size));
+        }
+        select {
+            padding: 0.2em 0.5em;
+        }
+
+
+        /**** SITE LAYOUT ****/
+
+        #story-selection {
+            background-color: var(--primary-grey-medium);
+            border-right: 2px solid var(--border-light);
+            width: 16em;
+            height: 100%;
+            flex-shrink: 0;
+        }
+        #story-selection > h2 {
+            color: black;
+            background-color: var(--primary-grey-dark);
+            padding: 0.5em 1em;
+            /* border-bottom: 1px solid var(--text-dark); */
+        }
+        #story-selection > h2, #more-coming-soon {
+            flex-shrink: 0;
+        }
+        #story-list {
+            overflow-y: scroll;
+            padding: 0.5em;
+            flex-grow: 1;
+        }
+        #story-list > button {
+            /* border-radius: 0.25em; */
+            font-size: 1em;
+            padding: 0.25em 0.5em;
+            gap: 1em;
+        }
+        #story-list > button:hover {
+            /* color: black; */
+            background-color: var(--primary-grey);
+        }
+        #story-list > button + button {
+            border-top: 1px solid var(--primary-grey-dark);
+        }
+        .active-story {
+            /* color: black; */
+            background-color: var(--primary-grey-light);
+        }
+        .story-number {
+            color: var(--text-dark);
+            font-size: 0.8em;
+        }
+        #more-coming-soon {
+            /* background-color: var(--primary-grey-dark); */
+            /* border-top: 1px solid var(--text-dark); */
+            padding: 0.5em;
+        }
+        #more-coming-soon > p {
+            color: black;
+            background-color: var(--primary-grey-light);
+            border: 2px solid var(--text-dark);
+            border-radius: 0.5em;
+            padding: 0.5em;
+            text-align: center;
+        }
+
+
+
+        #story-reader {
+            padding: 1em;
+            text-align: center;
+            flex-grow: 1;
+            gap: 0.8em;
+        }
+        .story-section {
+            font-size: 1.2em;
+        }
+        .story-section-translation {
+            /* font-size: 0.8em; */
+            font-style: italic;
+        }
+
+
+
+        /**** MEDIA QUERIES ****/
+
+        /* mobile-first styling for better load times on less-powerful devices */
+        @media (max-aspect-ratio: 5/4) { /* mobile mode */
+            /*  */
+        }
+		@media (min-aspect-ratio: 5/4) { /* desktop mode */
+            :root {
+                /*  */
+            }
+        }
+		
+	</style>
+</head>
+<body>
+
+<div id='main' class='flex-col'>
+    <div id='progress'></div>
+    <div id='nav-bar' class='flex-separated-row'>
+        <h1>Wikchamni Stories</h1>
+        <nav role='navigation'>
+            <ul class='flex-row'>
+                <li><a>Home</a></li>
+                <li><a>Dictionary</a></li>
+                <li class='nav-selected'><a>Stories</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div id='content' class='flex-row'>
+        <div id='story-selection' class='flex-col'>
+            <h2>STORIES</h2>
+            <div id='story-list' class='flex-col'>
+                <button class='flex-row'>
+                    <p class='story-number'>1</p><p>Eagle and Condor</p>
+                </button>
+                <button class='flex-row active-story'>
+                    <p class='story-number'>2</p><p>Kadadimcha</p>
+                </button>
+                <button class='flex-row'>
+                    <p class='story-number'>3</p><p>Redbud</p>
+                </button>
+                <button class='flex-row'>
+                    <p class='story-number'>4</p><p>Telamtelam</p>
+                </button>
+                <button class='flex-row'>
+                    <p class='story-number'>5</p><p>The Beginning of Fire</p>
+                </button>
+                <button class='flex-row'>
+                    <p class='story-number'>6</p><p>The Beginning of the World</p>
+                </button>
+                <button class='flex-row'>
+                    <p class='story-number'>7</p><p>Whirlwind Place</p>
+                </button>
+            </div>
+            <div id='more-coming-soon'>
+                <p>Several stories have been recorded but not transcribed. More coming soon...</p>
+            </div>
+        </div>
+        <div id='story-reader' class='flex-col'>
+            <div>
+                <h2 class='story-title'>Kʰatatimčʰa yow Tokʼoʔwonʼo  ʔa·xit</h2>
+                <p class='story-title-translation'>Kadadimcha and Her Pregnant Daughter</p>
+            </div>
+            
+            <div>
+                <p class='story-section'>Hiya·mʼu wɨxnat ʔo·ma pʼaʔanʼin tɨʔɨsnaw, Kʰatatimčʰa xo·ʔoxʔoš ʔan tokʼoʔwonʼo ʔa·xit.</p>
+                <p class='story-section-translation'>Very long ago when the world was made, lived Kadadimcha and her pregnant daughter.</p>
+            </div>
+            <div>
+                <p class='story-section'>Hute·ʔčʼa ʔan xotom maxa ʔamaʔ tʰaŋ wittʰa Kʰatatimčʰa našuš ʔan:</p>
+                <p class='story-section-translation'>She liked to get sweet clover and Kadadimcha, her mother, told her:</p>
+            </div>
+            <div>
+                <p class='story-section'>Xo·ʔoxi xew tuxun tʰaxnat tʰaw tuyo·ʔučʼʔamaʔ to·yatiy tukʼewnačʼhi mukešhi.</p>
+                <p class='story-section-translation'>There is a bear that comes there who is an eater and eats pregnant women.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type='text/javascript'>
+
+    //// REFS ////
+
+    // https://subscriptions.hollywoodreporter.com/site/thr-subscribe
+
+
+
+    //// WAVE 3 ////
+
+    // 6.5 hrs: site layout
+    // 1.0 hrs: data format, story annotation
+
+
+
+    ////
+
+
+
+    
+
+</script>
+
+</body>
+</html>
