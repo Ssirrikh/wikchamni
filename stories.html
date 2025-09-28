@@ -54,7 +54,7 @@
             flex-grow: 1;
         }
         #story-list > button {
-            /* border-radius: 0.25em; */
+            border-radius: 0.25em;
             font-size: 1em;
             padding: 0.25em 0.5em;
             gap: 1em;
@@ -64,7 +64,7 @@
             background-color: var(--primary-grey);
         }
         #story-list > button + button {
-            border-top: 1px solid var(--primary-grey-dark);
+            /* border-top: 1px solid var(--primary-grey-dark); */
         }
         .active-story {
             /* color: black; */
@@ -91,9 +91,64 @@
 
 
         #story-reader {
+            position: relative;
             padding: 1em;
+            min-height: 100%;
             text-align: center;
             flex-grow: 1;
+            align-items: center;
+            gap: 0.8em;
+        }
+        #story-header {
+            background-color: var(--bg-light);
+            border: 2px solid var(--primary-grey-dark);
+            border-radius: 1em;
+            position: sticky;
+            top: 0;
+            /* margin: 0.5em auto; */
+            padding: 1em;
+            width: 28em;
+            font-size: 1.2em;
+            align-items: center;
+            gap: 0.2em;
+        }
+
+        #player-title {
+            font-size: 1.2em;
+            text-decoration: underline;
+        }
+        #player-title-translation {
+            color: var(--text-subtitle);
+            font-size: 0.8em;
+        }
+        #player-progress-wrapper {
+            margin-top: 1em;
+            width: 12em;
+        }
+        #player-progress-bar {
+            background-color: var(--primary-grey-dark);
+            border-radius: 1em;
+            width: 100%;
+            height: 4px;
+        }
+        #player-currenttime, #player-length {
+            color: var(--text-subtitle);
+            font-size: 0.6em;
+        }
+        #player-buttons {
+            justify-content: center;
+            gap: 1em;
+        }
+        .stub-button {
+            --w: 2em;
+            background-color: var(--primary-grey-dark);
+            border-radius: 0.2em;
+            width: var(--w);
+            height: var(--w);
+        }
+
+        #story-contents {
+            align-items: center;
             gap: 0.8em;
         }
         .story-section {
@@ -136,7 +191,7 @@
     </div>
     <div id='content' class='flex-row'>
         <div id='story-selection' class='flex-col'>
-            <h2>STORIES</h2>
+            <!-- <h2>STORIES</h2> -->
             <div id='story-list' class='flex-col'>
                 <button class='flex-row'>
                     <p class='story-number'>1</p><p>Eagle and Condor</p>
@@ -165,22 +220,35 @@
             </div>
         </div>
         <div id='story-reader' class='flex-col'>
-            <div>
-                <h2 class='story-title'>Kʰatatimčʰa yow Tokʼoʔwonʼo  ʔa·xit</h2>
-                <p class='story-title-translation'>Kadadimcha and Her Pregnant Daughter</p>
+            <div id='story-header' class='flex-col'>
+                <h2 id='player-title'>Kʰatatimčʰa yow Tokʼoʔwonʼo  ʔa·xit</h2>
+                <p id='player-title-translation'>Kadadimcha and Her Pregnant Daughter</p>
+                <div id='player-progress-wrapper'>
+                    <div id='player-progress-bar'></div>
+                    <div class='flex-separated-row'>
+                        <p id='player-currenttime'>00:00</p>
+                        <p id='player-length'>03:35</p>
+                    </div>
+                    <div id='player-buttons' class='flex-row'>
+                        <button class='stub-button'></button>
+                        <button class='stub-button'></button>
+                        <button class='stub-button'></button>
+                    </div>
+                </div>
             </div>
-            
-            <div>
-                <p class='story-section'>Hiya·mʼu wɨxnat ʔo·ma pʼaʔanʼin tɨʔɨsnaw, Kʰatatimčʰa xo·ʔoxʔoš ʔan tokʼoʔwonʼo ʔa·xit.</p>
-                <p class='story-section-translation'>Very long ago when the world was made, lived Kadadimcha and her pregnant daughter.</p>
-            </div>
-            <div>
-                <p class='story-section'>Hute·ʔčʼa ʔan xotom maxa ʔamaʔ tʰaŋ wittʰa Kʰatatimčʰa našuš ʔan:</p>
-                <p class='story-section-translation'>She liked to get sweet clover and Kadadimcha, her mother, told her:</p>
-            </div>
-            <div>
-                <p class='story-section'>Xo·ʔoxi xew tuxun tʰaxnat tʰaw tuyo·ʔučʼʔamaʔ to·yatiy tukʼewnačʼhi mukešhi.</p>
-                <p class='story-section-translation'>There is a bear that comes there who is an eater and eats pregnant women.</p>
+            <div id='story-contents' class='flex-col'>
+                <div>
+                    <p class='story-section'>Hiya·mʼu wɨxnat ʔo·ma pʼaʔanʼin tɨʔɨsnaw, Kʰatatimčʰa xo·ʔoxʔoš ʔan tokʼoʔwonʼo ʔa·xit.</p>
+                    <p class='story-section-translation'>Very long ago when the world was made, lived Kadadimcha and her pregnant daughter.</p>
+                </div>
+                <div>
+                    <p class='story-section'>Hute·ʔčʼa ʔan xotom maxa ʔamaʔ tʰaŋ wittʰa Kʰatatimčʰa našuš ʔan:</p>
+                    <p class='story-section-translation'>She liked to get sweet clover and Kadadimcha, her mother, told her:</p>
+                </div>
+                <div>
+                    <p class='story-section'>Xo·ʔoxi xew tuxun tʰaxnat tʰaw tuyo·ʔučʼʔamaʔ to·yatiy tukʼewnačʼhi mukešhi.</p>
+                    <p class='story-section-translation'>There is a bear that comes there who is an eater and eats pregnant women.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -198,7 +266,7 @@
 
     //// WAVE 3 ////
 
-    // 6.5 hrs: site layout
+    // 7.5 hrs: site layout
     // 1.0 hrs: data format, story annotation
 
 
