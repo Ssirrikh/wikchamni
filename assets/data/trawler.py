@@ -1,5 +1,5 @@
 
-# 13.5 hrs: dev trawler script
+# 14.0 hrs: dev trawler script
 # 10.0 hrs: trawl data; record/label unhandled datapoints and inconsistencies
 # 2.0 hrs: research mdf format, add mdf formatter
 # 4.0 hrs: nameserver/pages/dns/record research
@@ -75,9 +75,14 @@
 
 
 import codecs
+import os
 import re
 
+WD = os.getcwd()
+DATA_DIR = 'pages'
+FILES = os.listdir(f'{WD}\\{DATA_DIR}')
 FILE = 'pages/t.html'
+
 FILE_STUB = """<p align="center" class="lpTitlePara">L  -  l</p>
 
 <p class="lpLexEntryPara"><span class="lpLexEntryNameNew"></span><span id="e1280" class="lpLexEntryName">lame&middot;sa/</span><span class="lpSpAfterEntryName">&nbsp;&nbsp;&nbsp;</span><span class="lpPartOfSpeech">n-theme. </span><span class="lpGlossEnglish">table.</span> <span class="lpMiniHeading">nominative:&nbsp;</span><span class="lpParadigm">lame&middot;saʔ</span><span class="lpPunctuation">.</span> <span class="lpMiniHeading">locative:&nbsp;</span><span class="lpParadigm">lame&middot;saw</span><span class="lpPunctuation">.</span><span class="lpPunctuation"> </span> <span class="lpMiniHeading">From: </span><span class="lpBorrowedWord">Spanish la mesa</span><span class="lpPunctuation">.</span> <span class="lpMiniHeading">Note: </span><span class="lpNotes_general">Related language Yawelmani lame&middot;saʔ   Chukchansi lame&middot;saʔ  (NAS)</span></p>
@@ -90,6 +95,10 @@ FILE_STUB = """<p align="center" class="lpTitlePara">L  -  l</p>
 
 <p class="lpLexEntryPara"><span class="lpLexEntryNameNew"></span><audio preload="none" id="dish" src="audio/dish.wav"></audio><a href="#" onclick="document.getElementById('dish').play(); return false"><img border="0" src="images/sound-icon.png" /></a> <span id="e1284" class="lpLexEntryName">la&middot;tuʔ</span><span class="lpSpAfterEntryName">&nbsp;&nbsp;&nbsp;</span><span class="lpPartOfSpeech">n. </span><span class="lpGlossEnglish">dish.</span> <span class="lpMiniHeading">From: </span><span class="lpBorrowedWord">Spanish plato</span><span class="lpPunctuation">.</span> <span class="lpMiniHeading">Note: </span><span class="lpNotes_general">Related language Chukchansi bila&middot;suʔ  (NAS)</span></p>
 """
+
+print(WD)
+print(f'{WD}\\{DATA_DIR}')
+print(FILES)
 
 
 
@@ -468,108 +477,108 @@ def parse (data):
 # 	for token in tokenstream:
 # 		print(f"    TOKEN {token}")
 
-with codecs.open(FILE, encoding='utf-8') as f:
-	# parse data (verbose by default)
-	print("=== Parsing Data... ===\n")
-	data = tokenize( f.read() )
-	entries = parse(data)
+# with codecs.open(FILE, encoding='utf-8') as f:
+# 	# parse data (verbose by default)
+# 	print("=== Parsing Data... ===\n")
+# 	data = tokenize( f.read() )
+# 	entries = parse(data)
 
-	# print flagged entries for diagnosis
-	print("\n=== Flagged Entries ===\n")
-	numEntriesFlagged = 0
-	for entry in entries:
-		if entry.flagged:
-			if numEntriesFlagged > 0: print("-----")
-			numEntriesFlagged += 1
-			entry.print()
-			print(entry.log)
+# 	# print flagged entries for diagnosis
+# 	print("\n=== Flagged Entries ===\n")
+# 	numEntriesFlagged = 0
+# 	for entry in entries:
+# 		if entry.flagged:
+# 			if numEntriesFlagged > 0: print("-----")
+# 			numEntriesFlagged += 1
+# 			entry.print()
+# 			print(entry.log)
 
-	# print MDF formatter output
-	print("\n=== MDF Formatting ===\n")
-	mdfTarget = "tuʔ"
-	print(f"Printing MDF for entries containing headword \"{mdfTarget}\"...\n")
-	for entry in entries:
-		# if entry.catg != "v. " and entry.catg != "v-theme. ":
-		if entry.wikchamni != "tuʔ":
-			continue
-		print(entry.getMDF())
-
-
-	# entries identifying roots
-	print("\n=== Word Forms ===\n")
-	themes = ["n-theme. ", "v-theme. ", "prn-theme. "]
-	themeForms = []
-	for entry in entries:
-		if entry.catg not in themes:
-			if len(entry.forms) > 0:
-				print(f"NOTE NON_THEME_FORMS Entry #{entry.entryId} \"{entry.english}\" of catg \"{entry.catg}\" was not labeled as a word-theme entry, but contained forms {entry.forms}")
-			continue
-		elif len(entry.forms) == 0:
-			print(f"NOTE THEME_NO_FORMS Entry #{entry.entryId} \"{entry.english}\" of catg \"{entry.catg}\" was labeled as a word-theme entry, but had no forms.")
-		formCollection = []
-		for form in entry.forms:
-			formCollection.append( (form,entry.forms[form]) )
-		themeForms.append( (entry.entryId, entry.catg, formCollection) )
-	print("")
+# 	# print MDF formatter output
+# 	print("\n=== MDF Formatting ===\n")
+# 	mdfTarget = "tuʔ"
+# 	print(f"Printing MDF for entries containing headword \"{mdfTarget}\"...\n")
+# 	for entry in entries:
+# 		# if entry.catg != "v. " and entry.catg != "v-theme. ":
+# 		if entry.wikchamni != "tuʔ":
+# 			continue
+# 		print(entry.getMDF())
 
 
+# 	# entries identifying roots
+# 	print("\n=== Word Forms ===\n")
+# 	themes = ["n-theme. ", "v-theme. ", "prn-theme. "]
+# 	themeForms = []
+# 	for entry in entries:
+# 		if entry.catg not in themes:
+# 			if len(entry.forms) > 0:
+# 				print(f"NOTE NON_THEME_FORMS Entry #{entry.entryId} \"{entry.english}\" of catg \"{entry.catg}\" was not labeled as a word-theme entry, but contained forms {entry.forms}")
+# 			continue
+# 		elif len(entry.forms) == 0:
+# 			print(f"NOTE THEME_NO_FORMS Entry #{entry.entryId} \"{entry.english}\" of catg \"{entry.catg}\" was labeled as a word-theme entry, but had no forms.")
+# 		formCollection = []
+# 		for form in entry.forms:
+# 			formCollection.append( (form,entry.forms[form]) )
+# 		themeForms.append( (entry.entryId, entry.catg, formCollection) )
+# 	print("")
 
-	## print statistics
 
-	# counts
-	print("\n=== Statistics ===\n")
-	print(f"{len(entries)} entries processed, {numEntriesFlagged} of which were flagged for a closer look.\n")
-	# unrecognized fields
-	if len(unknownFieldTypes) > 0:
-		print(f"Encountered {len(unknownFieldTypes)} unsupported fields: {unknownFieldTypes}\n")
-	# parts of speech and word forms
-	wordforms = {}
-	catgCounts = {}
-	catgCollectionCounts = {
-		'themes' : 0,
-		'nouns' : 0,
-		'verbs' : 0,
-		'misc' : 0
-	}
-	for entry in entries:
-		if entry.catg not in wordforms:
-			wordforms[entry.catg] = set()
-			catgCounts[entry.catg] = 0
-		if entry.morphology != "":
-			wordforms[entry.catg].add(entry.morphology)
-			catgCounts[entry.catg] += 1
-	for catg in wordforms:
-		print(f"{len(wordforms[catg])} uniq word forms across {catgCounts[catg]} entries of catg \"{catg}\"")
-		for form in wordforms[catg]:
-			print(f"    {form}")
-	for catg in catgCounts:
-		if catg in themes:
-			catgCollectionCounts['themes'] += catgCounts[catg]
-		elif catg == "n. ":
-			catgCollectionCounts['nouns'] += catgCounts[catg]
-		elif catg == "v. ":
-			catgCollectionCounts['verbs'] += catgCounts[catg]
-		else:
-			catgCollectionCounts['misc'] += catgCounts[catg]
-	print(f"\nDatabase contained {catgCollectionCounts['themes']} word-theme entries, {catgCollectionCounts['nouns']} nouns, {catgCollectionCounts['verbs']} verbs, and {catgCollectionCounts['misc']} misc entries.")
 
-	# word forms
-	foundForms = {}
-	numFormsFound = 0
-	for entryId,catg,forms in themeForms:
-		# print(f"Entry #{entryId} of catg \"{catg}\": {forms}")
-		for formName,wordForm in forms:
-			foundForms[wordForm] = False
-	for entry in entries:
-		if entry.wikchamni in foundForms:
-			foundForms[entry.wikchamni] = True
-	print("")
-	for form in foundForms:
-		if foundForms[form] == True:
-			numFormsFound += 1
-		else:
-			print(f"\"{form}\" was listed in a word-theme entry, but didn't have its own entry.")
-	print(f"\n{len(foundForms)-numFormsFound} out of {len(foundForms)} word-forms referenced in a word-theme entry don't have their own entry.\n")
+# 	## print statistics
+
+# 	# counts
+# 	print("\n=== Statistics ===\n")
+# 	print(f"{len(entries)} entries processed, {numEntriesFlagged} of which were flagged for a closer look.\n")
+# 	# unrecognized fields
+# 	if len(unknownFieldTypes) > 0:
+# 		print(f"Encountered {len(unknownFieldTypes)} unsupported fields: {unknownFieldTypes}\n")
+# 	# parts of speech and word forms
+# 	wordforms = {}
+# 	catgCounts = {}
+# 	catgCollectionCounts = {
+# 		'themes' : 0,
+# 		'nouns' : 0,
+# 		'verbs' : 0,
+# 		'misc' : 0
+# 	}
+# 	for entry in entries:
+# 		if entry.catg not in wordforms:
+# 			wordforms[entry.catg] = set()
+# 			catgCounts[entry.catg] = 0
+# 		if entry.morphology != "":
+# 			wordforms[entry.catg].add(entry.morphology)
+# 			catgCounts[entry.catg] += 1
+# 	for catg in wordforms:
+# 		print(f"{len(wordforms[catg])} uniq word forms across {catgCounts[catg]} entries of catg \"{catg}\"")
+# 		for form in wordforms[catg]:
+# 			print(f"    {form}")
+# 	for catg in catgCounts:
+# 		if catg in themes:
+# 			catgCollectionCounts['themes'] += catgCounts[catg]
+# 		elif catg == "n. ":
+# 			catgCollectionCounts['nouns'] += catgCounts[catg]
+# 		elif catg == "v. ":
+# 			catgCollectionCounts['verbs'] += catgCounts[catg]
+# 		else:
+# 			catgCollectionCounts['misc'] += catgCounts[catg]
+# 	print(f"\nDatabase contained {catgCollectionCounts['themes']} word-theme entries, {catgCollectionCounts['nouns']} nouns, {catgCollectionCounts['verbs']} verbs, and {catgCollectionCounts['misc']} misc entries.")
+
+# 	# word forms
+# 	foundForms = {}
+# 	numFormsFound = 0
+# 	for entryId,catg,forms in themeForms:
+# 		# print(f"Entry #{entryId} of catg \"{catg}\": {forms}")
+# 		for formName,wordForm in forms:
+# 			foundForms[wordForm] = False
+# 	for entry in entries:
+# 		if entry.wikchamni in foundForms:
+# 			foundForms[entry.wikchamni] = True
+# 	print("")
+# 	for form in foundForms:
+# 		if foundForms[form] == True:
+# 			numFormsFound += 1
+# 		else:
+# 			print(f"\"{form}\" was listed in a word-theme entry, but didn't have its own entry.")
+# 	print(f"\n{len(foundForms)-numFormsFound} out of {len(foundForms)} word-forms referenced in a word-theme entry don't have their own entry.\n")
 
 
 
