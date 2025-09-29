@@ -33,8 +33,8 @@
         /**** SITE LAYOUT ****/
 
         #story-selection {
-            background-color: var(--primary-grey-medium);
-            border-right: 2px solid var(--border-light);
+            background-color: var(--primary-medium);
+            border-right: thin solid var(--primary-medium);
             width: 16em;
             height: 100%;
             flex-shrink: 0;
@@ -61,16 +61,23 @@
         }
         #story-list > button:hover {
             /* color: black; */
-            background-color: var(--primary-grey);
+            background-color: var(--primary-grey-light);
         }
         #story-list > button + button {
             /* border-top: 1px solid var(--primary-grey-dark); */
         }
+        #story-list > button > div {
+            text-align: left;
+        }
         .active-story {
             /* color: black; */
-            background-color: var(--primary-grey-light);
+            background-color: var(--primary-white);
         }
         .story-number {
+            color: var(--text-dark);
+            font-size: 0.8em;
+        }
+        .story-list-subtitle {
             color: var(--text-dark);
             font-size: 0.8em;
         }
@@ -81,7 +88,7 @@
         }
         #more-coming-soon > p {
             color: black;
-            background-color: var(--primary-grey-light);
+            background-color: var(--primary-white);
             border: 2px solid var(--text-dark);
             border-radius: 0.5em;
             padding: 0.5em;
@@ -91,8 +98,9 @@
 
 
         #story-reader {
+            overflow-y: scroll;
             position: relative;
-            padding: 1em;
+            /* padding: 1em; */
             min-height: 100%;
             text-align: center;
             flex-grow: 1;
@@ -100,30 +108,41 @@
             gap: 0.8em;
         }
         #story-header {
-            background-color: var(--bg-light);
-            border: 2px solid var(--primary-grey-dark);
-            border-radius: 1em;
+            background-color: var(--primary-white);
+            /* background-color: var(--primary-grey); */
+            border: thin solid var(--primary-grey-medium);
+            /* border-radius: 1em; */
+            filter: drop-shadow(var(--popout-shadow));
             position: sticky;
             top: 0;
-            /* margin: 0.5em auto; */
-            padding: 1em;
+            margin: 0.5em auto;
+            padding: 0.3em;
             width: 28em;
             font-size: 1.2em;
             align-items: center;
-            gap: 0.2em;
+            /* gap: 0.2em; */
+
+            /**** uncomment for wide mode ****/
+            /* border: none;
+            border-bottom: thin solid var(--primary-medium);
+            border-radius: 0;
+            margin: 0;
+            width: 100%; */
         }
 
         #player-title {
-            font-size: 1.2em;
+            /* font-size: 1.2em; */
+            font-size: 0.75em;
             text-decoration: underline;
         }
         #player-title-translation {
             color: var(--text-subtitle);
-            font-size: 0.8em;
+            font-size: 0.75em;
         }
         #player-progress-wrapper {
-            margin-top: 1em;
+            /* margin-top: 1em; */
             width: 12em;
+            gap: 0.1em;
         }
         #player-progress-bar {
             background-color: var(--primary-grey-dark);
@@ -136,18 +155,28 @@
             font-size: 0.6em;
         }
         #player-buttons {
+            margin: 0.3em 0;
             justify-content: center;
             gap: 1em;
         }
+        .player-button {
+            --w: 2em;
+            color: var(--primary-dark);
+            /* background-color: var(--primary-dark); */
+            /* border-radius: 0.2em; */
+            width: var(--w);
+            height: var(--w);
+        }
         .stub-button {
             --w: 2em;
-            background-color: var(--primary-grey-dark);
+            background-color: var(--primary-dark);
             border-radius: 0.2em;
             width: var(--w);
             height: var(--w);
         }
 
         #story-contents {
+            padding: 1em;
             align-items: center;
             gap: 0.8em;
         }
@@ -157,6 +186,9 @@
         .story-section-translation {
             /* font-size: 0.8em; */
             font-style: italic;
+        }
+        .story-current-selection {
+            background-color: var(--primary-grey-light);
         }
 
 
@@ -193,27 +225,13 @@
         <div id='story-selection' class='flex-col'>
             <!-- <h2>STORIES</h2> -->
             <div id='story-list' class='flex-col'>
-                <button class='flex-row'>
-                    <p class='story-number'>1</p><p>Eagle and Condor</p>
-                </button>
-                <button class='flex-row active-story'>
-                    <p class='story-number'>2</p><p>Kadadimcha</p>
-                </button>
-                <button class='flex-row'>
-                    <p class='story-number'>3</p><p>Redbud</p>
-                </button>
-                <button class='flex-row'>
-                    <p class='story-number'>4</p><p>Telamtelam</p>
-                </button>
-                <button class='flex-row'>
-                    <p class='story-number'>5</p><p>The Beginning of Fire</p>
-                </button>
-                <button class='flex-row'>
-                    <p class='story-number'>6</p><p>The Beginning of the World</p>
-                </button>
-                <button class='flex-row'>
-                    <p class='story-number'>7</p><p>Whirlwind Place</p>
-                </button>
+                <!-- <button class='flex-row'>
+                    <p class='story-number'>1</p>
+                    <div class='flex-col'>
+                        <p class='story-list-title'>Ṭʰoxit yow ʔuwikʼ</p>
+                        <p class='story-list-subtitle'>Eagle and Condor</p>
+                    </div>
+                </button> -->
             </div>
             <div id='more-coming-soon'>
                 <p>Several stories have been recorded but not transcribed. More coming soon...</p>
@@ -223,38 +241,49 @@
             <div id='story-header' class='flex-col'>
                 <h2 id='player-title'>Kʰatatimčʰa yow Tokʼoʔwonʼo  ʔa·xit</h2>
                 <p id='player-title-translation'>Kadadimcha and Her Pregnant Daughter</p>
-                <div id='player-progress-wrapper'>
+                <div id='player-progress-wrapper' class='flex-col'>
+                    <div id='player-buttons' class='flex-row'>
+                        <!-- SVG icons from Tabler: https://tablericons.com/ -->
+                        <button class='player-button' role='button' onclick='' aria-keyshortcuts="j" title="Jump to previous section (j)" aria-label="Jump to previous section keyboard shortcut j">
+                            <svg id='prev-section' xmlns="http://www.w3.org/2000/svg" x-bind:width="size" x-bind:height="size" viewBox="0 0 24 24" fill="currentColor" width="100%" height="100%">
+                                <path d="M20.341 4.247l-8 7a1 1 0 0 0 0 1.506l8 7c.647 .565 1.659 .106 1.659 -.753v-14c0 -.86 -1.012 -1.318 -1.659 -.753z"></path>
+                                <path d="M9.341 4.247l-8 7a1 1 0 0 0 0 1.506l8 7c.647 .565 1.659 .106 1.659 -.753v-14c0 -.86 -1.012 -1.318 -1.659 -.753z"></path>
+                            </svg>
+                        </button>
+                        <button class='player-button' role='button' onclick='' aria-keyshortcuts="k" title="Play/Pause (k)" aria-label="Play or pause story keyboard shortcut k">
+                            <svg id='play-pause' xmlns="http://www.w3.org/2000/svg" x-bind:width="size" x-bind:height="size" viewBox="0 0 24 24" fill="currentColor" width="100%" height="100%">
+                                <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z"></path>
+                            </svg>
+                        </button>
+                        <button class='player-button' role='button' onclick='' aria-keyshortcuts="l" title="Jump to next section (l)" aria-label="Jump to next section keyboard shortcut l">
+                            <svg id='next-section' xmlns="http://www.w3.org/2000/svg" x-bind:width="size" x-bind:height="size" viewBox="0 0 24 24" fill="currentColor" width="100%" height="100%">
+                                <path d="M2 5v14c0 .86 1.012 1.318 1.659 .753l8 -7a1 1 0 0 0 0 -1.506l-8 -7c-.647 -.565 -1.659 -.106 -1.659 .753z"></path>
+                                <path d="M13 5v14c0 .86 1.012 1.318 1.659 .753l8 -7a1 1 0 0 0 0 -1.506l-8 -7c-.647 -.565 -1.659 -.106 -1.659 .753z"></path>
+                            </svg>
+                        </button>
+                        <!-- <button class='stub-button'></button>
+                        <button class='stub-button'></button>
+                        <button class='stub-button'></button> -->
+                    </div>
                     <div id='player-progress-bar'></div>
                     <div class='flex-separated-row'>
                         <p id='player-currenttime'>00:00</p>
                         <p id='player-length'>03:35</p>
                     </div>
-                    <div id='player-buttons' class='flex-row'>
-                        <button class='stub-button'></button>
-                        <button class='stub-button'></button>
-                        <button class='stub-button'></button>
-                    </div>
                 </div>
             </div>
             <div id='story-contents' class='flex-col'>
-                <div>
+                <!-- <div>
                     <p class='story-section'>Hiya·mʼu wɨxnat ʔo·ma pʼaʔanʼin tɨʔɨsnaw, Kʰatatimčʰa xo·ʔoxʔoš ʔan tokʼoʔwonʼo ʔa·xit.</p>
                     <p class='story-section-translation'>Very long ago when the world was made, lived Kadadimcha and her pregnant daughter.</p>
-                </div>
-                <div>
-                    <p class='story-section'>Hute·ʔčʼa ʔan xotom maxa ʔamaʔ tʰaŋ wittʰa Kʰatatimčʰa našuš ʔan:</p>
-                    <p class='story-section-translation'>She liked to get sweet clover and Kadadimcha, her mother, told her:</p>
-                </div>
-                <div>
-                    <p class='story-section'>Xo·ʔoxi xew tuxun tʰaxnat tʰaw tuyo·ʔučʼʔamaʔ to·yatiy tukʼewnačʼhi mukešhi.</p>
-                    <p class='story-section-translation'>There is a bear that comes there who is an eater and eats pregnant women.</p>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
 </div>
 
-
+<!-- load story data -->
+<script type='text/javascript' src="stories/kadadimcha-annotated.js"></script>
 
 <script type='text/javascript'>
 
@@ -266,12 +295,90 @@
 
     //// WAVE 3 ////
 
-    // 7.5 hrs: site layout
-    // 1.0 hrs: data format, story annotation
+    // 8.5 hrs: site layout
+    // 2.0 hrs: data format, story annotation
 
 
 
-    ////
+    //// DOM Anchors ////
+
+    const storylistElem = document.getElementById('story-list');
+    const titleElem = document.getElementById('player-title');
+    const subtitleElem = document.getElementById('player-title-translation');
+    const contentElem = document.getElementById('story-contents');
+
+    let activeStory = 0;
+    const stories = [
+        story_kadadimcha,
+        {
+            titleShortL1 : `Kʰumwitaʔaʔ yow Mo·yʼukʼ`,
+	        titleShortL2 : `Thunder and Whirlwind`
+        },{
+            titleShortL1 : `Mo·yʼukʼiw`,
+	        titleShortL2 : `Whirlwind Place`
+        },{
+            titleShortL1 : `Pʰohyon`,
+	        titleShortL2 : `Hawk`
+        },{
+            titleShortL1 : `Tʰakʰaʔkʰaʔ`,
+	        titleShortL2 : `Redbud`
+        },{
+            titleShortL1 : `Ṭʰoxit yow ʔuwikʼ`,
+	        titleShortL2 : `Eagle and Condor`
+        },{
+            titleShortL1 : `Ṭʰoxtin Pučʼoŋ`,
+	        titleShortL2 : `Eagle's Son`
+        }
+    ];
+
+    function loadStoryList () {
+        let eStr = '';
+        for (let i = 0; i < stories.length; i++) {
+            const storyId = i + 1;
+            const titleShortL1 = stories[i].titleShortL1;
+            const titleShortL2 = stories[i].titleShortL2;
+            eStr += `<button class='flex-row${(i==activeStory) ? ' active-story' : ''}'>`;
+                eStr += `<p class='story-number'>${storyId}</p>`;
+                eStr += `<div class='flex-col'>`;
+                    eStr += `<p class='story-list-title'>${titleShortL2}</p>`;
+                    eStr += `<p class='story-list-subtitle'>${titleShortL1}</p>`;
+                eStr += `</div>`;
+            eStr += `</button>`;
+        }
+        // <button class='flex-row'>
+        //     <p class='story-number'>1</p>
+        //     <div class='flex-col'>
+        //         <p class='story-list-title'>Ṭʰoxit yow ʔuwikʼ</p>
+        //         <p class='story-list-subtitle'>Eagle and Condor</p>
+        //     </div>
+        // </button>
+        storylistElem.innerHTML = eStr;
+    }
+
+    function loadStory (story) {
+        // title
+        titleElem.innerHTML = story.titleL1 ?? 'Untitled';
+        subtitleElem.innerHTML = story.titleL2 ?? 'Untitled';
+        // story sections
+        let eStr = '';
+        for (let i = 0; i < story.timestampsBySentence.length; i += 3) {
+            const timestamp = story.timestampsBySentence[i];
+            const sectionL2 = story.timestampsBySentence[i+1];
+            const sectionL1 = story.timestampsBySentence[i+2];
+            eStr += `<div>`;
+                eStr += `<p class='story-section${(i==0)?' story-current-selection':''}'>${sectionL2}</p>`;
+                eStr += `<p class='story-section-translation'>${sectionL1}</p>`;
+            eStr += `</div>`;
+        }
+        // <div>
+        //     <p class='story-section'>Hiya·mʼu wɨxnat ʔo·ma pʼaʔanʼin tɨʔɨsnaw, Kʰatatimčʰa xo·ʔoxʔoš ʔan tokʼoʔwonʼo ʔa·xit.</p>
+        //     <p class='story-section-translation'>Very long ago when the world was made, lived Kadadimcha and her pregnant daughter.</p>
+        // </div>
+        contentElem.innerHTML = eStr;
+    }
+
+    loadStoryList();
+    loadStory(stories[activeStory]);
 
 
 
