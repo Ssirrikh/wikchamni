@@ -34,7 +34,8 @@
 
         #story-selection {
             background-color: var(--primary-medium);
-            border-right: thin solid var(--primary-medium);
+            background-color: var(--bg-light);
+            border-right: thin solid var(--border-light);
             width: 16em;
             height: 100%;
             flex-shrink: 0;
@@ -61,7 +62,7 @@
         }
         #story-list > button:hover {
             /* color: black; */
-            background-color: var(--primary-grey-light);
+            background-color: var(--primary-grey);
         }
         #story-list > button + button {
             /* border-top: 1px solid var(--primary-grey-dark); */
@@ -71,7 +72,12 @@
         }
         .active-story {
             /* color: black; */
+            color: white;
             background-color: var(--primary-white);
+            background-color: var(--primary-grey-dark);
+        }
+        .active-story > .story-number, .active-story > .flex-col > .story-list-subtitle {
+            color: var(--primary-grey);
         }
         .story-number {
             color: var(--text-dark);
@@ -295,7 +301,7 @@
 
     //// WAVE 3 ////
 
-    // 8.5 hrs: site layout
+    // 9.5 hrs: site layout
     // 2.0 hrs: data format, story annotation
 
 
@@ -357,8 +363,8 @@
 
     function loadStory (story) {
         // title
-        titleElem.innerHTML = story.titleL1 ?? 'Untitled';
-        subtitleElem.innerHTML = story.titleL2 ?? 'Untitled';
+        titleElem.innerHTML = story.titleL2 ?? 'Untitled';
+        subtitleElem.innerHTML = story.titleL1 ?? 'Untitled';
         // story sections
         let eStr = '';
         for (let i = 0; i < story.timestampsBySentence.length; i += 3) {
