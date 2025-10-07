@@ -9,41 +9,9 @@
     <link rel='stylesheet' href='assets/css/common.css'>
     <style>
 		:root {
-            --text-white: #ffffff;
-            --text-light: #f5f5f5;
-            --text-dark: #323440;
-            --text-subtitle: #636570;
-            --bg-white: #ffffff;
-            --bg-light: #f5f5f5;
-            --bg-highlight: #65b9ff;
-            --bg-highlight: #2f91ff;
-            --bg-medium: #3b454a;
-            --bg-dark: #1a282f;
-            --border-light-unfocused: #484f58;
-            --border-light: #e2e4e5;
-            --border-medium: #cfcfcf;
-            --warning-white: #fee;
-            --warning-light: #fcc;
-            --warning-dark: #600;
-            --warning-highlight: #f00;
-            --warning-highlight-light: #f44;
-
-            /* from github.com */
-            --border-highlight: #8c93fb;
-            --border-highlight: #d8dbff;
-            /* --bg-light: #eae9f5; */
-            --bg-dark: #070942;
-            /* --border-highlight: #fff; */
-
-            --fluid-font-size: max(2.5vh, calc(1rem + 1.0vw));
+            /*  */
 		}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Times New Roman';
-        }
         body {
             color: var(--text-dark);
             background-color: var(--bg-dark);
@@ -53,41 +21,6 @@
         select {
             padding: 0.2em 0.5em;
         }
-
-
-
-        /**** FLEXBOX UTILITY ****/
-
-        /* .flex-sep {
-            width: 0;
-            flex-grow: 1;
-        }
-        .flex-row {
-            display: flex;
-            flex-direction: row !important;
-            align-items: start;
-        }
-        .flex-col {
-            display: flex;
-            flex-direction: column !important;
-        } */
-        /* .flex-adapt { */
-            /* column on mobile, row on desktop */
-            /* display: flex;
-            flex-direction: column !important;
-            align-items: center;
-        } */
-        /* .flex-adapt-reverse { */
-            /* row on mobile, column on desktop */
-            /* display: flex;
-            flex-direction: row !important;
-            align-items: normal;
-            justify-content: center;
-        } */
-        /* .flex-centered {
-            align-items: center;
-            justify-content: center;
-        } */
 
 
 
@@ -135,6 +68,14 @@
         .input-subtitle {
             color: var(--text-subtitle);
             font-size: 0.4em;
+        }
+        .h-sep-dark {
+            border-bottom: thin solid var(--primary-grey-dark);
+            width: 100%;
+        }
+        .h-sep-light {
+            border-bottom: thin solid var(--primary-grey);
+            width: 100%;
         }
 
         /* word forms */
@@ -314,13 +255,13 @@
 
 
         /* entry editor */
-        #panel-entry-editor label, #panel-entry-editor h3 {
+        /* #panel-entry-editor label, #panel-entry-editor h3 {
             font-size: 1.2em;
-        }
+        } */
         /* #panel-entry-editor button {
             font-size: 1em;
         } */
-        #panel-entry-editor input {
+        /* #panel-entry-editor input {
             padding: 0.2em 0.5em;
         }
         #panel-entry-editor select {
@@ -335,14 +276,14 @@
         }
         #entry-catg {
             width: min(90%, 10em);
-        }
+        } */
         #entry-forms-wrapper {
             gap: 0.3em;
         }
-        .entry-data-L2 {
+        /* .entry-data-L2 {
             align-items: center;
             gap: 0.5em;
-        }
+        } */
         #entry-add-wordform, #entry-add-note {
             color: var(--text-white);
             background-color: var(--bg-highlight);
@@ -351,6 +292,8 @@
             padding: 0.3em 1em;
             width: fit-content;
             font-size: 1em;
+
+            align-self: end;
         }
         .entry-note > textarea {
             padding: 0.25em;
@@ -387,6 +330,254 @@
             border-radius: 0.25em;
 
             padding: 0.5em 1em;
+        }
+
+
+        /**** ENTRY HEADER ****/
+
+        #entry-header {
+            border: thin solid red;
+            width: 100%;
+            max-width: 40em;
+            font-size: 1em;
+            padding: 0.5em;
+            gap: 1em;
+        }
+
+        /* header left: basic info */
+        #entry-data-wrapper {
+            /* border: thin solid blue; */
+            gap: 0.2em;
+            flex-grow: 1;
+        }
+        #entry-data-wrapper > .flex-row {
+            gap: 0.5em;
+        }
+        #entry-L1, label:has(+ #entry-L1) {
+            color: var(--primary-dark);
+            width: 7em;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+        #entry-catg, label:has(+ #entry-catg) {
+            color: var(--primary-dark);
+            width: calc(1.2 * 7em);
+            font-size: 1em;
+            flex-shrink: 0;
+        }
+        #entry-L1 {
+            min-width: 12em;
+            flex-grow: 1;
+        }
+        label:has(+ #entry-L1), label:has(+ #entry-catg) {
+            text-align: right;
+        }
+
+        /* header right: image gallery */
+        #entry-gallery-button {
+            color: var(--primary-grey);
+            background-color: var(--primary-dark);
+            border-radius: 100%;
+            width: 5em;
+            height: 5em;
+            flex-shrink: 0;
+        }
+        /* #entry-gallery-wrapper {
+            gap: 0.5em;
+            flex-shrink: 0;
+        }
+        #entry-gallery-button {
+            background-color: var(--primary-dark);
+            border-radius: 100%;
+            width: 5em;
+            height: 5em;
+        }
+        #entry-add-image {
+            color: white;
+            background-color: var(--primary-highlight);
+            border-radius: 0.25em;
+            padding: 0.3em 0.5em;
+        } */
+
+
+
+        .button-action {
+            color: white;
+            background-color: var(--primary-highlight);
+            border-radius: 0.25em;
+            padding: 0.3em 1em;
+            width: fit-content;
+            /* font-size: 1em; */
+        }
+        .button-action:hover {
+            background-color: var(--primary-grey-dark);
+        }
+
+
+
+
+        .entry-form-wrapper {
+            filter: drop-shadow(var(--popout-shadow));
+        }
+        .entry-form-wrapper button {
+            font-size: 1em;
+        }
+        /* .entry-form-wrapper .button-action {
+            font-size: 1em;
+        } */
+        .entry-form-header {
+            background-color: white;
+            color: white;
+            background-color: var(--primary-grey);
+            border-radius: 0.3em 0.3em 0 0;
+            padding: 0.3em;
+            gap: 0.3em;
+        }
+        .entry-form-header input {
+            background-color: transparent;
+            border: none;
+            border-bottom: thin solid var(--primary-grey-dark);
+            padding: 0.1em 0.5em;
+            font-size: 1.2em;
+        }
+        .entry-form-header select {
+            background-color: transparent;
+            border: none;
+            border-bottom: thin solid var(--primary-grey-dark);
+            font-size: 1em;
+        }
+        .entry-form-content {
+            background-color: var(--bg-light);
+            border-radius: 0 0 0.3em 0.3em;
+            padding: 0.3em;
+            gap: 0.3em;
+        }
+
+        .entry-form-audio-gallery {
+            flex-grow: 1;
+        }
+        .entry-form-add-audio {
+            font-size: 0.8;
+            flex-shrink: 0;
+        }
+
+        .entry-form-attachments > .flex-row {
+            width: 100%;
+        }
+
+        .entry-example-labels {
+            color: var(--text-subtitle);
+            font-size: 0.8em;
+        }
+        
+        .entry-example-audio-gallery {
+            gap: 0.25em;
+        }
+
+
+
+
+
+
+
+
+        /* ////////////////////////////// */
+
+        .section-title {
+            font-size: 1.2em;
+        }
+
+        #entry-forms-legend {
+            color: black;
+            color: var(--primary-white);
+            color: var(--bg-light);
+            color: white;
+            background-color: var(--bg-offwhite);
+            background-color: var(--primary-highlight-dark);
+            background-color: var(--primary);
+            border-radius: 0.3em;
+            padding: 0.3em;
+            font-size: 1em;
+        }
+
+        .entry2-form-wrapper {
+            background-color: white;
+            border-radius: 0.3em;
+            padding: 0.3em;
+        }
+        .entry2-form-wrapper > select {
+            /* background-color: transparent; */
+            /* border: none;
+            border-bottom: thin solid var(--primary-grey-dark); */
+            width: calc(1.25 * 10em);
+            font-size: 0.8em;
+        }
+        #entry2-legend-case {
+            width: 10em;
+        }
+        .entry2-form-wrapper > input {
+            background-color: var(--bg-light);
+            border: none;
+            border-bottom: thin solid var(--border-medium);
+            padding: 0.1em 0.5em;
+            width: 16em;
+            font-size: 1em;
+        }
+        #entry2-legend-form {
+            width: 16em;
+        }
+        .entry2-form-wrapper > select + input, #entry2-legend-case + #entry2-legend-form {
+            margin-left: 0.5em;
+        }
+        #entry2-legend-options {
+            width: calc(1em + 0.3em + 0.3em);
+        }
+
+        .entry2-audio-gallery {
+            gap: 0.25em;
+        }
+        .entry2-add-audio {
+            color: var(--primary-black);
+            color: white;
+            background-color: var(--primary);
+            border: thin solid var(--primary-black);
+            border: none;
+            border-radius: 0.3em;
+            width: calc(1em + 0.3em + 0.3em);
+            height: calc(1em + 0.3em + 0.3em);
+        }
+        .entry2-no-audio {
+            color: var(--text-subtitle);
+            font-size: 0.8em;
+        }
+
+
+
+
+
+
+
+
+        .icon-headword, .icon-delete, .icon-audio {
+            background-color: var(--primary-dark);
+            border-radius: 0.25em;
+            width: calc(1em + 0.3em + 0.3em);
+            height: calc(1em + 0.3em + 0.3em);
+        }
+        .icon-plus {
+            /* background-color: var(--primary-dark); */
+            color: white;
+            background-color: var(--primary);
+            /* border: thin solid var(--primary-dark); */
+            border-radius: 0.25em;
+            width: calc(1em + 0.3em + 0.3em);
+            height: calc(1em + 0.3em + 0.3em);
+        }
+        .icon-tridot {
+            color: var(--primary-dark);
+            border-radius: 0.25em;
+            width: calc(1em + 0.3em + 0.3em);
+            height: calc(1em + 0.3em + 0.3em);
         }
 
 
@@ -505,13 +696,37 @@
     <!-- right panel: entry editor -->
     <div id='panel-entry-editor' class='flex-col'>
         <!-- L1 forms, Part of Speech -->
-        <div id='entry-data-basic' class='flex-col'>
+        <!-- <div id='entry-data-basic' class='flex-col'>
             <label for='entry-L1'>English Word(s)</label>
             <input id='entry-L1' type='text'>
             <p id='desc-entry-L1' class='subtitle-small'>Synonyms can be added using semicolons, ie "dash; run; sprint".</p>
+        </div> -->
+        <div id='entry-header' class='flex-row'>
+            <div id='entry-data-wrapper' class='flex-col'>
+                <input id='entry-L1' type='text'>
+                <p id='desc-entry-L1' class='subtitle-small'>Synonyms can be added using semicolons, ie "dash; run; sprint".</p>
+                <!-- <div class='flex-row'>
+                    <label for='entry-L1'>English Word(s)</label>
+                    
+                </div>
+                <div class='flex-row'>
+                    <label for='entry-catg'>Part of Speech</label>
+                    <select id='entry-catg'>
+                        <option value=''>-- Choose One --</option>
+                    </select>
+                </div> -->
+            </div>
+            <p class='entry-catg'>Verb</p>
+            <button id='entry-gallery-button'>Entry Images</button>
+            <!-- <div id='entry-gallery-wrapper' class='flex-col'>
+                <div id='entry-gallery-button'>
+                    <button>Manage Images</button>
+                </div>
+                <button id='entry-add-image'>Add Image</button>
+            </div> -->
         </div>
         <!-- <div class='separator-line'></div> -->
-        <div id='entry-catg-wrapper' class='flex-row'>
+        <!-- <div id='entry-catg-wrapper' class='flex-row'>
             <label for='entry-catg'>Part of Speech:</label>
             <select id='entry-catg'>
                 <option value='n'>Noun</option>
@@ -520,11 +735,219 @@
                 <option value='+'>[+ add new]</option>
             </select>
         </div>
-        <div class='separator-line'></div>
+        <div class='separator-line'></div> -->
         <!-- L2 forms -->
-        <h3>Wikchamni Forms <span class='subtitle-small'>(13)</span></h3>
+        <h3 class='section-title'>Wikchamni Wordforms <span class='subtitle-small'>(13)</span></h3>
+        <!-- <div id='entry-forms-legend' class='flex-row'>
+            <p id='entry2-legend-case'>Form/Case</p>
+            <p id='entry2-legend-form'>Wikchamni Word</p>
+            <div class='flex-sep'></div>
+            <p>Audio</p>
+            <div class='flex-sep'></div>
+            <p id='entry2-legend-options'></p>
+        </div> -->
         <div id='entry-forms-wrapper' class='flex-col'>
-            <!--  -->
+            
+
+
+
+
+            <!-- v1: sentences w/ forms -->
+
+            <div class='flex-col entry-form-wrapper'>
+                <div class='flex-row entry-form-header'>
+                    <select>
+                        <option value='-1'>-- Select Form --</option>
+                        <option value='0'>Subject</option>
+                        <option value='0'>Object</option>
+                        <option value='0'>Locative</option>
+                        <option value='0'>Possessed</option>
+                        <option value='long'>Long asf wordform name</option>
+                    </select>
+                    <div class='flex-sep'></div>
+                    <button class='icon-tridot'>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                            <path d='M 12 12 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 19 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 5 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0' />
+                        </svg>
+                    </button>
+                </div>
+                <div class='flex-col entry-form-content'>
+                    <div class='flex-row entry-form-data'>
+                        <input type='text'>
+                        <div class='flex-sep'></div>
+                        <button class='button-action'>Add Audio</button>
+                    </div>
+                    <div class='h-sep-dark'></div>
+                    <div class='flex-col entry-form-attachments'>
+                        <div class='flex-row'>
+                            <p>Ex 1</p>
+                            <div class='flex-sep'></div>
+                            <div class='flex-col'>
+                                <p class='entry-example-L2'>ʔamaʔ tʰihinʼ tʰaŋ kačʰyat tʼepʰna yowwe·ʔi ha·ʔatʰaw.</p>
+                                <p class='entry-example-L1'>Then they mix it with acorn mush or whatever the have.</p>
+                            </div>
+                            <div class='flex-sep'></div>
+                            <div class='flex-row entry-example-audio-gallery'>
+                                <div class='icon-audio'></div>
+                                <div class='icon-audio'></div>
+                                <button class='icon-plus'>+</button>
+                            </div>
+                            <div class='flex-sep'></div>
+                            <button class='icon-delete'></button>
+                        </div>
+                        <div class='flex-row'>
+                            <p>Ex 2</p>
+                            <div class='flex-sep'></div>
+                            <div class='flex-col'>
+                                <p class='entry-example-L2'>ʔamaʔ tʰihinʼ tʰaŋ kačʰyat tʼepʰna yowwe·ʔi ha·ʔatʰaw.</p>
+                                <p class='entry-example-L1'>Then they mix it with acorn mush or whatever the have.</p>
+                            </div>
+                            <div class='flex-sep'></div>
+                            <div class='flex-row entry-example-audio-gallery'>
+                                <p>No Audio</p>
+                                <button class='icon-plus'>+</button>
+                            </div>
+                            <div class='flex-sep'></div>
+                            <button class='icon-delete'></button>
+                        </div>
+                    </div>
+                    <button class='button-action'>Add Sentence</button>
+                </div>
+            </div>
+            <div class='flex-col entry-form-wrapper'>
+                <div class='flex-row entry-form-header'>
+                    <select>
+                        <option value='-1'>-- Select Form --</option>
+                        <option value='0'>Subject</option>
+                        <option value='0'>Object</option>
+                        <option value='0'>Locative</option>
+                        <option value='0'>Possessed</option>
+                        <option value='long'>Long asf wordform name</option>
+                    </select>
+                    <div class='flex-sep'></div>
+                    <button class='icon-tridot'></button>
+                </div>
+                <div class='flex-col entry-form-content'>
+                    <div class='flex-row entry-form-data'>
+                        <input type='text'>
+                        <div class='flex-sep'></div>
+                        <button class='button-action'>Add Audio</button>
+                    </div>
+                    <div class='h-sep-dark'></div>
+                    <div class='flex-col entry-form-attachments'>
+                        <div class='flex-row'>
+                            <p>Ex 1</p>
+                            <div class='flex-sep'></div>
+                            <div class='flex-col'>
+                                <p class='entry-example-L2'>ʔamaʔ tʰihinʼ tʰaŋ kačʰyat tʼepʰna yowwe·ʔi ha·ʔatʰaw.</p>
+                                <p class='entry-example-L1'>Then they mix it with acorn mush or whatever the have.</p>
+                            </div>
+                            <div class='flex-sep'></div>
+                            <div class='flex-row entry-example-audio-gallery'>
+                                <div class='icon-audio'></div>
+                                <div class='icon-audio'></div>
+                                <button class='icon-plus'>+</button>
+                            </div>
+                            <div class='flex-sep'></div>
+                            <button class='icon-delete'></button>
+                        </div>
+                        <div class='flex-row'>
+                            <p>Ex 2</p>
+                            <div class='flex-sep'></div>
+                            <div class='flex-col'>
+                                <p class='entry-example-L2'>ʔamaʔ tʰihinʼ tʰaŋ kačʰyat tʼepʰna yowwe·ʔi ha·ʔatʰaw.</p>
+                                <p class='entry-example-L1'>Then they mix it with acorn mush or whatever the have.</p>
+                            </div>
+                            <div class='flex-sep'></div>
+                            <div class='flex-row entry-example-audio-gallery'>
+                                <p>No Audio</p>
+                                <button class='icon-plus'>+</button>
+                            </div>
+                            <div class='flex-sep'></div>
+                            <button class='icon-delete'></button>
+                        </div>
+                    </div>
+                    <button class='button-action'>Add Sentence</button>
+                </div>
+            </div>
+
+
+
+            <!-- v2: form section, then sentence section -->
+
+            <!-- <div class='flex-row entry2-form-wrapper'>
+                <select>
+                    <option value='-1'>-- Select Form --</option>
+                    <option value='0'>Subject</option>
+                    <option value='0'>Object</option>
+                    <option value='0'>Locative</option>
+                    <option value='0'>Possessed</option>
+                    <option value='long'>Long asf wordform name</option>
+                </select>
+                <input type='text'>
+                <div class='flex-sep'></div>
+                <div class='flex-row entry2-audio-gallery'>
+                    <button class='icon-audio'></button>
+                    <button class='entry2-add-audio'>+</button>
+                </div>
+                <div class='flex-sep'></div>
+                <button class='icon-tridot'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <path d='M 12 12 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 19 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 5 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0' />
+                    </svg>
+                </button>
+            </div>
+            <div class='flex-row entry2-form-wrapper'>
+                <select>
+                    <option value='-1'>-- Select Form --</option>
+                    <option value='0'>Subject</option>
+                    <option value='0'>Object</option>
+                    <option value='0'>Locative</option>
+                    <option value='0'>Possessed</option>
+                    <option value='long'>Long asf wordform name</option>
+                </select>
+                <input type='text'>
+                <div class='flex-sep'></div>
+                <div class='flex-row entry2-audio-gallery'>
+                    <p class='entry2-no-audio'>No Audio</p>
+                    <button class='entry2-add-audio'>+</button>
+                </div>
+                <div class='flex-sep'></div>
+                <button class='icon-tridot'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <path d='M 12 12 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 19 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 5 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0' />
+                    </svg>
+                </button>
+            </div>
+            <div class='flex-row entry2-form-wrapper'>
+                <select>
+                    <option value='-1'>-- Select Form --</option>
+                    <option value='0'>Subject</option>
+                    <option value='0'>Object</option>
+                    <option value='0'>Locative</option>
+                    <option value='0'>Possessed</option>
+                    <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
+                </select>
+                <input type='text'>
+                <div class='flex-sep'></div>
+                <div class='flex-row entry2-audio-gallery'>
+                    <button class='icon-audio'></button>
+                    <button class='icon-audio'></button>
+                    <button class='entry2-add-audio'>+</button>
+                </div>
+                <div class='flex-sep'></div>
+                <button class='icon-tridot'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <path d='M 12 12 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 19 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 5 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0' />
+                    </svg>
+                </button>
+            </div> -->
+
+
+
+
+
+
         </div>
         <button id='entry-add-wordform' onclick='stub_addForm()'>+ New Form</button>
         <div class='separator-line'></div>
@@ -573,12 +996,12 @@
 
     //// WAVE 3 ////
 
-    // 7.0 hrs: design research, color palette, layout
+    // 7.5 hrs: design research, color palette, layout
     // 0.5 hrs: custom alphabetization research
     // 2.0 hrs: add Language object and JSON data format, misc bugfixes
     // 1.5 hrs: data format and editor design
     // 4.5 hrs: lexicon design
-    // 8.5 hrs: entry editor design
+    // 18.0 hrs: entry editor design
     // 4.0 hrs: JSON data load/save
 
 
@@ -833,8 +1256,8 @@
 
     stub_loadL1(stub_activeEntry);
     stub_loadCatg(stub_activeEntry);
-    stub_loadForms(stub_activeEntry);
-    stub_addForm();
+    // stub_loadForms(stub_activeEntry);
+    // stub_addForm();
     // stub_addForm();
     // stub_addForm();
 
