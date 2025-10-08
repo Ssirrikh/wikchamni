@@ -158,11 +158,12 @@
         #panel-entry-editor {
             /* border: 1px solid yellow; */
             background-color: var(--bg-light);
+            background-color: var(--bg-offwhite);
             border-left: 1px solid var(--border-medium);
-            padding: 0.5em;
+            /* padding: 0.5em; */
             overflow-y: scroll;
             font-size: 0.6em;
-            gap: 0.5em;
+            /* gap: 0.5em; */
             flex-grow: 1;
         }
 
@@ -284,9 +285,10 @@
             align-items: center;
             gap: 0.5em;
         } */
-        #entry-add-wordform, #entry-add-note {
+        #entry-add-wordform, #entry-add-sentence, #entry-add-note {
             color: var(--text-white);
             background-color: var(--bg-highlight);
+            background-color: var(--primary);
             border-radius: 0.25em;
 
             padding: 0.3em 1em;
@@ -294,6 +296,9 @@
             font-size: 1em;
 
             align-self: end;
+        }
+        #entry-add-wordform:hover, #entry-add-sentence:hover, #entry-add-note:hover {
+            background-color: var(--primary-selection);
         }
         .entry-note > textarea {
             padding: 0.25em;
@@ -336,68 +341,64 @@
         /**** ENTRY HEADER ****/
 
         #entry-header {
-            border: thin solid red;
-            width: 100%;
-            max-width: 40em;
-            font-size: 1em;
-            padding: 0.5em;
-            gap: 1em;
-        }
-
-        /* header left: basic info */
-        #entry-data-wrapper {
-            /* border: thin solid blue; */
-            gap: 0.2em;
-            flex-grow: 1;
-        }
-        #entry-data-wrapper > .flex-row {
-            gap: 0.5em;
-        }
-        #entry-L1, label:has(+ #entry-L1) {
-            color: var(--primary-dark);
-            width: 7em;
-            font-size: 1.2em;
-            flex-shrink: 0;
-        }
-        #entry-catg, label:has(+ #entry-catg) {
-            color: var(--primary-dark);
-            width: calc(1.2 * 7em);
-            font-size: 1em;
-            flex-shrink: 0;
-        }
-        #entry-L1 {
-            min-width: 12em;
-            flex-grow: 1;
-        }
-        label:has(+ #entry-L1), label:has(+ #entry-catg) {
-            text-align: right;
-        }
-
-        /* header right: image gallery */
-        #entry-gallery-button {
-            color: var(--primary-grey);
-            background-color: var(--primary-dark);
-            border-radius: 100%;
-            width: 5em;
-            height: 5em;
-            flex-shrink: 0;
-        }
-        /* #entry-gallery-wrapper {
-            gap: 0.5em;
-            flex-shrink: 0;
-        }
-        #entry-gallery-button {
-            background-color: var(--primary-dark);
-            border-radius: 100%;
-            width: 5em;
-            height: 5em;
-        }
-        #entry-add-image {
+            background-color: white;
             color: white;
-            background-color: var(--primary-highlight);
-            border-radius: 0.25em;
+            background-color: var(--primary-selection);
+            border-radius: 1em;
+            filter: drop-shadow(0 0 4px #00000038);
+            
+            /* width: 100%; */
+            /* max-width: 40em; */
+            font-size: 1em;
+            margin: 1em;
+            padding: 1em;
+            gap: 1em;
+
+            /* uncomment to enable sticky mode */
+            /* reqs explicit z-index to prevent sibling elements' shadows from rendering on top */
+            /* border-bottom: thin solid var(--border-medium);
+            border-radius: 0;
+            z-index: var(--layer-front);
+            position: sticky;
+            top: 0;
+            left: 0;
+            margin: 0; */
+        }
+
+        #entry-L1 {
+            color: black;
+            background-color: var(--bg-light);
+            border: none;
+            border-bottom: thin solid var(--text-dark);
+            border-radius: 4px;
+            padding: 0.25em 0.5em;
+            font-size: 1.5em;
+        }
+        #entry-L1-desc {
+            color: var(--primary-grey);
+            font-size: 0.5em;
+        }
+        #entry-catg {
+            color: var(--primary-selection);
+            background-color: white;
+            border-radius: 1em;
             padding: 0.3em 0.5em;
-        } */
+            font-size: 1.25em;
+        }
+        #entry-image {
+            color: white;
+            background-color: var(--primary);
+            border: thin solid white;
+            border-radius: 0.5em;
+            width: 5em;
+            height: 5em;
+        }
+
+        
+
+
+
+
 
 
 
@@ -483,18 +484,53 @@
 
         /* ////////////////////////////// */
 
-        .section-title {
-            font-size: 1.2em;
+        /* general */
+
+        #entry-content {
+            filter: drop-shadow(0 0 4px #00000038);
+            padding: 1em 4em;
+            gap: 0.5em;
         }
+
+        .section-title {
+            font-size: 1.5em;
+        }
+
+        .entry-audio-gallery {
+            gap: 0.3em;
+            justify-content: center;
+            flex-grow: 1;
+        }
+        .entry2-audio-gallery {
+            gap: 0.25em;
+        }
+        .icon-plus {
+            color: var(--primary-black);
+            color: white;
+            background-color: var(--primary);
+            border: thin solid var(--primary-black);
+            border: none;
+            border-radius: 0.3em;
+            width: calc(1em + 0.3em + 0.3em);
+            height: calc(1em + 0.3em + 0.3em);
+        }
+        .entry2-no-audio {
+            color: var(--text-subtitle);
+            font-size: 0.8em;
+        }
+
+        /* wordforms section */
 
         #entry-forms-legend {
             color: black;
             color: var(--primary-white);
             color: var(--bg-light);
             color: white;
+            /* color: var(--text-subtitle); */
             background-color: var(--bg-offwhite);
             background-color: var(--primary-highlight-dark);
-            background-color: var(--primary);
+            background-color: var(--primary-selection);
+            /* background-color: var(--bg-offwhite); */
             border-radius: 0.3em;
             padding: 0.3em;
             font-size: 1em;
@@ -502,13 +538,11 @@
 
         .entry2-form-wrapper {
             background-color: white;
+            /* filter: drop-shadow(0 0 4px #00000038); */
             border-radius: 0.3em;
             padding: 0.3em;
         }
         .entry2-form-wrapper > select {
-            /* background-color: transparent; */
-            /* border: none;
-            border-bottom: thin solid var(--primary-grey-dark); */
             width: calc(1.25 * 10em);
             font-size: 0.8em;
         }
@@ -533,24 +567,60 @@
             width: calc(1em + 0.3em + 0.3em);
         }
 
-        .entry2-audio-gallery {
+        /* sentences section */
+
+        .entry-sentence-wrapper {
+            background-color: white;
+            border-radius: 0.3em;
+            padding: 0.3em;
+            gap: 0.3em;
+        }
+        .entry2-sentence-wrapper {
+            background-color: white;
+            border-radius: 0.3em;
+            padding: 0.3em;
             gap: 0.25em;
         }
-        .entry2-add-audio {
-            color: var(--primary-black);
-            color: white;
-            background-color: var(--primary);
-            border: thin solid var(--primary-black);
-            border: none;
-            border-radius: 0.3em;
-            width: calc(1em + 0.3em + 0.3em);
-            height: calc(1em + 0.3em + 0.3em);
-        }
-        .entry2-no-audio {
+
+        .entry2-sentence-wrapper label {
             color: var(--text-subtitle);
             font-size: 0.8em;
+            width: 3em;
+            text-align: center;
+        }
+        
+        .entry-sentence-wrapper > select {
+            width: calc(1.25 * 10em);
+            font-size: 0.8em;
+        }
+        .entry2-sentence-wrapper select {
+            width: calc(1.25 * 10em);
+            font-size: 0.8em;
+        }
+        .entry-sentence-L1, .entry-sentence-L2 {
+            background-color: var(--bg-light);
+            border: none;
+            border-bottom: thin solid var(--border-medium);
+            padding: 0.1em 0.5em;
+            width: 16em;
+        }
+        .entry-sentence-L2 + .entry-sentence-L1 {
+            margin-top: 0.25em;
         }
 
+        .entry2-sentence-L1, .entry2-sentence-L2 {
+            background-color: var(--bg-light);
+            border: none;
+            border-bottom: thin solid var(--border-medium);
+            border-radius: 4px;
+            padding: 0.1em 0.5em;
+            /* margin: 0 2em; */
+            /* margin-left: 4em; */
+            /* width: 16em; */
+            flex-grow: 1;
+        }
+
+        
 
 
 
@@ -558,26 +628,56 @@
 
 
 
-        .icon-headword, .icon-delete, .icon-audio {
+
+        .icon-headword, .icon-delete {
             background-color: var(--primary-dark);
             border-radius: 0.25em;
             width: calc(1em + 0.3em + 0.3em);
             height: calc(1em + 0.3em + 0.3em);
         }
+        .icon-audio {
+            color: var(--primary-dark);
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M 6 15 h -2 a 1 1 0 0 1 -1 -1 v -4 a 1 1 0 0 1 1 -1 h 2 l 3.5 -4.5 a 0.8 0.8 0 0 1 1.5 0.5 v 14 a 0.8 0.8 0 0 1 -1.5 0.5 l -3.5 -4.5 Z M 15 8 a 5 5 0 0 1 0 8 L 14.1 14.8 a 3.5 3.5 0 0 0 0 -5.6 Z M 17.7 5 a 9 9 0 0 1 0 14 L 16.75 17.83 a 8 8 0 0 0 0 -11.67 Z" /></svg>');
+            /* <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <path d='M 6 15 h -2 a 1 1 0 0 1 -1 -1 v -4 a 1 1 0 0 1 1 -1 h 2 l 3.5 -4.5 a 0.8 0.8 0 0 1 1.5 0.5 v 14 a 0.8 0.8 0 0 1 -1.5 0.5 l -3.5 -4.5 Z M 15 8 a 5 5 0 0 1 0 8 L 14.1 14.8 a 3.5 3.5 0 0 0 0 -5.6 Z M 17.7 5 a 9 9 0 0 1 0 14 L 16.75 17.83 a 8 8 0 0 0 0 -11.67 Z' />
+            </svg> */
+            border-radius: 0.25em;
+            width: calc(1em + 0.3em + 0.3em);
+            height: calc(1em + 0.3em + 0.3em);
+        }
+        .icon-audio:hover {
+            background-color: var(--bg-light);
+        }
         .icon-plus {
             /* background-color: var(--primary-dark); */
             color: white;
             background-color: var(--primary);
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M 12 18 m -1 0 a 1 1 0 1 0 2 0 v -5 h 5 a 1 1 0 1 0 0 -2 h -5 v -5 a 1 1 0 1 0 -2 0 v 5 h -5 a 1 1 0 1 0 0 2 h 5 z" /></svg>');
+            
+            /* can't use fill="currentColor" since svg is technically outside DOM */
+            /* either manually set fill color, or use mask instead of background-image */
+
             /* border: thin solid var(--primary-dark); */
             border-radius: 0.25em;
             width: calc(1em + 0.3em + 0.3em);
             height: calc(1em + 0.3em + 0.3em);
         }
+        .icon-plus:hover {
+            background-color: var(--primary-selection);
+        }
         .icon-tridot {
             color: var(--primary-dark);
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M 12 12 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 19 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 5 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0" /></svg>');
+            /* <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <path d='M 12 12 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 19 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 5 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0' />
+            </svg> */
+            
             border-radius: 0.25em;
             width: calc(1em + 0.3em + 0.3em);
             height: calc(1em + 0.3em + 0.3em);
+        }
+        .icon-tridot:hover {
+            background-color: var(--bg-light);
         }
 
 
@@ -695,67 +795,34 @@
 
     <!-- right panel: entry editor -->
     <div id='panel-entry-editor' class='flex-col'>
-        <!-- L1 forms, Part of Speech -->
-        <!-- <div id='entry-data-basic' class='flex-col'>
-            <label for='entry-L1'>English Word(s)</label>
-            <input id='entry-L1' type='text'>
-            <p id='desc-entry-L1' class='subtitle-small'>Synonyms can be added using semicolons, ie "dash; run; sprint".</p>
-        </div> -->
+
+        <!-- HEADER (L1, CATG, IMAGES) -->
+
         <div id='entry-header' class='flex-row'>
-            <div id='entry-data-wrapper' class='flex-col'>
-                <input id='entry-L1' type='text'>
-                <p id='desc-entry-L1' class='subtitle-small'>Synonyms can be added using semicolons, ie "dash; run; sprint".</p>
-                <!-- <div class='flex-row'>
-                    <label for='entry-L1'>English Word(s)</label>
-                    
-                </div>
-                <div class='flex-row'>
-                    <label for='entry-catg'>Part of Speech</label>
-                    <select id='entry-catg'>
-                        <option value=''>-- Choose One --</option>
-                    </select>
-                </div> -->
+            <label>English Word(s)</label>
+            <input id='entry-L1' type='text'>
+            <div class='flex-row flex-fill'>
+                <p id='entry-catg'>Verb</p>
             </div>
-            <p class='entry-catg'>Verb</p>
-            <button id='entry-gallery-button'>Entry Images</button>
-            <!-- <div id='entry-gallery-wrapper' class='flex-col'>
-                <div id='entry-gallery-button'>
-                    <button>Manage Images</button>
-                </div>
-                <button id='entry-add-image'>Add Image</button>
-            </div> -->
+            <button id='entry-image'>No Image</button>
         </div>
-        <!-- <div class='separator-line'></div> -->
-        <!-- <div id='entry-catg-wrapper' class='flex-row'>
-            <label for='entry-catg'>Part of Speech:</label>
-            <select id='entry-catg'>
-                <option value='n'>Noun</option>
-                <option value='v'>Verb</option>
-                <option value='adj'>Adjective</option>
-                <option value='+'>[+ add new]</option>
-            </select>
-        </div>
-        <div class='separator-line'></div> -->
-        <!-- L2 forms -->
-        <h3 class='section-title'>Wikchamni Wordforms <span class='subtitle-small'>(13)</span></h3>
-        <!-- <div id='entry-forms-legend' class='flex-row'>
-            <p id='entry2-legend-case'>Form/Case</p>
-            <p id='entry2-legend-form'>Wikchamni Word</p>
-            <div class='flex-sep'></div>
-            <p>Audio</p>
-            <div class='flex-sep'></div>
-            <p id='entry2-legend-options'></p>
-        </div> -->
-        <div id='entry-forms-wrapper' class='flex-col'>
-            
 
+        <div id='entry-content' class='flex-col'>
 
+            <!-- WORDFORMS -->
 
-
-            <!-- v1: sentences w/ forms -->
-
-            <div class='flex-col entry-form-wrapper'>
-                <div class='flex-row entry-form-header'>
+            <h3 class='section-title'>Wordforms <span class='subtitle-small'>(13)</span></h3>
+            <div id='entry-forms-legend' class='flex-row'>
+                <p id='entry2-legend-case'>Form/Case</p>
+                <p id='entry2-legend-form'>Wikchamni Word</p>
+                <div class='flex-sep'></div>
+                <p>Audio</p>
+                <div class='flex-sep'></div>
+                <p id='entry2-legend-options'></p>
+            </div>
+            <div id='entry-forms-wrapper' class='flex-col'>
+                
+                <div class='flex-row entry2-form-wrapper'>
                     <select>
                         <option value='-1'>-- Select Form --</option>
                         <option value='0'>Subject</option>
@@ -764,222 +831,243 @@
                         <option value='0'>Possessed</option>
                         <option value='long'>Long asf wordform name</option>
                     </select>
+                    <input type='text'>
                     <div class='flex-sep'></div>
-                    <button class='icon-tridot'>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                            <path d='M 12 12 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 19 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 5 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0' />
-                        </svg>
-                    </button>
-                </div>
-                <div class='flex-col entry-form-content'>
-                    <div class='flex-row entry-form-data'>
-                        <input type='text'>
-                        <div class='flex-sep'></div>
-                        <button class='button-action'>Add Audio</button>
+                    <div class='flex-row entry2-audio-gallery'>
+                        <button class='icon-audio'></button>
+                        <button class='icon-plus'></button>
                     </div>
-                    <div class='h-sep-dark'></div>
-                    <div class='flex-col entry-form-attachments'>
-                        <div class='flex-row'>
-                            <p>Ex 1</p>
-                            <div class='flex-sep'></div>
-                            <div class='flex-col'>
-                                <p class='entry-example-L2'>ʔamaʔ tʰihinʼ tʰaŋ kačʰyat tʼepʰna yowwe·ʔi ha·ʔatʰaw.</p>
-                                <p class='entry-example-L1'>Then they mix it with acorn mush or whatever the have.</p>
-                            </div>
-                            <div class='flex-sep'></div>
-                            <div class='flex-row entry-example-audio-gallery'>
-                                <div class='icon-audio'></div>
-                                <div class='icon-audio'></div>
-                                <button class='icon-plus'>+</button>
-                            </div>
-                            <div class='flex-sep'></div>
-                            <button class='icon-delete'></button>
-                        </div>
-                        <div class='flex-row'>
-                            <p>Ex 2</p>
-                            <div class='flex-sep'></div>
-                            <div class='flex-col'>
-                                <p class='entry-example-L2'>ʔamaʔ tʰihinʼ tʰaŋ kačʰyat tʼepʰna yowwe·ʔi ha·ʔatʰaw.</p>
-                                <p class='entry-example-L1'>Then they mix it with acorn mush or whatever the have.</p>
-                            </div>
-                            <div class='flex-sep'></div>
-                            <div class='flex-row entry-example-audio-gallery'>
-                                <p>No Audio</p>
-                                <button class='icon-plus'>+</button>
-                            </div>
-                            <div class='flex-sep'></div>
-                            <button class='icon-delete'></button>
-                        </div>
-                    </div>
-                    <button class='button-action'>Add Sentence</button>
-                </div>
-            </div>
-            <div class='flex-col entry-form-wrapper'>
-                <div class='flex-row entry-form-header'>
-                    <select>
-                        <option value='-1'>-- Select Form --</option>
-                        <option value='0'>Subject</option>
-                        <option value='0'>Object</option>
-                        <option value='0'>Locative</option>
-                        <option value='0'>Possessed</option>
-                        <option value='long'>Long asf wordform name</option>
-                    </select>
                     <div class='flex-sep'></div>
                     <button class='icon-tridot'></button>
                 </div>
-                <div class='flex-col entry-form-content'>
-                    <div class='flex-row entry-form-data'>
-                        <input type='text'>
-                        <div class='flex-sep'></div>
-                        <button class='button-action'>Add Audio</button>
-                    </div>
-                    <div class='h-sep-dark'></div>
-                    <div class='flex-col entry-form-attachments'>
-                        <div class='flex-row'>
-                            <p>Ex 1</p>
-                            <div class='flex-sep'></div>
-                            <div class='flex-col'>
-                                <p class='entry-example-L2'>ʔamaʔ tʰihinʼ tʰaŋ kačʰyat tʼepʰna yowwe·ʔi ha·ʔatʰaw.</p>
-                                <p class='entry-example-L1'>Then they mix it with acorn mush or whatever the have.</p>
-                            </div>
-                            <div class='flex-sep'></div>
-                            <div class='flex-row entry-example-audio-gallery'>
-                                <div class='icon-audio'></div>
-                                <div class='icon-audio'></div>
-                                <button class='icon-plus'>+</button>
-                            </div>
-                            <div class='flex-sep'></div>
-                            <button class='icon-delete'></button>
-                        </div>
-                        <div class='flex-row'>
-                            <p>Ex 2</p>
-                            <div class='flex-sep'></div>
-                            <div class='flex-col'>
-                                <p class='entry-example-L2'>ʔamaʔ tʰihinʼ tʰaŋ kačʰyat tʼepʰna yowwe·ʔi ha·ʔatʰaw.</p>
-                                <p class='entry-example-L1'>Then they mix it with acorn mush or whatever the have.</p>
-                            </div>
-                            <div class='flex-sep'></div>
-                            <div class='flex-row entry-example-audio-gallery'>
-                                <p>No Audio</p>
-                                <button class='icon-plus'>+</button>
-                            </div>
-                            <div class='flex-sep'></div>
-                            <button class='icon-delete'></button>
-                        </div>
-                    </div>
-                    <button class='button-action'>Add Sentence</button>
-                </div>
-            </div>
-
-
-
-            <!-- v2: form section, then sentence section -->
-
-            <!-- <div class='flex-row entry2-form-wrapper'>
-                <select>
-                    <option value='-1'>-- Select Form --</option>
-                    <option value='0'>Subject</option>
-                    <option value='0'>Object</option>
-                    <option value='0'>Locative</option>
-                    <option value='0'>Possessed</option>
-                    <option value='long'>Long asf wordform name</option>
-                </select>
-                <input type='text'>
-                <div class='flex-sep'></div>
-                <div class='flex-row entry2-audio-gallery'>
-                    <button class='icon-audio'></button>
-                    <button class='entry2-add-audio'>+</button>
-                </div>
-                <div class='flex-sep'></div>
-                <button class='icon-tridot'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                        <path d='M 12 12 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 19 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 5 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0' />
-                    </svg>
-                </button>
-            </div>
-            <div class='flex-row entry2-form-wrapper'>
-                <select>
-                    <option value='-1'>-- Select Form --</option>
-                    <option value='0'>Subject</option>
-                    <option value='0'>Object</option>
-                    <option value='0'>Locative</option>
-                    <option value='0'>Possessed</option>
-                    <option value='long'>Long asf wordform name</option>
-                </select>
-                <input type='text'>
-                <div class='flex-sep'></div>
-                <div class='flex-row entry2-audio-gallery'>
-                    <p class='entry2-no-audio'>No Audio</p>
-                    <button class='entry2-add-audio'>+</button>
-                </div>
-                <div class='flex-sep'></div>
-                <button class='icon-tridot'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                        <path d='M 12 12 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 19 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 5 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0' />
-                    </svg>
-                </button>
-            </div>
-            <div class='flex-row entry2-form-wrapper'>
-                <select>
-                    <option value='-1'>-- Select Form --</option>
-                    <option value='0'>Subject</option>
-                    <option value='0'>Object</option>
-                    <option value='0'>Locative</option>
-                    <option value='0'>Possessed</option>
-                    <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
-                </select>
-                <input type='text'>
-                <div class='flex-sep'></div>
-                <div class='flex-row entry2-audio-gallery'>
-                    <button class='icon-audio'></button>
-                    <button class='icon-audio'></button>
-                    <button class='entry2-add-audio'>+</button>
-                </div>
-                <div class='flex-sep'></div>
-                <button class='icon-tridot'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                        <path d='M 12 12 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 19 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0 M 12 5 m -2 0 a 2 2 0 1 0 4 0 a 2 2 0 1 0 -4 0' />
-                    </svg>
-                </button>
-            </div> -->
-
-
-
-
-
-
-        </div>
-        <button id='entry-add-wordform' onclick='stub_addForm()'>+ New Form</button>
-        <div class='separator-line'></div>
-        <!-- Entry Notes -->
-        <h3>Notes</h3>
-        <div id='entry-notes-wrapper' class='flex-col'>
-            <div class='flex-col entry-note'>
-                <p>Note #1</p>
-                <textarea rows='3'>Related language Chukchansi tʰixtʰinitʰ 'sick'</textarea>
-            </div>
-        </div>
-        <button id='entry-add-note' onclick=''>+ Add Note</button>
-        <div class='separator-line'></div>
-        <!-- The Danger Zone -->
-        <div id='entry-danger-zone-wrapper' class='flex-col'>
-            <button id='danger-zone-header' class='flex-col'>
-                <h3>The Danger Zone</h3>
-                <div class='arrow-down'></div>
-            </button>
-            <div id='entry-danger-zone' class='flex-col'>
-                <div id='entry-delete-wrapper' class='flex-row'>
-                    <button id='entry-delete'>Delete Entry</button>
-                    <p class='subtitle-warning-small'>This will delete the current entry PERMANENTLY. This action cannot be undone.</p>
-                </div>
-                <!-- <div class='flex-col'>
-                    <h4>Raw Data Entry</h4>
+                <div class='flex-row entry2-form-wrapper'>
+                    <select>
+                        <option value='-1'>-- Select Form --</option>
+                        <option value='0'>Subject</option>
+                        <option value='0'>Object</option>
+                        <option value='0'>Locative</option>
+                        <option value='0'>Possessed</option>
+                        <option value='long'>Long asf wordform name</option>
+                    </select>
                     <input type='text'>
+                    <div class='flex-sep'></div>
+                    <div class='flex-row entry2-audio-gallery'>
+                        <p class='entry2-no-audio'>No Audio</p>
+                        <button class='icon-plus'></button>
+                    </div>
+                    <div class='flex-sep'></div>
+                    <button class='icon-tridot'></button>
+                </div>
+                <div class='flex-row entry2-form-wrapper'>
+                    <select>
+                        <option value='-1'>-- Select Form --</option>
+                        <option value='0'>Subject</option>
+                        <option value='0'>Object</option>
+                        <option value='0'>Locative</option>
+                        <option value='0'>Possessed</option>
+                        <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
+                    </select>
+                    <input type='text'>
+                    <div class='flex-sep'></div>
+                    <div class='flex-row entry2-audio-gallery'>
+                        <button class='icon-audio'></button>
+                        <button class='icon-audio'></button>
+                        <button class='icon-plus'></button>
+                    </div>
+                    <div class='flex-sep'></div>
+                    <button class='icon-tridot'></button>
+                </div>
+
+            </div>
+            <button id='entry-add-wordform' onclick='stub_addForm()'>Add New Wordform</button>
+
+            <!-- SENTENCES -->
+
+            <h3 class='section-title'>Sentences <span class='subtitle-small'>(5)</span></h3>
+            <div id='entry-forms-legend' class='flex-row'>
+                <p id='entry2-legend-case'>Form/Case</p>
+                <!-- <p id='entry2-legend-form'>Sentences</p> -->
+                <div class='flex-sep'></div>
+                <p>Audio</p>
+                <div class='flex-sep'></div>
+                <p id='entry2-legend-options'></p>
+            </div>
+            <div id='entry-forms-wrapper' class='flex-col'>
+
+                <!-- <div class='flex-row entry-sentence-wrapper'>
+                    <select>
+                        <option value='-1'>-- Select Form --</option>
+                        <option value='0'>Subject</option>
+                        <option value='0'>Object</option>
+                        <option value='0'>Locative</option>
+                        <option value='0'>Possessed</option>
+                        <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
+                    </select>
+                    <div class='flex-col'>
+                        <input class='entry-sentence-L2' type='text' placeholder='Wikchamni'>
+                        <input class='entry-sentence-L1' type='text' placeholder='English'>
+                    </div>
+                    <div class='flex-row entry-audio-gallery'>
+                        <button class='icon-audio'></button>
+                        <button class='icon-audio'></button>
+                        <button class='icon-plus'></button>
+                    </div>
+                    <button class='icon-tridot'></button>
+                </div>
+                <div class='flex-row entry-sentence-wrapper'>
+                    <select>
+                        <option value='-1'>-- Select Form --</option>
+                        <option value='0'>Subject</option>
+                        <option value='0'>Object</option>
+                        <option value='0'>Locative</option>
+                        <option value='0'>Possessed</option>
+                        <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
+                    </select>
+                    <div class='flex-col'>
+                        <input class='entry-sentence-L2' type='text' placeholder='Wikchamni'>
+                        <input class='entry-sentence-L1' type='text' placeholder='English'>
+                    </div>
+                    <div class='flex-row entry-audio-gallery'>
+                        <button class='icon-audio'></button>
+                        <button class='icon-audio'></button>
+                        <button class='icon-plus'></button>
+                    </div>
+                    <button class='icon-tridot'></button>
                 </div> -->
+
+                <!-- <div class='flex-col entry2-sentence-wrapper'>
+                    <div class='flex-row'>
+                        <select>
+                            <option value='-1'>-- Select Form --</option>
+                            <option value='0'>Subject</option>
+                            <option value='0'>Object</option>
+                            <option value='0'>Locative</option>
+                            <option value='0'>Possessed</option>
+                            <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
+                        </select>
+                        <div class='flex-row entry-audio-gallery'>
+                            <p class='entry2-no-audio'>No Audio</p>
+                            <button class='icon-plus'></button>
+                        </div>
+                        <button class='icon-tridot'></button>
+                    </div>
+                    <input class='entry2-sentence-L2' type='text' placeholder='Wikchamni'>
+                    <input class='entry2-sentence-L1' type='text' placeholder='English'>
+                </div>
+                <div class='flex-col entry2-sentence-wrapper'>
+                    <div class='flex-row'>
+                        <select>
+                            <option value='-1'>-- Select Form --</option>
+                            <option value='0'>Subject</option>
+                            <option value='0'>Object</option>
+                            <option value='0'>Locative</option>
+                            <option value='0'>Possessed</option>
+                            <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
+                        </select>
+                        <div class='flex-row entry-audio-gallery'>
+                            <button class='icon-audio'></button>
+                            <button class='icon-plus'></button>
+                        </div>
+                        <button class='icon-tridot'></button>
+                    </div>
+                    <input class='entry2-sentence-L2' type='text' placeholder='Wikchamni'>
+                    <input class='entry2-sentence-L1' type='text' placeholder='English'>
+                </div> -->
+
+                <div class='flex-col entry2-sentence-wrapper'>
+                    <div class='flex-row'>
+                        <select>
+                            <option value='-1'>-- Select Form --</option>
+                            <option value='0'>Subject</option>
+                            <option value='0'>Object</option>
+                            <option value='0'>Locative</option>
+                            <option value='0'>Possessed</option>
+                            <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
+                        </select>
+                        <div class='flex-row entry-audio-gallery'>
+                            <button class='icon-audio'></button>
+                            <button class='icon-plus'></button>
+                        </div>
+                        <button class='icon-tridot'></button>
+                    </div>
+                    <div class='flex-row'>
+                        <label>Wik</label>
+                        <input class='entry2-sentence-L2' type='text'>
+                    </div>
+                    <div class='flex-row'>
+                        <label>Eng</label>
+                        <input class='entry2-sentence-L1' type='text'>
+                    </div>
+                </div>
+                <div class='flex-col entry2-sentence-wrapper'>
+                    <div class='flex-row'>
+                        <select>
+                            <option value='-1'>-- Select Form --</option>
+                            <option value='0'>Subject</option>
+                            <option value='0'>Object</option>
+                            <option value='0'>Locative</option>
+                            <option value='0'>Possessed</option>
+                            <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
+                        </select>
+                        <div class='flex-row entry-audio-gallery'>
+                            <p class='entry2-no-audio'>No Audio</p>
+                            <button class='icon-plus'></button>
+                        </div>
+                        <button class='icon-tridot'></button>
+                    </div>
+                    <div class='flex-row'>
+                        <label>Wik</label>
+                        <input class='entry2-sentence-L2' type='text'>
+                    </div>
+                    <div class='flex-row'>
+                        <label>Eng</label>
+                        <input class='entry2-sentence-L1' type='text'>
+                    </div>
+                </div>
+
+            </div>
+
+            <button id='entry-add-sentence' onclick='stub_addForm()'>Add New Sentence</button>
+
+
+
+
+
+
+            <!-- <div class='separator-line'></div> -->
+
+            <!-- Entry Notes -->
+
+            <h3 class='section-title'>Notes <span class='subtitle-small'>(1)</span></h3>
+            <div id='entry-notes-wrapper' class='flex-col'>
+                <div class='flex-col entry-note'>
+                    <p>Note #1</p>
+                    <textarea rows='3'>Related language Chukchansi tʰixtʰinitʰ 'sick'</textarea>
+                </div>
+            </div>
+            <button id='entry-add-note' onclick=''>Add New Note</button>
+            
+            <div class='separator-line'></div>
+
+            <!-- The Danger Zone -->
+
+            <div id='entry-danger-zone-wrapper' class='flex-col'>
+                <button id='danger-zone-header' class='flex-col'>
+                    <h3>The Danger Zone</h3>
+                    <div class='arrow-down'></div>
+                </button>
+                <div id='entry-danger-zone' class='flex-col'>
+                    <div id='entry-delete-wrapper' class='flex-row'>
+                        <button id='entry-delete'>Delete Entry</button>
+                        <p class='subtitle-warning-small'>This will delete the current entry PERMANENTLY. This action cannot be undone.</p>
+                    </div>
+                    <!-- <div class='flex-col'>
+                        <h4>Raw Data Entry</h4>
+                        <input type='text'>
+                    </div> -->
+                </div>
             </div>
         </div>
-        <!-- <p class='subtitle-warning-small'>This section allows you to delete an entry PERMANENTLY, or directly edit the raw database data. Proceed with caution.</p> -->
-        
         
     </div>
 </div>
@@ -996,12 +1084,12 @@
 
     //// WAVE 3 ////
 
-    // 7.5 hrs: design research, color palette, layout
+    // 8.0 hrs: design research, color palette, layout
     // 0.5 hrs: custom alphabetization research
     // 2.0 hrs: add Language object and JSON data format, misc bugfixes
     // 1.5 hrs: data format and editor design
     // 4.5 hrs: lexicon design
-    // 18.0 hrs: entry editor design
+    // 24.0 hrs: entry editor design
     // 4.0 hrs: JSON data load/save
 
 

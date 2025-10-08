@@ -59,7 +59,11 @@
     --primary-white: #cefbff;
 
     --primary: #2950e5;
+    /* --primary: #1d7aea; */
+    /* --primary: #4292c7; */
+    /* --primary: #5074ff; */
     --primary-selection: #2043c2;
+    /* --primary-selection: #0664d6; */
 
     --secondary-white: #cec9c1;
     --secondary: #c2ae8f;
@@ -149,6 +153,10 @@ input, select {
     flex-direction: row !important;
     align-items: center;
     justify-content: space-between;
+}
+.flex-fill {
+    justify-content: center;
+    flex-grow: 1;
 }
 
 
