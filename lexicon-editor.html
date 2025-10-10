@@ -519,6 +519,79 @@
             font-size: 0.8em;
         }
 
+        .options-menu {
+            background-color: white;
+            border: thin solid var(--border-medium);
+            border-radius: 0.5em;
+            filter: drop-shadow(0 0 4px #00000038);
+            z-index: var(--layer-front);
+            position: absolute;
+            top: 100%;
+            right: 0;
+            padding: 0.5em;
+            /* gap: 0.5em; */
+
+            visibility: hidden;
+        }
+        .menu-option-standard {
+            border-radius: 0.3em;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            text-align: left;
+        }
+        .menu-option-standard:hover {
+            background-color: var(--bg-light);
+        }
+        .menu-option-caution {
+            color: var(--warning-highlight);
+            border-radius: 0.3em;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            text-align: left;
+        }
+        .menu-option-caution:hover {
+            background-color: var(--warning-light);
+        }
+        .menu-separator {
+            border-bottom: thin solid var(--border-medium);
+            margin: 4px 0;
+            /* width: 100%; */
+        }
+
+        /* modal */
+
+        #modal {
+            background-color: #00000066;
+            z-index: var(--layer-overlay);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #modal-content {
+            background-color: white;
+            border-radius: 0.5em;
+            filter: drop-shadow(0 0 4px #00000038);
+            max-width: 80%;
+            padding: 1em 1.5em;
+            gap: 0.5em;
+        }
+        .modal-buttons {
+            justify-content: end;
+            gap: 0.5em;
+        }
+        .modal-buttons > button {
+            color: white;
+            background-color: var(--primary);
+            border-radius: 0.3em;
+            padding: 0.25em 1em;
+            font-size: 1em;
+        }
+        .modal-buttons > button:hover {
+            background-color: var(--primary-selection);
+        }
+
         /* wordforms section */
 
         #entry-forms-legend {
@@ -540,6 +613,7 @@
             background-color: white;
             /* filter: drop-shadow(0 0 4px #00000038); */
             border-radius: 0.3em;
+            position: relative;
             padding: 0.3em;
         }
         .entry2-form-wrapper > select {
@@ -796,6 +870,16 @@
     <!-- right panel: entry editor -->
     <div id='panel-entry-editor' class='flex-col'>
 
+        <div id='modal' class='flex-row flex-centered' style='visibility:hidden;'>
+            <div id='modal-content' class='flex-col'>
+                <p>Modal content will go here...</p>
+                <div class='flex-row modal-buttons'>
+                    <button onclick='closeModal()'>Ok</button>
+                    <button onclick='closeModal()'>Cancel</button>
+                </div>
+            </div>
+        </div>
+
         <!-- HEADER (L1, CATG, IMAGES) -->
 
         <div id='entry-header' class='flex-row'>
@@ -839,6 +923,11 @@
                     </div>
                     <div class='flex-sep'></div>
                     <button class='icon-tridot'></button>
+                    <div class='flex-col options-menu'>
+                        <button class='menu-option-standard'>Manage Audio</button>
+                        <div class='menu-separator'></div>
+                        <button class='menu-option-caution'>Delete Wordform</button>
+                    </div>
                 </div>
                 <div class='flex-row entry2-form-wrapper'>
                     <select>
@@ -1090,7 +1179,8 @@
     // 1.5 hrs: data format and editor design
     // 4.5 hrs: lexicon design
     // 24.0 hrs: entry editor design
-    // 4.0 hrs: JSON data load/save
+    // 5.0 hrs: JSON data load/save
+    // 2.0 hrs: dynamic page construction, modals
 
 
 
@@ -1184,7 +1274,43 @@
         }
 	}
 
+    //// modal functionality ////
+
+    const modal = document.getElementById('modal');
+    const modalContent = document.getElementById('modal-content')
+
+    function closeModal () {
+        modal.style.visibility = 'hidden';
+    }
+    function modalFormAudio (formNum) {
+        console.log(`Manage audio for wordform ${formNum}`);
+        let eStr = ``;
+        eStr += `<p>Audio management screen is still under construction...</p>`;
+        eStr += `<div class='flex-row modal-buttons'>`;
+            eStr += `<button onclick='closeModal()'>Ok</button>`;
+        eStr += `</div>`;
+
+        modalContent.innerHTML = eStr;
+        modal.style.visibility = 'visible';
+    }
+    function modalConfirmDeleteForm (formNum) {
+        console.log(`Confirm delete wordform ${formNum}`);
+        let eStr = ``;
+        eStr += `<p>Are you sure you want to delete this wordform?</p>`;
+        eStr += `<div class='flex-row modal-buttons'>`;
+            eStr += `<button onclick='closeModal()'>Delete</button>`;
+            eStr += `<button onclick='closeModal()'>Cancel</button>`;
+        eStr += `</div>`;
+
+        modalContent.innerHTML = eStr;
+        modal.style.visibility = 'visible';
+    }
+
     //// site functionality ////
+
+    const formsWrapper = document.getElementById('entry-forms-wrapper');
+
+    let activeMenu = undefined;
 
     const RE_ESCAPE = /[&<>"']/g;
     const RE_MAP_ESCAPE = { "&" : "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }; // all contexts support &#39; but not all support &apos;, so ignore it
@@ -1201,6 +1327,27 @@
     //         .replace(/>/g, '&gt;');
     // }
 
+    function closeMenu () {
+        const e = document.getElementById(activeMenu);
+        if (e) e.style.visibility = 'hidden';
+    }
+    function toggleMenu (event,id) {
+        event.stopPropagation(); // menu closes when user clicks outside it, so block that if user clicked explicit menu trigger
+        const e = document.getElementById(id);
+        if (!e) return;
+        if (e.style.visibility == 'hidden') {
+            // if another menu is already open, close it
+            const prev = document.getElementById(activeMenu);
+            if (prev) prev.style.visibility = 'hidden';
+            // then open this one
+            e.style.visibility = 'visible';
+            activeMenu = id;
+        } else {
+            // if we're open, user wants to close menu
+            e.style.visibility = 'hidden';
+        }
+    }
+
     // LOAD //
     function stub_loadL1 (entry) {
         document.getElementById('entry-L1').value = escapeHTML(entry.L1);
@@ -1212,22 +1359,62 @@
         // check if there's actually data to load
         if (entry.L2.length === 0) return;
         // reset parent container
-        const parent = document.getElementById('entry-forms-wrapper');
-        parent.innerHTML = '';
+        formsWrapper.innerHTML = '';
         // dynamically construct datafield element for each wordform
         // need to escape catgs and wordforms
         for (let i = 0; i < entry.L2.length; i++) {
             const vStr = `value='${escapeHTML(entry.L2[i].formId)}'`; // implicit type cast Number->String by escapeHTML()
-            let eStr = wordformSelectors[entry.catg].replace(vStr, `${vStr} selected`)
-                    + `<input type='text' value='${escapeHTML(entry.L2[i].content)}'>`;
+            let eStr = '';
+            eStr += wordformSelectors[entry.catg].replace(vStr, `${vStr} selected`);
+            eStr += `<input type='text' value='${escapeHTML(entry.L2[i].content)}'>`;
+            eStr += `<div class='flex-sep'></div>`;
+            eStr += `<div class='flex-row entry2-audio-gallery'>`;
+                let numAudio = Math.floor(Math.random() * 3);
+                if (numAudio == 0) {
+                    eStr += `<p class='entry2-no-audio'>No Audio</p>`;
+                } else {
+                    for (let a = 0; a < numAudio; a++) eStr += `<button class='icon-audio'></button>`;
+                }
+                eStr += `<button class='icon-plus'></button>`;
+            eStr += `</div>`;
+            eStr += `<div class='flex-sep'></div>`;
+            eStr += `<button class='icon-tridot' onclick='toggleMenu(event,"form-${i}-menu");'></button>`;
+            eStr += `<div id='form-${i}-menu' class='flex-col options-menu' style='visibility:hidden;'>`;
+                eStr += `<button class='menu-option-standard' onclick='modalFormAudio(${i});closeMenu();'>Manage Audio</button>`;
+                eStr += `<div class='menu-separator'></div>`;
+                eStr += `<button class='menu-option-caution' onclick='modalConfirmDeleteForm(${i});closeMenu();'>Delete Wordform</button>`;
+            eStr += `</div>`;
             let e = document.createElement('div');
                 e.id = `entry-form-${i}`;
                 e.classList.add('flex-row');
-                e.classList.add('entry-data-L2');
+                e.classList.add('entry2-form-wrapper');
                 e.innerHTML = eStr;
             console.log(eStr);
-            parent.appendChild(e);
+            formsWrapper.appendChild(e);
         }
+        // <div class='flex-row entry2-form-wrapper'>
+        //     <select>
+        //         <option value='-1'>-- Select Form --</option>
+        //         <option value='0'>Subject</option>
+        //         <option value='0'>Object</option>
+        //         <option value='0'>Locative</option>
+        //         <option value='0'>Possessed</option>
+        //         <option value='long'>Long asf wordform name</option>
+        //     </select>
+        //     <input type='text'>
+        //     <div class='flex-sep'></div>
+        //     <div class='flex-row entry2-audio-gallery'>
+        //         <button class='icon-audio'></button>
+        //         <button class='icon-plus'></button>
+        //     </div>
+        //     <div class='flex-sep'></div>
+        //     <button class='icon-tridot'></button>
+        //     <div class='flex-col options-menu'>
+        //         <button class='menu-option-standard'>Manage Audio</button>
+        //         <div class='menu-separator'></div>
+        //         <button class='menu-option-caution'>Delete Wordform</button>
+        //     </div>
+        // </div>
     }
     function stub_addForm () {
         // add to data structure
@@ -1344,10 +1531,20 @@
 
     stub_loadL1(stub_activeEntry);
     stub_loadCatg(stub_activeEntry);
-    // stub_loadForms(stub_activeEntry);
+    stub_loadForms(stub_activeEntry);
     // stub_addForm();
     // stub_addForm();
     // stub_addForm();
+
+    // close context menus when user clicks outside them
+    window.addEventListener('click', e => {
+        if (activeMenu !== undefined) {
+            const elem = document.getElementById(activeMenu);
+            if (!elem.contains(e.target)) {
+                elem.style.visibility = 'hidden';
+            }
+        }
+    });
 
 
 
