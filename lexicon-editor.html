@@ -577,6 +577,9 @@
             padding: 1em 1.5em;
             gap: 0.5em;
         }
+        #modal-content > form {
+            gap: 0.5em;
+        }
         .modal-buttons {
             justify-content: end;
             gap: 0.5em;
@@ -588,8 +591,16 @@
             padding: 0.25em 1em;
             font-size: 1em;
         }
-        .modal-buttons > button:hover {
-            background-color: var(--primary-selection);
+        .modal-buttons > button:hover, .modal-buttons > button:focus-visible {
+            background-color: var(--primary);
+            outline: medium solid var(--primary-dark);
+        }
+        .modal-buttons > .modal-button-caution {
+            background-color: var(--warning-highlight);
+        }
+        .modal-buttons > .modal-button-caution:hover, .modal-buttons > .modal-button-caution:focus-visible {
+            background-color: var(--warning-highlight);
+            outline: medium solid var(--warning-dark);
         }
 
         /* wordforms section */
@@ -1180,7 +1191,7 @@
     // 4.5 hrs: lexicon design
     // 24.0 hrs: entry editor design
     // 5.0 hrs: JSON data load/save
-    // 2.0 hrs: dynamic page construction, modals
+    // 7.5 hrs: dynamic page construction, modals
 
 
 
@@ -1274,14 +1285,141 @@
         }
 	}
 
+
+
+    //// global helpers ////
+
+    const RE_ESCAPE = /[&<>"']/g;
+    const RE_MAP_ESCAPE = { "&" : "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }; // all contexts support &#39; but not all support &apos;, so ignore it
+    function escapeHTML (s) {
+        return String(s).replace(RE_ESCAPE, c => RE_MAP_ESCAPE[c]);
+    }
+
+
+
+    //// data structures ////
+
+    const CATG_NAMES = {
+        'n' : 'Noun',
+        'v' : 'Verb',
+        'adj' : 'Adjective'
+    };
+    let stub_wordforms = {
+        'n' : ['Subject','Object','Locative','Supercalifragalisticexpialadocious'],
+        // 'v' : ['Past','Recent Past','Future','Fantastic','Supercalifragalisticexpialadocious']
+        'v' : ['Past','Medio Passive','Durative Aorist','Future','Passive Gerundial','Durative Present','Neutral Verbal Noun','Causative','Neutral Agentive','UNDERLYING']
+    };
+
+    // cache oft-reused constructor strings for wordform <select> elements
+    let wordformSelectors = {}; // wordformSelectors[catg] = '<select>...</select>'
+    function rebuildWordformSelector (catg) {
+        if (!stub_wordforms[catg]) {
+            console.error(`Catg "${catg}" not recognized. Cannot rebuild <select>.`);
+            return;
+        }
+        let eStr = `<select id='' onchange=''>`;
+            eStr += `<option value='-1'>-- Choose One --</option>`;
+            for (let formNum = 0; formNum < stub_wordforms[catg].length; formNum++) {
+                eStr += `<option value='${formNum}'>${escapeHTML(stub_wordforms[catg][formNum])}</option>`;
+            }
+            eStr += `<option value='+'>++ ADD NEW FORM ++</option>`;
+        eStr += `</select>`;
+        wordformSelectors[catg] = eStr;
+    }
+    for (let catg in stub_wordforms) {
+        rebuildWordformSelector(catg);
+    }
+    // rebuildWordformSelector('test-err');
+
+    function addWordform (catg,formName) {
+        if (stub_wordforms[catg].indexOf(formName) !== -1) return -1;
+        // add new form and cache constructor string
+        stub_wordforms[catg].push(formName);
+        rebuildWordformSelector(catg);
+        // rebuild forms
+        
+        // rebuild sentences
+            //
+        return stub_wordforms[catg].length - 1;
+    }
+
+
+
+
+
+
+
     //// modal functionality ////
 
     const modal = document.getElementById('modal');
     const modalContent = document.getElementById('modal-content')
 
     function closeModal () {
+        modalContent.innerHTML = ''; // clear contents so they can't be tabbed into
         modal.style.visibility = 'hidden';
     }
+
+    // "add wordform" modal
+    function modalAddWordformSuccess (formNum) {
+        const formName = document.getElementById("modal-input-wordform").value;
+        if (formName === '') {
+            console.warn(`Input is empty. Please enter the name of the new wordform.`);
+            return false;
+        }
+        let i = addWordform(stub_activeEntry.catg, formName);
+        if (i === -1) {
+            // if wordform already exists, simply switch to it
+            console.warn(`Wordform "${formName}" already exists. Blocking attempted duplicate.`);
+            i = stub_wordforms[stub_activeEntry.catg].indexOf(formName);
+            document.getElementById(`entry-form-${formNum}-selector`).value = i;
+        } else {
+            // else, record new form and rebuild UI to account for it
+            stub_activeEntry.L2[formNum].formId = i;
+            stub_loadForms(stub_activeEntry);
+        }
+        closeModal();
+    }
+    function modalAddWordformFailure (formNum) {
+        // reset <select> to old value
+        console.log(`New wordform creation cancelled. Returning to original value of ${stub_activeEntry.L2[formNum].formId}.`);
+        document.getElementById(`entry-form-${formNum}-selector`).value = stub_activeEntry.L2[formNum].formId;
+        closeModal();
+    }
+    function modalAddWordform (formNum) {
+        console.log(`Add new wordform, triggered by entry form ${formNum}`);
+        let eStr = ``;
+        // eStr += `<p>Add new wordform option...</p>`;
+        // eStr += `<input id='modal-input-wordform' type='text'>`;
+        // eStr += `<div class='flex-row modal-buttons'>`;
+        //     eStr += `<button onclick='modalAddWordformSuccess(${formNum});'>Add</button>`;
+        //     eStr += `<button onclick='modalAddWordformFailure(${formNum});'>Cancel</button>`;
+        // eStr += `</div>`;
+        eStr += `<p>Add new wordform option...</p>`;
+        eStr += `<form class='flex-col' onsubmit='modalAddWordformSuccess(${formNum}); return false;'>`;
+            eStr += `<input id='modal-input-wordform' type='text'>`;
+            eStr += `<div class='flex-row modal-buttons'>`;
+                eStr += `<button type='submit'>Add</button>`;
+                eStr += `<button type='button' onclick='modalAddWordformFailure(${formNum});'>Cancel</button>`;
+            eStr += `</div>`;
+        eStr += `</form>`;
+
+        modalContent.innerHTML = eStr;
+        modal.style.visibility = 'visible';
+        document.getElementById('modal-input-wordform').focus();
+    }
+    // "add audio" modal
+    function modalAddFormAudio (formNum) {
+        console.log(`Add audio to wordform ${formNum}`);
+        let eStr = ``;
+        eStr += `<p>Audio file uploads disabled in web demo.</p>`;
+        eStr += `<div class='flex-row modal-buttons'>`;
+            eStr += `<button onclick='closeModal()'>Ok</button>`;
+        eStr += `</div>`;
+
+        modalContent.innerHTML = eStr;
+        modal.style.visibility = 'visible';
+    }
+    // "manage audio" modal
     function modalFormAudio (formNum) {
         console.log(`Manage audio for wordform ${formNum}`);
         let eStr = ``;
@@ -1293,15 +1431,17 @@
         modalContent.innerHTML = eStr;
         modal.style.visibility = 'visible';
     }
+    // "delete wordform" modal
     function modalConfirmDeleteForm (formNum) {
         console.log(`Confirm delete wordform ${formNum}`);
         let eStr = ``;
         eStr += `<p>Are you sure you want to delete this wordform?</p>`;
         eStr += `<div class='flex-row modal-buttons'>`;
-            eStr += `<button onclick='closeModal()'>Delete</button>`;
+            eStr += `<button class='modal-button-caution' onclick='stub_deleteForm(${formNum});stub_loadForms(stub_activeEntry);closeModal();'>Delete</button>`;
             eStr += `<button onclick='closeModal()'>Cancel</button>`;
         eStr += `</div>`;
 
+        // TODO: switch to targetted element removal instead of refreshing entire section, if only to preserve scroll amount
         modalContent.innerHTML = eStr;
         modal.style.visibility = 'visible';
     }
@@ -1312,11 +1452,7 @@
 
     let activeMenu = undefined;
 
-    const RE_ESCAPE = /[&<>"']/g;
-    const RE_MAP_ESCAPE = { "&" : "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }; // all contexts support &#39; but not all support &apos;, so ignore it
-    function escapeHTML (s) {
-        return String(s).replace(RE_ESCAPE, c => RE_MAP_ESCAPE[c]);
-    }
+    
     // function escapeHTML (s) {
     //     return String(s)
     //         .replace(/&/g, '&amp;')
@@ -1365,8 +1501,11 @@
         for (let i = 0; i < entry.L2.length; i++) {
             const vStr = `value='${escapeHTML(entry.L2[i].formId)}'`; // implicit type cast Number->String by escapeHTML()
             let eStr = '';
-            eStr += wordformSelectors[entry.catg].replace(vStr, `${vStr} selected`);
-            eStr += `<input type='text' value='${escapeHTML(entry.L2[i].content)}'>`;
+            eStr += wordformSelectors[entry.catg]
+                .replace(`id=''`, `id='entry-form-${i}-selector'`)
+                .replace(`onchange=''`, `onchange='if (event.srcElement.value == "+") {modalAddWordform(${i})} else {stub_activeEntry.L2[${i}].formId = parseInt(event.srcElement.value)};'`)
+                .replace(vStr, `${vStr} selected`);
+            eStr += `<input id='entry-form-${i}-content' type='text' value='${escapeHTML(entry.L2[i].content)}' onblur='stub_updateForm(${i})'>`;
             eStr += `<div class='flex-sep'></div>`;
             eStr += `<div class='flex-row entry2-audio-gallery'>`;
                 let numAudio = Math.floor(Math.random() * 3);
@@ -1375,7 +1514,7 @@
                 } else {
                     for (let a = 0; a < numAudio; a++) eStr += `<button class='icon-audio'></button>`;
                 }
-                eStr += `<button class='icon-plus'></button>`;
+                eStr += `<button class='icon-plus' onclick='modalAddFormAudio(${i})'></button>`;
             eStr += `</div>`;
             eStr += `<div class='flex-sep'></div>`;
             eStr += `<button class='icon-tridot' onclick='toggleMenu(event,"form-${i}-menu");'></button>`;
@@ -1389,7 +1528,7 @@
                 e.classList.add('flex-row');
                 e.classList.add('entry2-form-wrapper');
                 e.innerHTML = eStr;
-            console.log(eStr);
+            // console.log(eStr);
             formsWrapper.appendChild(e);
         }
         // <div class='flex-row entry2-form-wrapper'>
@@ -1417,16 +1556,44 @@
         // </div>
     }
     function stub_addForm () {
+        const entry = stub_activeEntry;
+        const i = entry.L2.length;
         // add to data structure
-        stub_activeEntry.L2.push({ formId : -1, content : `` });
+        entry.L2.push({ formId : -1, content : `` });
         // add to UI
-        let eStr = wordformSelectors[stub_activeEntry.catg] + `<input type='text'>`;
+        const vStr = `value='${escapeHTML(entry.L2[i].formId)}'`; // implicit type cast Number->String by escapeHTML()
+        let eStr = '';
+        eStr += wordformSelectors[entry.catg]
+            .replace(`id=''`, `id='entry-form-${i}-selector'`)
+            .replace(`onchange=''`, `onchange='if (event.srcElement.value == "+") {modalAddWordform(${i})} else {stub_activeEntry.L2[${i}].formId = parseInt(event.srcElement.value)};'`);
+        eStr += `<input id='entry-form-${i}-content' type='text' value='' onblur='stub_updateForm(${i})'>`;
+        eStr += `<div class='flex-sep'></div>`;
+        eStr += `<div class='flex-row entry2-audio-gallery'>`;
+            eStr += `<p class='entry2-no-audio'>No Audio</p>`;
+            eStr += `<button class='icon-plus' onclick='modalAddFormAudio(${i})'></button>`;
+        eStr += `</div>`;
+        eStr += `<div class='flex-sep'></div>`;
+        eStr += `<button class='icon-tridot' onclick='toggleMenu(event,"form-${i}-menu");'></button>`;
+        eStr += `<div id='form-${i}-menu' class='flex-col options-menu' style='visibility:hidden;'>`;
+            eStr += `<button class='menu-option-standard' onclick='modalFormAudio(${i});closeMenu();'>Manage Audio</button>`;
+            eStr += `<div class='menu-separator'></div>`;
+            eStr += `<button class='menu-option-caution' onclick='modalConfirmDeleteForm(${i});closeMenu();'>Delete Wordform</button>`;
+        eStr += `</div>`;
         let e = document.createElement('div');
-            e.id = `entry-form-${stub_activeEntry.L2.length}`;
+            e.id = `entry-form-${i}`;
             e.classList.add('flex-row');
-            e.classList.add('entry-data-L2');
+            e.classList.add('entry2-form-wrapper');
             e.innerHTML = eStr;
-        document.getElementById('entry-forms-wrapper').appendChild(e);
+        // console.log(eStr);
+        formsWrapper.appendChild(e);
+    }
+    function stub_deleteForm (formNum) {
+        formNum = parseInt(formNum);
+        if (formNum === NaN || formNum < 0 || formNum >= stub_activeEntry.L2.length) {
+            console.error(`Cannot delete wordform ${formNum}, index out of bounds.`);
+            return;
+        }
+        stub_activeEntry.L2.splice(formNum, 1);
     }
 
     // UPDATE //
@@ -1443,6 +1610,16 @@
     }
     document.getElementById('entry-L1').addEventListener('blur', stub_updateL1);
 
+    function stub_updateForm (formNum) {
+        const e = document.getElementById(`entry-form-${formNum}-content`);
+        if (!e) {
+            console.error(`Cannot find DOM input linked to wordform ${formNum}.`);
+            return;
+        }
+        stub_activeEntry.L2[formNum].content = e.value;
+        console.log(`Updated wordform ${formNum} to "${e.value}"`);
+    }
+
     function loadLanguageData (L) {
         document.getElementById('lang-name').value = L.name;
         document.getElementById('lang-abbr').value = L.abbr;
@@ -1453,32 +1630,6 @@
 
     //// data ////
 
-    const CATG_NAMES = {
-        'n' : 'Noun',
-        'v' : 'Verb',
-        'adj' : 'Adjective'
-    };
-    let stub_wordforms = {
-        'n' : ['Subject','Object','Locative','Supercalifragalisticexpialadocious'],
-        // 'v' : ['Past','Recent Past','Future','Fantastic','Supercalifragalisticexpialadocious']
-        'v' : ['Past','Medio Passive','Durative Aorist','Future','Passive Gerundial','Durative Present','Neutral Verbal Noun','Causative','Neutral Agentive','UNDERLYING']
-    };
-    let wordformSelectors = (() => {
-        // <select> elements for wordforms are highly reused, so cache constructor strings for them
-        // need to escape wordform names
-        let o = {};
-        for (let catg in stub_wordforms) {
-            let eStr = `<select>`;
-                eStr += `<option value='-1'>-- Choose One --</option>`;
-                for (let formNum = 0; formNum < stub_wordforms[catg].length; formNum++) {
-                    eStr += `<option value='${formNum}'>${escapeHTML(stub_wordforms[catg][formNum])}</option>`;
-                }
-                eStr += `<option value='+'>++ ADD NEW FORM ++</option>`;
-            eStr += `</select>`;
-            o[catg] = eStr;
-        }
-        return o;
-    })();
 
     // let stub_activeEntry = {
     //     L1 : `dash; run; sprint`,
@@ -1540,6 +1691,11 @@
     window.addEventListener('click', e => {
         if (activeMenu !== undefined) {
             const elem = document.getElementById(activeMenu);
+            if (!elem) {
+                // if previously-active element deleted, stop tracking it (ie wordform recently deleted)
+                activeMenu = undefined;
+                return;
+            }
             if (!elem.contains(e.target)) {
                 elem.style.visibility = 'hidden';
             }
