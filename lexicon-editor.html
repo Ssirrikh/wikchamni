@@ -278,7 +278,7 @@
         #entry-catg {
             width: min(90%, 10em);
         } */
-        #entry-forms-wrapper {
+        #entry-forms-wrapper, #entry-sentences-wrapper {
             gap: 0.3em;
         }
         /* .entry-data-L2 {
@@ -605,34 +605,45 @@
 
         /* wordforms section */
 
-        #entry-forms-legend {
-            color: black;
-            color: var(--primary-white);
-            color: var(--bg-light);
+        .entry-legend {
             color: white;
-            /* color: var(--text-subtitle); */
-            background-color: var(--bg-offwhite);
-            background-color: var(--primary-highlight-dark);
             background-color: var(--primary-selection);
-            /* background-color: var(--bg-offwhite); */
             border-radius: 0.3em;
             padding: 0.3em;
             font-size: 1em;
         }
+        #entry2-forms-legend-case {
+            width: 10em;
+        }
+        #entry2-forms-legend-form {
+            width: 16em;
+        }
+        #entry2-forms-legend-options {
+            width: calc(1em + 0.3em + 0.3em);
+        }
+        #entry2-forms-legend-case + #entry2-forms-legend-form {
+            margin-left: 0.5em;
+        }
+        #entry2-sents-legend-case {
+            width: 10em;
+        }
+        #entry2-sents-legend-options {
+            width: calc(1em + 0.3em + 0.3em);
+        }
 
-        .entry2-form-wrapper {
+        .entry2-form-wrapper, .entry2-sentence-wrapper {
             background-color: white;
             /* filter: drop-shadow(0 0 4px #00000038); */
             border-radius: 0.3em;
             position: relative;
             padding: 0.3em;
         }
+        .entry2-sentence-wrapper {
+            gap: 0.25em;
+        }
         .entry2-form-wrapper > select {
             width: calc(1.25 * 10em);
             font-size: 0.8em;
-        }
-        #entry2-legend-case {
-            width: 10em;
         }
         .entry2-form-wrapper > input {
             background-color: var(--bg-light);
@@ -642,30 +653,11 @@
             width: 16em;
             font-size: 1em;
         }
-        #entry2-legend-form {
-            width: 16em;
-        }
-        .entry2-form-wrapper > select + input, #entry2-legend-case + #entry2-legend-form {
+        .entry2-form-wrapper > select + input {
             margin-left: 0.5em;
-        }
-        #entry2-legend-options {
-            width: calc(1em + 0.3em + 0.3em);
         }
 
         /* sentences section */
-
-        .entry-sentence-wrapper {
-            background-color: white;
-            border-radius: 0.3em;
-            padding: 0.3em;
-            gap: 0.3em;
-        }
-        .entry2-sentence-wrapper {
-            background-color: white;
-            border-radius: 0.3em;
-            padding: 0.3em;
-            gap: 0.25em;
-        }
 
         .entry2-sentence-wrapper label {
             color: var(--text-subtitle);
@@ -907,13 +899,13 @@
             <!-- WORDFORMS -->
 
             <h3 class='section-title'>Wordforms <span class='subtitle-small'>(13)</span></h3>
-            <div id='entry-forms-legend' class='flex-row'>
-                <p id='entry2-legend-case'>Form/Case</p>
-                <p id='entry2-legend-form'>Wikchamni Word</p>
+            <div class='flex-row entry-legend'>
+                <p id='entry2-forms-legend-case'>Form/Case</p>
+                <p id='entry2-forms-legend-form'>Wikchamni Word</p>
                 <div class='flex-sep'></div>
                 <p>Audio</p>
                 <div class='flex-sep'></div>
-                <p id='entry2-legend-options'></p>
+                <p id='entry2-forms-legend-options'></p>
             </div>
             <div id='entry-forms-wrapper' class='flex-col'>
                 
@@ -924,7 +916,6 @@
                         <option value='0'>Object</option>
                         <option value='0'>Locative</option>
                         <option value='0'>Possessed</option>
-                        <option value='long'>Long asf wordform name</option>
                     </select>
                     <input type='text'>
                     <div class='flex-sep'></div>
@@ -940,43 +931,6 @@
                         <button class='menu-option-caution'>Delete Wordform</button>
                     </div>
                 </div>
-                <div class='flex-row entry2-form-wrapper'>
-                    <select>
-                        <option value='-1'>-- Select Form --</option>
-                        <option value='0'>Subject</option>
-                        <option value='0'>Object</option>
-                        <option value='0'>Locative</option>
-                        <option value='0'>Possessed</option>
-                        <option value='long'>Long asf wordform name</option>
-                    </select>
-                    <input type='text'>
-                    <div class='flex-sep'></div>
-                    <div class='flex-row entry2-audio-gallery'>
-                        <p class='entry2-no-audio'>No Audio</p>
-                        <button class='icon-plus'></button>
-                    </div>
-                    <div class='flex-sep'></div>
-                    <button class='icon-tridot'></button>
-                </div>
-                <div class='flex-row entry2-form-wrapper'>
-                    <select>
-                        <option value='-1'>-- Select Form --</option>
-                        <option value='0'>Subject</option>
-                        <option value='0'>Object</option>
-                        <option value='0'>Locative</option>
-                        <option value='0'>Possessed</option>
-                        <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
-                    </select>
-                    <input type='text'>
-                    <div class='flex-sep'></div>
-                    <div class='flex-row entry2-audio-gallery'>
-                        <button class='icon-audio'></button>
-                        <button class='icon-audio'></button>
-                        <button class='icon-plus'></button>
-                    </div>
-                    <div class='flex-sep'></div>
-                    <button class='icon-tridot'></button>
-                </div>
 
             </div>
             <button id='entry-add-wordform' onclick='stub_addForm()'>Add New Wordform</button>
@@ -984,95 +938,14 @@
             <!-- SENTENCES -->
 
             <h3 class='section-title'>Sentences <span class='subtitle-small'>(5)</span></h3>
-            <div id='entry-forms-legend' class='flex-row'>
-                <p id='entry2-legend-case'>Form/Case</p>
-                <!-- <p id='entry2-legend-form'>Sentences</p> -->
+            <div class='flex-row entry-legend'>
+                <p id='entry2-sents-legend-case'>Form/Case</p>
                 <div class='flex-sep'></div>
                 <p>Audio</p>
                 <div class='flex-sep'></div>
-                <p id='entry2-legend-options'></p>
+                <p id='entry2-sents-legend-options'></p>
             </div>
-            <div id='entry-forms-wrapper' class='flex-col'>
-
-                <!-- <div class='flex-row entry-sentence-wrapper'>
-                    <select>
-                        <option value='-1'>-- Select Form --</option>
-                        <option value='0'>Subject</option>
-                        <option value='0'>Object</option>
-                        <option value='0'>Locative</option>
-                        <option value='0'>Possessed</option>
-                        <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
-                    </select>
-                    <div class='flex-col'>
-                        <input class='entry-sentence-L2' type='text' placeholder='Wikchamni'>
-                        <input class='entry-sentence-L1' type='text' placeholder='English'>
-                    </div>
-                    <div class='flex-row entry-audio-gallery'>
-                        <button class='icon-audio'></button>
-                        <button class='icon-audio'></button>
-                        <button class='icon-plus'></button>
-                    </div>
-                    <button class='icon-tridot'></button>
-                </div>
-                <div class='flex-row entry-sentence-wrapper'>
-                    <select>
-                        <option value='-1'>-- Select Form --</option>
-                        <option value='0'>Subject</option>
-                        <option value='0'>Object</option>
-                        <option value='0'>Locative</option>
-                        <option value='0'>Possessed</option>
-                        <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
-                    </select>
-                    <div class='flex-col'>
-                        <input class='entry-sentence-L2' type='text' placeholder='Wikchamni'>
-                        <input class='entry-sentence-L1' type='text' placeholder='English'>
-                    </div>
-                    <div class='flex-row entry-audio-gallery'>
-                        <button class='icon-audio'></button>
-                        <button class='icon-audio'></button>
-                        <button class='icon-plus'></button>
-                    </div>
-                    <button class='icon-tridot'></button>
-                </div> -->
-
-                <!-- <div class='flex-col entry2-sentence-wrapper'>
-                    <div class='flex-row'>
-                        <select>
-                            <option value='-1'>-- Select Form --</option>
-                            <option value='0'>Subject</option>
-                            <option value='0'>Object</option>
-                            <option value='0'>Locative</option>
-                            <option value='0'>Possessed</option>
-                            <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
-                        </select>
-                        <div class='flex-row entry-audio-gallery'>
-                            <p class='entry2-no-audio'>No Audio</p>
-                            <button class='icon-plus'></button>
-                        </div>
-                        <button class='icon-tridot'></button>
-                    </div>
-                    <input class='entry2-sentence-L2' type='text' placeholder='Wikchamni'>
-                    <input class='entry2-sentence-L1' type='text' placeholder='English'>
-                </div>
-                <div class='flex-col entry2-sentence-wrapper'>
-                    <div class='flex-row'>
-                        <select>
-                            <option value='-1'>-- Select Form --</option>
-                            <option value='0'>Subject</option>
-                            <option value='0'>Object</option>
-                            <option value='0'>Locative</option>
-                            <option value='0'>Possessed</option>
-                            <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
-                        </select>
-                        <div class='flex-row entry-audio-gallery'>
-                            <button class='icon-audio'></button>
-                            <button class='icon-plus'></button>
-                        </div>
-                        <button class='icon-tridot'></button>
-                    </div>
-                    <input class='entry2-sentence-L2' type='text' placeholder='Wikchamni'>
-                    <input class='entry2-sentence-L1' type='text' placeholder='English'>
-                </div> -->
+            <div id='entry-sentences-wrapper' class='flex-col'>
 
                 <div class='flex-col entry2-sentence-wrapper'>
                     <div class='flex-row'>
@@ -1082,7 +955,6 @@
                             <option value='0'>Object</option>
                             <option value='0'>Locative</option>
                             <option value='0'>Possessed</option>
-                            <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
                         </select>
                         <div class='flex-row entry-audio-gallery'>
                             <button class='icon-audio'></button>
@@ -1099,44 +971,11 @@
                         <input class='entry2-sentence-L1' type='text'>
                     </div>
                 </div>
-                <div class='flex-col entry2-sentence-wrapper'>
-                    <div class='flex-row'>
-                        <select>
-                            <option value='-1'>-- Select Form --</option>
-                            <option value='0'>Subject</option>
-                            <option value='0'>Object</option>
-                            <option value='0'>Locative</option>
-                            <option value='0'>Possessed</option>
-                            <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
-                        </select>
-                        <div class='flex-row entry-audio-gallery'>
-                            <p class='entry2-no-audio'>No Audio</p>
-                            <button class='icon-plus'></button>
-                        </div>
-                        <button class='icon-tridot'></button>
-                    </div>
-                    <div class='flex-row'>
-                        <label>Wik</label>
-                        <input class='entry2-sentence-L2' type='text'>
-                    </div>
-                    <div class='flex-row'>
-                        <label>Eng</label>
-                        <input class='entry2-sentence-L1' type='text'>
-                    </div>
-                </div>
 
             </div>
+            <button id='entry-add-sentence' onclick='stub_addSentence()'>Add New Sentence</button>
 
-            <button id='entry-add-sentence' onclick='stub_addForm()'>Add New Sentence</button>
-
-
-
-
-
-
-            <!-- <div class='separator-line'></div> -->
-
-            <!-- Entry Notes -->
+            <!-- NOTES -->
 
             <h3 class='section-title'>Notes <span class='subtitle-small'>(1)</span></h3>
             <div id='entry-notes-wrapper' class='flex-col'>
@@ -1149,7 +988,7 @@
             
             <div class='separator-line'></div>
 
-            <!-- The Danger Zone -->
+            <!-- DANGER ZONE -->
 
             <div id='entry-danger-zone-wrapper' class='flex-col'>
                 <button id='danger-zone-header' class='flex-col'>
@@ -1191,7 +1030,7 @@
     // 4.5 hrs: lexicon design
     // 24.0 hrs: entry editor design
     // 5.0 hrs: JSON data load/save
-    // 7.5 hrs: dynamic page construction, modals
+    // 10.0 hrs: dynamic page construction, modals
 
 
 
@@ -1388,12 +1227,6 @@
     function modalAddWordform (formNum) {
         console.log(`Add new wordform, triggered by entry form ${formNum}`);
         let eStr = ``;
-        // eStr += `<p>Add new wordform option...</p>`;
-        // eStr += `<input id='modal-input-wordform' type='text'>`;
-        // eStr += `<div class='flex-row modal-buttons'>`;
-        //     eStr += `<button onclick='modalAddWordformSuccess(${formNum});'>Add</button>`;
-        //     eStr += `<button onclick='modalAddWordformFailure(${formNum});'>Cancel</button>`;
-        // eStr += `</div>`;
         eStr += `<p>Add new wordform option...</p>`;
         eStr += `<form class='flex-col' onsubmit='modalAddWordformSuccess(${formNum}); return false;'>`;
             eStr += `<input id='modal-input-wordform' type='text'>`;
@@ -1419,11 +1252,33 @@
         modalContent.innerHTML = eStr;
         modal.style.visibility = 'visible';
     }
+    function modalAddSentenceAudio (sentNum) {
+        console.log(`Add audio to sentence ${sentNum}`);
+        let eStr = ``;
+        eStr += `<p>Audio file uploads disabled in web demo.</p>`;
+        eStr += `<div class='flex-row modal-buttons'>`;
+            eStr += `<button onclick='closeModal()'>Ok</button>`;
+        eStr += `</div>`;
+
+        modalContent.innerHTML = eStr;
+        modal.style.visibility = 'visible';
+    }
     // "manage audio" modal
     function modalFormAudio (formNum) {
         console.log(`Manage audio for wordform ${formNum}`);
         let eStr = ``;
-        eStr += `<p>Audio management screen is still under construction...</p>`;
+        eStr += `<p>Audio management temporarily unavailable. Audio file uploads disabled in web demo.</p>`;
+        eStr += `<div class='flex-row modal-buttons'>`;
+            eStr += `<button onclick='closeModal()'>Ok</button>`;
+        eStr += `</div>`;
+
+        modalContent.innerHTML = eStr;
+        modal.style.visibility = 'visible';
+    }
+    function modalSentenceAudio (sentNum) {
+        console.log(`Manage audio for sentence ${sentNum}`);
+        let eStr = ``;
+        eStr += `<p>Audio management temporarily unavailable. Audio file uploads disabled in web demo.</p>`;
         eStr += `<div class='flex-row modal-buttons'>`;
             eStr += `<button onclick='closeModal()'>Ok</button>`;
         eStr += `</div>`;
@@ -1445,10 +1300,26 @@
         modalContent.innerHTML = eStr;
         modal.style.visibility = 'visible';
     }
+    function modalConfirmDeleteSentence (sentNum) {
+        console.log(`Confirm delete sentence ${sentNum}`);
+        let eStr = ``;
+        eStr += `<p>Are you sure you want to delete this sentence?</p>`;
+        eStr += `<div class='flex-row modal-buttons'>`;
+            eStr += `<button class='modal-button-caution' onclick='stub_deleteSentence(${sentNum});stub_loadSentences(stub_activeEntry);closeModal();'>Delete</button>`;
+            eStr += `<button onclick='closeModal()'>Cancel</button>`;
+        eStr += `</div>`;
+
+        // TODO: switch to targetted element removal instead of refreshing entire section, if only to preserve scroll amount
+        modalContent.innerHTML = eStr;
+        modal.style.visibility = 'visible';
+    }
+
+    
 
     //// site functionality ////
 
     const formsWrapper = document.getElementById('entry-forms-wrapper');
+    const sentsWrapper = document.getElementById('entry-sentences-wrapper');
 
     let activeMenu = undefined;
 
@@ -1469,6 +1340,7 @@
     }
     function toggleMenu (event,id) {
         event.stopPropagation(); // menu closes when user clicks outside it, so block that if user clicked explicit menu trigger
+        console.log(id);
         const e = document.getElementById(id);
         if (!e) return;
         if (e.style.visibility == 'hidden') {
@@ -1503,7 +1375,7 @@
             let eStr = '';
             eStr += wordformSelectors[entry.catg]
                 .replace(`id=''`, `id='entry-form-${i}-selector'`)
-                .replace(`onchange=''`, `onchange='if (event.srcElement.value == "+") {modalAddWordform(${i})} else {stub_activeEntry.L2[${i}].formId = parseInt(event.srcElement.value)};'`)
+                .replace(`onchange=''`, `onchange='if (event.srcElement.value === "+") {modalAddWordform(${i})} else {stub_activeEntry.L2[${i}].formId = parseInt(event.srcElement.value)};'`)
                 .replace(vStr, `${vStr} selected`);
             eStr += `<input id='entry-form-${i}-content' type='text' value='${escapeHTML(entry.L2[i].content)}' onblur='stub_updateForm(${i})'>`;
             eStr += `<div class='flex-sep'></div>`;
@@ -1561,11 +1433,10 @@
         // add to data structure
         entry.L2.push({ formId : -1, content : `` });
         // add to UI
-        const vStr = `value='${escapeHTML(entry.L2[i].formId)}'`; // implicit type cast Number->String by escapeHTML()
         let eStr = '';
         eStr += wordformSelectors[entry.catg]
             .replace(`id=''`, `id='entry-form-${i}-selector'`)
-            .replace(`onchange=''`, `onchange='if (event.srcElement.value == "+") {modalAddWordform(${i})} else {stub_activeEntry.L2[${i}].formId = parseInt(event.srcElement.value)};'`);
+            .replace(`onchange=''`, `onchange='if (event.srcElement.value === "+") {modalAddWordform(${i})} else {stub_activeEntry.L2[${i}].formId = parseInt(event.srcElement.value)};'`);
         eStr += `<input id='entry-form-${i}-content' type='text' value='' onblur='stub_updateForm(${i})'>`;
         eStr += `<div class='flex-sep'></div>`;
         eStr += `<div class='flex-row entry2-audio-gallery'>`;
@@ -1595,6 +1466,128 @@
         }
         stub_activeEntry.L2.splice(formNum, 1);
     }
+    function stub_deleteSentence (sentNum) {
+        sentNum = parseInt(sentNum);
+        if (sentNum === NaN || sentNum < 0 || sentNum >= stub_activeEntry.sentences.length) {
+            console.error(`Cannot delete sentence ${sentNum}, index out of bounds.`);
+            return;
+        }
+        stub_activeEntry.sentences.splice(sentNum, 1);
+    }
+    
+
+    function stub_loadSentences (entry) {
+        // check if there's actually data to load
+        if (entry.sentences.length === 0) return;
+        // reset parent container
+        sentsWrapper.innerHTML = '';
+        // dynamically construct datafield element for each wordform
+        // need to escape catgs and wordforms
+        for (let i = 0; i < entry.sentences.length; i++) {
+            const vStr = `value='${escapeHTML(entry.sentences[i].formId)}'`; // implicit type cast Number->String by escapeHTML()
+            let eStr = '';
+            eStr += `<div class='flex-row'>`;
+                eStr += wordformSelectors[entry.catg]
+                    .replace(`id=''`, `id='entry-sentence-${i}-selector'`)
+                    .replace(`onchange=''`, `onchange='if (event.srcElement.value === "+") {console.log("Sentence ${i} adds new wordform...")} else {stub_activeEntry.sentences[${i}].formId = parseInt(event.srcElement.value)};'`)
+                    .replace(vStr, `${vStr} selected`);
+                eStr += `<div class='flex-row entry-audio-gallery'>`;
+                    eStr += ``;
+                    let numAudio = Math.floor(Math.random() * 3);
+                    if (numAudio == 0) {
+                        eStr += `<p class='entry2-no-audio'>No Audio</p>`;
+                    } else {
+                        for (let a = 0; a < numAudio; a++) eStr += `<button class='icon-audio'></button>`;
+                    }
+                    eStr += `<button class='icon-plus' onclick='modalAddSentenceAudio(${i})'></button>`;
+                eStr += `</div>`;
+                eStr += `<button class='icon-tridot' onclick='toggleMenu(event,"sentence-${i}-menu");'></button>`;
+                eStr += `<div id='sentence-${i}-menu' class='flex-col options-menu' style='visibility:hidden;'>`;
+                    eStr += `<button class='menu-option-standard' onclick='modalSentenceAudio(${i});closeMenu();'>Manage Audio</button>`;
+                    eStr += `<div class='menu-separator'></div>`;
+                    eStr += `<button class='menu-option-caution' onclick='modalConfirmDeleteSentence(${i});closeMenu();'>Delete Sentence</button>`;
+                eStr += `</div>`;
+            eStr += `</div>`;
+            eStr += `<div class='flex-row'>`;
+                eStr += `<label>Wik</label>`;
+                eStr += `<input id='entry-sentence-${i}-L2' class='entry2-sentence-L2' type='text' value='${escapeHTML(entry.sentences[i].L2)}' onblur='stub_updateSentenceL2(${i})'>`;
+            eStr += `</div>`;
+            eStr += `<div class='flex-row'>`;
+                eStr += `<label>Eng</label>`;
+                eStr += `<input id='entry-sentence-${i}-L1' class='entry2-sentence-L1' type='text' value='${escapeHTML(entry.sentences[i].L1)}' onblur='stub_updateSentenceL1(${i})'>`;
+            eStr += `</div>`;
+            let e = document.createElement('div');
+                e.id = `entry-sentence-${i}`;
+                e.classList.add('flex-col');
+                e.classList.add('entry2-sentence-wrapper');
+                e.innerHTML = eStr;
+            // console.log(eStr);
+            sentsWrapper.appendChild(e);
+        }
+        // <div class='flex-col entry2-sentence-wrapper'>
+        //     <div class='flex-row'>
+        //         <select>
+        //             <option value='-1'>-- Select Form --</option>
+        //             <option value='0'>Subject</option>
+        //             <option value='0'>Object</option>
+        //             <option value='0'>Locative</option>
+        //             <option value='0'>Possessed</option>
+        //             <option value='long'>Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</option>
+        //         </select>
+        //         <div class='flex-row entry-audio-gallery'>
+        //             <p class='entry2-no-audio'>No Audio</p>
+        //             <button class='icon-plus'></button>
+        //         </div>
+        //         <button class='icon-tridot'></button>
+        //     </div>
+        //     <div class='flex-row'>
+        //         <label>Wik</label>
+        //         <input class='entry2-sentence-L2' type='text'>
+        //     </div>
+        //     <div class='flex-row'>
+        //         <label>Eng</label>
+        //         <input class='entry2-sentence-L1' type='text'>
+        //     </div>
+        // </div>
+    }
+    function stub_addSentence () {
+        const entry = stub_activeEntry;
+        const i = entry.sentences.length;
+        // add to data structure
+        entry.sentences.push({ formId : -1, L1 : ``, L2 : `` });
+        // add to UI
+        let eStr = '';
+        eStr += `<div class='flex-row'>`;
+            eStr += wordformSelectors[entry.catg]
+                .replace(`id=''`, `id='entry-sentence-${i}-selector'`)
+                .replace(`onchange=''`, `onchange='if (event.srcElement.value === "+") {console.log("Sentence ${i} adds new wordform...")} else {stub_activeEntry.sentences[${i}].formId = parseInt(event.srcElement.value)};'`)
+            eStr += `<div class='flex-row entry-audio-gallery'>`;
+                eStr += `<p class='entry2-no-audio'>No Audio</p>`;
+                eStr += `<button class='icon-plus' onclick='modalAddSentenceAudio(${i})'></button>`;
+            eStr += `</div>`;
+            eStr += `<button class='icon-tridot' onclick='toggleMenu(event,"sentence-${i}-menu");'></button>`;
+            eStr += `<div id='sentence-${i}-menu' class='flex-col options-menu' style='visibility:hidden;'>`;
+                eStr += `<button class='menu-option-standard' onclick='modalSentenceAudio(${i});closeMenu();'>Manage Audio</button>`;
+                eStr += `<div class='menu-separator'></div>`;
+                eStr += `<button class='menu-option-caution' onclick='modalConfirmDeleteSentence(${i});closeMenu();'>Delete Sentence</button>`;
+            eStr += `</div>`;
+        eStr += `</div>`;
+        eStr += `<div class='flex-row'>`;
+            eStr += `<label>Wik</label>`;
+            eStr += `<input id='entry-sentence-${i}-L2' class='entry2-sentence-L2' type='text' value='${escapeHTML(entry.sentences[i].L2)}' onblur='stub_updateSentenceL2(${i})'>`;
+        eStr += `</div>`;
+        eStr += `<div class='flex-row'>`;
+            eStr += `<label>Eng</label>`;
+            eStr += `<input id='entry-sentence-${i}-L1' class='entry2-sentence-L1' type='text' value='${escapeHTML(entry.sentences[i].L1)}' onblur='stub_updateSentenceL1(${i})'>`;
+        eStr += `</div>`;
+        let e = document.createElement('div');
+            e.id = `entry-sentence-${i}`;
+            e.classList.add('flex-col');
+            e.classList.add('entry2-sentence-wrapper');
+            e.innerHTML = eStr;
+        // console.log(eStr);
+        sentsWrapper.appendChild(e);
+    }
 
     // UPDATE //
 
@@ -1618,6 +1611,25 @@
         }
         stub_activeEntry.L2[formNum].content = e.value;
         console.log(`Updated wordform ${formNum} to "${e.value}"`);
+    }
+
+    function stub_updateSentenceL1 (sentNum) {
+        const e = document.getElementById(`entry-sentence-${sentNum}-L1`);
+        if (!e) {
+            console.error(`Cannot find DOM input linked to sentence ${sentNum} L1.`);
+            return;
+        }
+        stub_activeEntry.sentences[sentNum].L1 = e.value;
+        console.log(`Updated sentence ${sentNum} L1 to "${e.value}"`);
+    }
+    function stub_updateSentenceL2 (sentNum) {
+        const e = document.getElementById(`entry-sentence-${sentNum}-L2`);
+        if (!e) {
+            console.error(`Cannot find DOM input linked to sentence ${sentNum} L2.`);
+            return;
+        }
+        stub_activeEntry.sentences[sentNum].L2 = e.value;
+        console.log(`Updated sentence ${sentNum} L2 to "${e.value}"`);
     }
 
     function loadLanguageData (L) {
@@ -1662,6 +1674,10 @@
             { formId : 8, content : `čʰɨxačʰničʼa` },
             { formId : 9, content : `#čʰɨxičʰ -in` },
         ],
+        sentences : [
+            { formId : -1, L1 : `This is the first sentence.`, L2 : `First sentence translation goes here.` },
+            { formId : 2, L1 : `Hello world.`, L2 : `Wikchamni says hello.` }
+        ],
         notes : [
             { type : '-1', content : `Related language Chukchansi tʰixtʰinitʰ 'sick'` }
         ]
@@ -1686,6 +1702,7 @@
     // stub_addForm();
     // stub_addForm();
     // stub_addForm();
+    stub_loadSentences(stub_activeEntry);
 
     // close context menus when user clicks outside them
     window.addEventListener('click', e => {
