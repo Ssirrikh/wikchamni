@@ -1,13 +1,14 @@
 
-# 14.0 hrs: dev trawler script
+# 16.0 hrs: dev trawler script
 # 10.0 hrs: trawl data; record/label unhandled datapoints and inconsistencies
 # 2.0 hrs: research mdf format, add mdf formatter
 # 4.0 hrs: nameserver/pages/dns/record research
-# 7.0 hrs: zoom meeting, powerpoint, email chain
+# 10.0 hrs: zoom meeting, powerpoint, email chain
 # 2.0 hrs: meetings
 # 1.5 hrs: accessibility dev
 # 3.0 hrs: data format R&D
 # 1.0 hrs: electronJS
+# 2.5 hrs: data cleanup
 
 #### NOTES ####
 
@@ -77,6 +78,9 @@
 import codecs
 import os
 import re
+
+FLAG_VERBOSE = False
+FLAG_QUIET = True
 
 WD = os.getcwd()
 DATA_DIR = 'pages'
@@ -266,13 +270,13 @@ class DataEntry:
 		self.log = []
 	def addField(self,fieldname,contents):
 		if fieldname in FIELD_SINGLETON:
-			if getattr(self,fieldname) != "":
+			if not FLAG_QUIET and getattr(self,fieldname) != "":
 				print(f"WARN Found duplicate \"{fieldname}\" field in entry \"{self.english}\"")
 			setattr(self,fieldname,contents)
 		else:
 			unknownFieldNames.add(fieldname)
 	def addWordForm(self,formname,form):
-		if formname in self.forms:
+		if not FLAG_QUIET and formname in self.forms:
 			print(f"WARN Found duplicate \"{formname}\" form in entry \"{self.english}\"")
 		self.forms[formname] = form
 	def addWordVariant(self,variant):
@@ -284,7 +288,8 @@ class DataEntry:
 	def flag(self,msg = "Entry flagged; no reason given"):
 		self.flagged = True
 		self.log.append(msg)
-		print(msg)
+		if FLAG_VERBOSE:
+			print(msg)
 	def getMDF(self):
 		# mandatory ordered components (\lx \ps), core entry
 		mdf = f"\\lx {self.wikchamni}\n"
@@ -403,7 +408,8 @@ def parse (data):
 									unpop()
 
 							entry.addExample(currContents, nextContents, None)
-							print(f"2T example sentence \"{currContents}\" = \"{nextContents}\"")
+							if FLAG_VERBOSE:
+								print(f"2T example sentence \"{currContents}\" = \"{nextContents}\"")
 						else:
 							entry.flag(f"WARN No translation found for sentence \"{currContents}\"; next field was of type \"{nextFieldname}\"")
 							unpop()
@@ -420,42 +426,49 @@ def parse (data):
 						# special case: store "underlying form" \pd tokens as singleton field instead of general word form
 						elif nextFieldname == FIELD_TYPE_PARADIGM and formNameClean == "underlyingform":
 							entry.addField("underlying", nextContents)
-							print(f"2T underlying form \"{nextContents}\"")
+							if FLAG_VERBOSE:
+								print(f"2T underlying form \"{nextContents}\"")
 						# check if next token is \va spelling variation
 						elif nextFieldname == FIELD_TYPE_VARIANT:
 							entry.addWordVariant(nextContents)
-							print(f"2T variant \"{formNameClean}\" = \"{nextContents}\"")
+							if FLAG_VERBOSE:
+								print(f"2T variant \"{formNameClean}\" = \"{nextContents}\"")
 							if formNameClean != "variant":
 								entry.flag(f"WARN Detected lpMainCrossRef that was not of type \"variant\"")
 						# check if next token is \mn linked word
 						elif nextFieldname == FIELD_TYPE_LINKED_WORD:
 							entry.addLinkedWord(nextContents)
-							print(f"2T linked word \"{nextContents}\"")
+							if FLAG_VERBOSE:
+								print(f"2T linked word \"{nextContents}\"")
 							if formNameClean != "see":
 								entry.flag(f"WARN Detected lpCrossRef that was not of type \"see (linked word)\"")
 						# check if next token is recognized singleton field
 						elif FIELD_TYPE_NAMES[nextFieldname] in FIELD_SINGLETON:
 							entry.addField(FIELD_TYPE_NAMES[nextFieldname], nextContents)
-							print(f"2T singleton field \"{FIELD_TYPE_NAMES[nextFieldname]}\" = \"{nextContents}\"")
+							if FLAG_VERBOSE:
+								print(f"2T singleton field \"{FIELD_TYPE_NAMES[nextFieldname]}\" = \"{nextContents}\"")
 						# otherwise treat it as a word form
 						else:
 							entry.addWordForm(formNameClean, nextContents)
-							print(f"2T word form \"{formNameClean}\" = \"{nextContents}\"")
+							if FLAG_VERBOSE:
+								print(f"2T word form \"{formNameClean}\" = \"{nextContents}\"")
 				# check if current token is a recognized singleton field
 				elif currFieldname in FIELD_TYPE_NAMES:
 					entry.addField(FIELD_TYPE_NAMES[currFieldname],currContents)
-					print(f"1T singleton field \"{FIELD_TYPE_NAMES[currFieldname]}\" = \"{currContents}\"")
+					if FLAG_VERBOSE:
+						print(f"1T singleton field \"{FIELD_TYPE_NAMES[currFieldname]}\" = \"{currContents}\"")
 					# if this token is the \lx main entry label, extract the entry id from it
 					if currFieldname == FIELD_TYPE_ENTRY_LABEL:
 						currId = int(re.sub(r"[^0-9]+", '', getId(currAttributes)))
 						entry.entryId = currId
-						print(f"SP entry id \"{currId}\"")
+						if FLAG_VERBOSE:
+							print(f"SP entry id \"{currId}\"")
 				# else we must be on the ignore list
 					# no-op
 			if len(currClasslist) > 1:
 				entry.flag(f"WARN MULTICLASS {currClasslist}")
-		if len(entries) > 0: print("-----")
-		entry.print()
+		if FLAG_VERBOSE and len(entries) > 0: print("-----")
+		# entry.print()
 		entries.append(entry)
 	return entries
 
@@ -508,13 +521,17 @@ def parse (data):
 # 	print("\n=== Word Forms ===\n")
 # 	themes = ["n-theme. ", "v-theme. ", "prn-theme. "]
 # 	themeForms = []
+# 	nonThemeFormCount = 0
+# 	themeNoFormsCount = 0
 # 	for entry in entries:
 # 		if entry.catg not in themes:
 # 			if len(entry.forms) > 0:
 # 				print(f"NOTE NON_THEME_FORMS Entry #{entry.entryId} \"{entry.english}\" of catg \"{entry.catg}\" was not labeled as a word-theme entry, but contained forms {entry.forms}")
+# 				nonThemeFormCount += 1
 # 			continue
 # 		elif len(entry.forms) == 0:
 # 			print(f"NOTE THEME_NO_FORMS Entry #{entry.entryId} \"{entry.english}\" of catg \"{entry.catg}\" was labeled as a word-theme entry, but had no forms.")
+# 			themeNoFormsCount += 1
 # 		formCollection = []
 # 		for form in entry.forms:
 # 			formCollection.append( (form,entry.forms[form]) )
@@ -579,6 +596,108 @@ def parse (data):
 # 		else:
 # 			print(f"\"{form}\" was listed in a word-theme entry, but didn't have its own entry.")
 # 	print(f"\n{len(foundForms)-numFormsFound} out of {len(foundForms)} word-forms referenced in a word-theme entry don't have their own entry.\n")
+
+# 	print(f"{nonThemeFormCount} entries contained wordforms, but were not labeled as x-theme.")
+# 	print(f"{themeNoFormsCount} entries were labeled as x-theme, but contained no entries.")
+
+
+
+
+
+themes = ["n-theme. ", "v-theme. ", "prn-theme. "]
+themeCounts = {
+	"n-theme. " : 0,
+	"v-theme. " : 0,
+	"prn-theme. " : 0
+}
+nonThemeFormCountTotal = 0
+themeNoFormsCountTotal = 0
+themeEntriesCountTotal = 0
+vbaseCountTotal = 0
+vbaseNoFormsCountTotal = 0
+
+nonThemeFormBuffer = []
+themeNoFormsBuffer = []
+vbaseNoFormsBuffer = []
+	
+for filename in FILES:
+	with codecs.open(f"{DATA_DIR}\\{filename}", encoding='utf-8') as f:
+		# parse data (verbose by default)
+		print(f"=== Parsing Data in {filename} ===\n")
+		FLAG_VERBOSE = filename == "hash.html"
+		data = tokenize( f.read() )
+		entries = parse(data)
+
+		# x-theme entries
+		nonThemeFormCount = 0
+		themeNoFormsCount = 0
+		themeEntriesCount = 0
+		vbaseCount = 0
+		vbaseNoFormsCount = 0
+		for entry in entries:
+			if entry.catg == "v-base. ":
+				if len(entry.forms) > 0:
+					vbaseCount += 1
+				else:
+					vbaseNoFormsCount += 1
+					vbaseNoFormsBuffer.append(f'#{entry.entryId} ({entry.catg}) {entry.wikchamni} — {entry.english}')
+			elif entry.catg not in themes:
+				if len(entry.forms) > 0:
+					# print(f"NOTE NON_THEME_FORMS Entry #{entry.entryId} \"{entry.english}\" of catg \"{entry.catg}\" was not labeled as a word-theme entry, but contained forms {entry.forms}")
+					nonThemeFormCount += 1
+					nonThemeFormBuffer.append(f'#{entry.entryId} ({entry.catg}) {entry.wikchamni} — {entry.english}')
+					# print("bonk")
+					# entry.print()
+			elif len(entry.forms) == 0:
+				# print(f"NOTE THEME_NO_FORMS Entry #{entry.entryId} \"{entry.english}\" of catg \"{entry.catg}\" was labeled as a word-theme entry, but had no forms.")
+				themeNoFormsCount += 1
+				themeNoFormsBuffer.append(f'#{entry.entryId} ({entry.catg}) {entry.wikchamni} — {entry.english}')
+				# print("bonk")
+				# entry.print()
+			else:
+				themeEntriesCount += 1
+				themeCounts[entry.catg] += 1
+		nonThemeFormCountTotal += nonThemeFormCount
+		themeNoFormsCountTotal += themeNoFormsCount
+		themeEntriesCountTotal += themeEntriesCount
+		vbaseCountTotal += vbaseCount
+		vbaseNoFormsCountTotal += vbaseNoFormsCount
+		
+print(f'{themeEntriesCountTotal} valid x-theme entries in total ({themeCounts["n-theme. "]} n-theme, {themeCounts["v-theme. "]} v-theme, {themeCounts["prn-theme. "]} prn-theme)')
+print(f'{nonThemeFormCountTotal} entries should probably be x-theme but aren\'t (contain paradigms, but not labeled as x-theme)')
+print(f'{themeNoFormsCountTotal} entries are marked as x-theme, but contain no paradigms')
+print(f'{vbaseCountTotal} valid v-base entries')
+print(f'{vbaseNoFormsCountTotal} v-base entries with no paradigms')
+
+with codecs.open('output.txt', 'w', encoding='utf-8') as f:
+	buf = []
+
+	buf.append('\n=== STATISTICS ====\n\n')
+	buf.append(f'{themeEntriesCountTotal} entries are a valid x-theme with paradigms ({themeCounts["n-theme. "]} n-theme, {themeCounts["v-theme. "]} v-theme, {themeCounts["prn-theme. "]} prn-theme).\n')
+	buf.append(f'{vbaseCountTotal} entries are a valid v-base with paradigms\n')
+	buf.append(f'{themeNoFormsCountTotal} entries are marked as x-theme, but contain no paradigms.\n')
+	buf.append(f'{vbaseNoFormsCountTotal} entries are marked as v-base, but contain no paradigms.\n')
+	buf.append(f'{nonThemeFormCountTotal} entries likely should have been x-theme (contain paradigms, but not marked as x-theme).\n')
+	buf.append('\nTo be flagged as a likely x-theme, an entry met these criteria:\n')
+	buf.append('\t1. \\ps part-of-speech is NOT "n-theme", "v-theme", "prn-theme", or "v-base"\n')
+	buf.append('\t2. AND at least one \\pd paradigm which isn\'t an underlying form\n')
+
+	buf.append(f'\n\n\n=== X-THEME, BUT NO PARADIGMS ({themeNoFormsCountTotal}) ===\n\n')
+	for x in themeNoFormsBuffer:
+		buf.append(f'{x}\n')
+
+	buf.append(f'\n\n\n=== V-BASE, BUT NO PARADIGMS ({vbaseNoFormsCountTotal}) ===\n\n')
+	for x in vbaseNoFormsBuffer:
+		buf.append(f'{x}\n')
+
+
+	buf.append(f'\n\n\n=== LIKELY X-THEME ({nonThemeFormCountTotal}) ===\n\n')
+	for x in nonThemeFormBuffer:
+		buf.append(f'{x}\n')
+
+	f.write(''.join(buf).replace("&middot;",'·'))
+
+
 
 
 
