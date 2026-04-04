@@ -111,9 +111,25 @@ for (let i = 0; i < parse.lexemes.length; i++) {
     }
 }
 // sort index cards alphabetically (case insensative)
-orderedL1 = Object.keys(indexL1).sort((a,b) => a.toLowerCase() > b.toLowerCase());
+orderedL1 = Object.keys(indexL1).sort(
+    (a,b) => {
+        a = a.toLowerCase();
+        b = b.toLowerCase();
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+    }
+);
 console.log(`Ordered L1:`, orderedL1);
-orderedL2 = Object.keys(indexL2).sort((a,b) => a.toLowerCase() > b.toLowerCase());
+orderedL2 = Object.keys(indexL2).sort(
+    (a,b) => {
+        a = a.toLowerCase();
+        b = b.toLowerCase();
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+    }
+);
 console.log(`Ordered L2:`, orderedL2);
 const t1_index = performance.now();
 console.log(`Data indexed in ${Math.round(t1_index-t0_index)} ms`);
