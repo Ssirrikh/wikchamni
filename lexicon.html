@@ -30,6 +30,7 @@
 
 				--primary-faded: #666f99;
 				--highlight: #2f91ff;
+				/* --highlight: #428bca; */
 				--highlight-dark: #113366ff;
 				--bg-tint: #2f91ff22;
 
@@ -271,7 +272,7 @@
 				border-radius: 0.25em;
 				padding: 0.15em;
 				padding-left: 1.75em;
-				padding-right: 5.75em;
+				padding-right: 6em;
 				font-size: 1em;
 			}
 			#searchbar:active {
@@ -288,56 +289,70 @@
 				left: 0;
 				padding: 0 0.15em;
 			}
+			#searchbar-actions-left > button {
+				height: 100%;
+			}
 			#search-filters {
 				color: white !important;
+			}
+			#search-filters > svg {
 				background-color: var(--highlight) !important;
+				border-radius: 0.2em;
 			}
 			#search-filters:focus-visible {
 				outline: medium solid var(--dark);
 			}
-			/* #search-filters.active {
-				color: white !important;
-				background-color: var(--highlight) !important;
-			} */
+			#search-filters:hover> svg {
+				color: var(--bg-tint);
+				/* outline: thin solid var(--highlight-dark); */
+				/* background-color: var(--highlight-dark) !important; */
+			}
 			#searchbar-actions-right {
+				/* border: thin solid transparent; */
 				height: 100%;
 				position: absolute;
 				right: 0;
 				padding-right: 0.15em;
 			}
-			.search-lang {
+			#searchbar-actions-right > button {
+				height: 100%;
+			}
+			.search-lang > span {
 				color: var(--highlight) !important;
 				background-color: transparent;
+				display: inline-block;
 				width: 2em;
 			}
-			.search-lang.active {
+			.search-lang.active > span {
 				color: white !important;
 				background-color: var(--highlight) !important;
 			}
-			.search-lang:hover {
+			.search-lang:hover > span {
 				background-color: var(--bg-grey-light);
 			}
 			.search-lang:focus-visible {
 				outline: medium solid var(--dark);
 			}
-			#search-clear:hover {
+			#search-clear {
+				width: 1.5em;
+			}
+			#search-clear:hover > .icon-x {
 				background-color: var(--bg-grey-light);
 			}
 			#search-copy-chars {
 				flex-wrap: wrap;
-				padding: 0.15em;
 			}
 			#search-copy-chars > button {
 				/* Safari browser will style button as link if color is inherited; must explicitly override on element */
 				color: var(--text-dark-focus);
-				border-radius: 0.25em;
-				padding: 0 0.5em;
+				padding: 0.15em 0.5em;
 			}
 			#search-copy-chars > button:hover {
 				background-color: var(--bg-grey-light);
 			}
 			#search-copy-chars > button:focus-visible {
 				outline: medium solid black;
+				z-index: var(--layer-front);
 			}
 
 			#search-results-wrapper {
@@ -426,6 +441,9 @@
 			}
 			.modal-header .icon-x {
 				font-size: 1.2em;
+			}
+			.modal-header .icon-x:hover {
+				background-color: var(--bg-grey-light);
 			}
 			.modal-footer {
 				color: var(--text-dark);
@@ -541,6 +559,12 @@
 			.entry-L2-word {
 				font-size: 1em;
 			}
+			/* .entry-L2 .icon-audio {
+				padding: 0.2em;
+			} */
+			.entry-L2 .icon-audio:hover {
+				background-color: var(--bg-grey-light);
+			}
 
 
 			.entry-examples {
@@ -564,6 +588,12 @@
 			.entry-example > .flex-row-centered > p {
 				/* flex-row wrapper changes flex axis */
 				flex-shrink: 1;
+			}
+			/* .entry-example .icon-audio {
+				padding: 0.2em;
+			} */
+			.entry-example .icon-audio:hover {
+				background-color: white;
 			}
 
 			.entry-lexemes {
@@ -726,7 +756,7 @@
 						<div class='flex-col pos-anchor'>
 							<input id='searchbar' type='text' placeholder='Search...'>
 							<div id='searchbar-actions-left' class='flex-row-centered'>
-								<button id='search-filters' class='icon icon-svg' title='Search filters'>
+								<button id='search-filters' class='flex-centered' title='Search filters'>
 									<svg id='nav-hamburger' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' width='24' height='24' stroke-width='1.5' aria-hidden='true'>
 										<path d='M5 8l14 0'></path>
 										<path d='M7 12l10 0'></path>
@@ -735,9 +765,9 @@
 								</button>
 							</div>
 							<div id='searchbar-actions-right' class='flex-row-centered'>
-								<button id='search-lang-L1' class='search-lang active' title='Search in English'>EN</button>
-								<button id='search-lang-L2' class='search-lang' title='Search in Wikchamni'>WK</button>
-								<button id='search-clear' class='icon icon-x' title='Clear search'></button>
+								<button id='search-lang-L1' class='search-lang active' title='Search in English'><span aria-hidden='true'>EN</span></button>
+								<button id='search-lang-L2' class='search-lang' title='Search in Wikchamni'><span aria-hidden='true'>WK</span></button>
+								<button id='search-clear' class='flex-centered' title='Clear search'><div class='icon icon-x'></div></button>
 							</div>
 						</div>
 						<div id='search-copy-chars' class='flex-row flex-centered'>
@@ -881,6 +911,9 @@
 				<p class='entry-example-L1'>[no English translation]</p>
 			</div>
 		</template>
+		<!-- <template id='tpl-audio-button'>
+			<button class='icon icon-audio' title='[Blank or missing audio file]'></button>
+		</template> -->
 
 		<!-- scripts -->
 		<script type='text/javascript'>
