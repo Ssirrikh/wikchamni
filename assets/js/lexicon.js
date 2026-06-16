@@ -10,6 +10,8 @@ const IMG_404 = `assets/images/404.png`;
 // enum
 const CARD_TYPE_ENTRY = false;
 const CARD_TYPE_LEXEME = true;
+const LANG_WIK = true;
+const LANG_ENG = false;
 
 // regex
 const RE_SYNONYM_SPLITTER = /;\s*/;
@@ -116,6 +118,86 @@ let audioPlayer = {
         audioPlayer.player.src = `./${src}`;
 		audioPlayer.player.play();
 	}
+};
+
+
+
+// param handlers
+const tryGetDefaultEntry = () => {
+    // straw grass (acc) č'akši [3 forms, 1 sent]
+    // clover č'it'at' [2 forms, 2 sents]
+    // digging roots (dur pres) hopʰtat [2 forms, 2 sents]
+    // mountain balm (cons adju) kiṭ'inʔiy [2 forms, 1 sent]
+    // baskets (acc) k'ač'iwhat [2 forms, 2 sents]
+    // weaving (neutral v n acc) tixta [2 forms, 2 sents]
+    // elderberry (abs) wiše·tʰaʔ [2 forms, 1 sent]
+    for (let i = 0; i < indexL1.length; i++) {
+        // toolbox output may shuffle order of entries and does not provide id numbers
+        // only way to reliably target an entry is to manually search for it
+        // the word "clover" is chosen for its unambiguity: only one entry currently has L1 "clover" and an example with audio
+        if (indexL1[i].word == 'clover' && indexL1[i].hasAudio) {
+            console.log(`Loading initial entry "${indexL1[i].word}" (${indexL1[i].catg}) id ${indexL1[i].id}`);
+            return indexL1[i];
+            // eSearchGotoEntryButton.textContent = indexL1[i].word;
+            // renderEntryFor(indexL1[i]);
+            // break;
+        }
+    }
+    return null;
+};
+const tryGetEntryFromParams = () => {
+    // get url params
+    if (!window.location.search) {
+        console.log(`No url params detected.`);
+        return null;
+    }
+    const paramsObj = new URLSearchParams(window.location.search);
+    const params = {
+        lang : paramsObj.get('lang') || '',
+        entry : paramsObj.get('entry') || -1,
+    };
+    console.log(params);
+    // check lang
+    if (params.lang !== 'wk' && params.lang !== 'en') {
+        console.log( (params.lang === '')
+            ? 'No language specified.'
+            : `"${params.lang}" is not a recognized language. Options are "en" for English or "wk" for Wikchamni.`
+        );
+        return null;
+    }
+    // check entry
+    if (params.entry < 0) {
+        console.log('Detected request for default entry.');
+        return null;
+    }
+    const activeIndex = (params.lang === 'wk') ? indexL2 : indexL1;
+    if (activeIndex.length === 0) {
+        console.log('No entries in specified language.');
+        return null;
+    }
+    return activeIndex[Math.min(params.entry, activeIndex.length-1)];
+};
+const setParamsFromEntry = (lang,entryId=0) => {
+    if (lang !== 'wk' && lang !== 'en') {
+        console.error(`"${lang}" is not a recognized language. Options are "en" for English or "wk" for Wikchamni.`);
+        return false;
+    }
+    const activeIndex = (lang === 'wk') ? indexL2 : indexL1;
+    // check for out of bounds entry
+    if (activeIndex.length === 0 || entryId < 0) {
+        entryId = -1;
+    } else if (entryId >= activeIndex.length) {
+        entryId = activeIndex.length - 1;
+    }
+    // construct url param string
+    history.pushState({}, '', `?lang=${lang}&entry=${entryId}`);
+    return true;
+    // const oldParamStr = window.location.search;
+    // const paramStr = `?lang=${lang}&entry=${entryId}`;
+    // console.log(`Setting url params to "${paramStr}" from entry: ${activeIndex[entryId]}`);
+    // history.pushState({}, "", paramStr);
+    // console.log(`Params "${oldParamStr}" -> "${window.location.search}"`);
+    // return true;
 };
 
 
@@ -229,8 +311,11 @@ const indexEntries = (parse) => {
         }
     }
 };
-const populateIndexDOMElementsFor = (index) => {
-    for (let card of index) {
+const populateIndexDOMElementsFor = (lang=LANG_ENG) => {
+    console.log(`Populating index DOM elements for "${lang?'wk':'en'}"`);
+    const index = (lang === LANG_WIK) ? indexL2 : indexL1;
+    for (let i = 0; i < index.length; i++) {
+        const card = index[i];
         const entry = (card.isLexeme) ? parse.lexemes[card.id] : parse.entries[card.id];
         if (!entry) {
             console.error(`Index card points to ${(card.isLexeme?'lexeme ':'')}entry that doesn't exist.`, card);
@@ -250,6 +335,8 @@ const populateIndexDOMElementsFor = (index) => {
         }
         e.onclick = () => {
             console.log(`Rendering ${(card.isLexeme?'lexeme ':'')}entry ${card.id} for "${card.word}" (${card.catg})`);
+            // console.log(`Url params would be ?lang=${(lang===LANG_WIK)?'wk':'en'}&entry=${i}`);
+            setParamsFromEntry((lang===LANG_WIK)?'wk':'en', i);
             eSearchGotoEntryButton.textContent = card.word;
             renderEntryFor(card);
             focusEntry();
@@ -705,7 +792,6 @@ const renderEntryFor = (card) => {
     // related words
     eEntryDisplay.querySelector('.entry-lexemes').textContent = '';
 
-    // TODO: display images
     // TODO: in lexeme entries, link non-underlying words to standard entries (else color red)
     // TODO: in standard entries, link underlying words to lexeme entries (else color red)
 };
@@ -752,32 +838,22 @@ const t3_page = performance.now();
 console.log(`Entries alphabetized in ${Math.round(t3_page-t2_page)} ms.`);
 
 // build global dynamic page elements
-populateCopychars();
+// populateCopychars(); // hard-coded into html; only rerun if new special chars added
 search.filters.render();
 eSearchDisplay.querySelector('#search-goto-entry .goto-button').onclick = focusEntry;
 eEntryDisplay.querySelector('#entry-goto-search .goto-button').onclick = focusSearch;
 // build L1 dynamic page elems and load initial entry
-populateIndexDOMElementsFor(indexL1);
+populateIndexDOMElementsFor(LANG_ENG);
 search.domElement.value = ''; // need to reset input text for consistency, since we can't save begins-contains-ends state
 search.populate();
 // load initial entry
-    // straw grass (acc) č'akši [3 forms, 1 sent]
-    // clover č'it'at' [2 forms, 2 sents]
-    // digging roots (dur pres) hopʰtat [2 forms, 2 sents]
-    // mountain balm (cons adju) kiṭ'inʔiy [2 forms, 1 sent]
-    // baskets (acc) k'ač'iwhat [2 forms, 2 sents]
-    // weaving (neutral v n acc) tixta [2 forms, 2 sents]
-    // elderberry (abs) wiše·tʰaʔ [2 forms, 1 sent]
-for (let i = 0; i < indexL1.length; i++) {
-    // toolbox output may shuffle order of entries and does not provide id numbers
-    // only way to reliably target an entry is to manually search for it
-    // the word "clover" is chosen for its unambiguity: only one entry currently has L1 "clover" and an example with audio
-    if (indexL1[i].word == 'clover' && indexL1[i].hasAudio) {
-        console.log(`Loading initial entry "${indexL1[i].word}" (${indexL1[i].catg}) id ${indexL1[i].id}`);
-        eSearchGotoEntryButton.textContent = indexL1[i].word;
-        renderEntryFor(indexL1[i]);
-        break;
-    }
+let initialEntry = tryGetEntryFromParams() || tryGetDefaultEntry();
+if (!initialEntry) {
+    console.log(`Unable to load initial entry.`);
+    // [set status text to "Unable to load initial entry"]
+} else {
+    eSearchGotoEntryButton.textContent = initialEntry.word;
+    renderEntryFor(initialEntry);
 }
 const t4_page = performance.now();
 eNumResults.textContent = `${(search.toggleLang)?indexL2.length:indexL1.length} entries`;
@@ -790,10 +866,34 @@ console.log(`Page fully rendered after ${Math.round(t4_page-t0_page)} ms. (Data 
 requestAnimationFrame(() => {
     const t5_page = performance.now();
     // build L2 dynamic page elems
-    populateIndexDOMElementsFor(indexL2);
+    populateIndexDOMElementsFor(LANG_WIK);
     const t6_page = performance.now();
     console.log(`${Math.round(t6_page-t5_page)} ms of work was deferred by ${Math.round(t5_page-t4_page)} ms to allow for final contentful render.`);
     console.log(`All loading done in ${Math.round(t6_page-t0_page)} ms`);
+
+    // // temp generate sitemap
+    // const URL_BASE = 'https://ssirrikh.github.io/wikchamni';
+    // let sitemapPages = [
+    //     `${URL_BASE}`,
+    //     `${URL_BASE}/about`,
+    //     `${URL_BASE}/language`,
+    //     `${URL_BASE}/lexicon`,
+    // ];
+    // for (let lang of ['en','wk']) {
+    //     const activeIndex = (lang === 'wk') ? indexL2 : indexL1;
+    //     for (let i = 0; i < activeIndex.length; i++) {
+    //         sitemapPages.push(`${URL_BASE}/lexicon?lang=${lang}&entry=${i}`);
+    //     }
+    // }
+    // console.log(`Sitemap contains ${sitemapPages.length} pages: 4 base pages + ${indexL1.length} eng entries + ${indexL2.length} wik entries`);
+    // // download sitemap
+    // let eSitemap = document.createElement('a');
+    // eSitemap.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(sitemapPages.join('\n')));
+    // eSitemap.setAttribute('download', 'sitemap-wikchamni.txt');
+    // eSitemap.style.display = 'none';
+    // document.body.appendChild(eSitemap);
+    // eSitemap.click();
+    // document.body.removeChild(eSitemap);
 });
 
 
