@@ -99,6 +99,23 @@
 						Gamble, Geoffrey. <i>A Wikchamni Dictionary</i>. Fresno State Library, California State University, Fresno, <span id="citation-date">1 September 2019</span>, wikchamnidictionary.library.csufresno.edu.
 					</blockquote>
 				</article>
+				<article>
+					<h3 id="debug">Debug Section</h3>
+					<p>The following webpages each represent a debug test for Fresno State University Library's automated evaluation tools. The original evaluation of this site's lexicon failed silently, so these tests attempt to discover that point of failure.</p>
+					<h4>HTML/JS Page Tests</h4>
+					<p><a href='lexicon-test-nojs-notemplate-buttons'>Minimal</a>: copy of lexicon page with few elements, no JS, and no HTML5 features (ex. templates)</p>
+					<p><a href='lexicon-test-nojs-buttons'>No-JS (Buttons)</a>: fully-static page with HTML5 templates, but no JS (old design with buttons)</p>
+					<p><a href='lexicon-test-nojs-anchors'>No-JS (Anchors)</a>: fully-static page with HTML5 templates, but no JS (new design with anchors)</p>
+					<p><a href='lexicon-test-static-buttons'>Static (Buttons)</a>: static page with JS, but no dynamic page modification (old buttons design)</p>
+					<p><a href='lexicon-test-static-anchors'>Static (Anchors)</a>: static page with JS, but no dynamic page modification (new anchors design)</p>
+					<p><a href='lexicon-test-dynamic20-anchors'>Dynamic (20 elem)</a>: dynamic page w/ full database code, but renders only 20/5078 eng entries</p>
+					<p><a href='lexicon-test-dynamic500-anchors'>Dynamic (500 elem)</a>: dynamic page w/ full database code, but renders only 500/5078 eng entries</p>
+					<p><a href='lexicon-test-longjs-static'>Expensive JS</a>: dynamic page with few elements which spoofs expensive JS ops and dynamically modifies html</p>
+					<p><a href='lexicon-test-full-nojs-notemplate-anchors'>Static Full Eng</a>: large fully-static frozen render of eng database w/ no JS or HTML5 features</p>
+					<h4>Crawler Tests</h4>
+					<p><span>Unlinked Page</span>: crawler test page that appears in sitemap, but is never linked to by another page</p>
+					<p><a href='lexicon-test-unmapped'>Unmapped Page</a>: crawler test page that is linked to, but not included in sitemap</p>
+				</article>
 
 			</div>
 
