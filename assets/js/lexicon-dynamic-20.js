@@ -314,7 +314,7 @@ const indexEntries = (parse) => {
 const populateIndexDOMElementsFor = (lang=LANG_ENG) => {
     console.log(`Populating index DOM elements for "${lang?'wk':'en'}"`);
     const index = (lang === LANG_WIK) ? indexL2 : indexL1;
-    for (let i = 0; i < index.length; i++) {
+    for (let i = 0; i < 20; i++) {
         const card = index[i];
         const entry = (card.isLexeme) ? parse.lexemes[card.id] : parse.entries[card.id];
         if (!entry) {
@@ -393,11 +393,13 @@ let search = {
         eSearchResults.textContent = '';
         if (search.toggleLang) {
             for (let card of indexL2) {
+                if (!card.domElement) continue;
                 card.domElement.classList.remove('hidden');
                 eSearchResults.appendChild(card.domElement);
             }
         } else {
             for (let card of indexL1) {
+                if (!card.domElement) continue;
                 card.domElement.classList.remove('hidden');
                 eSearchResults.appendChild(card.domElement);
             }
@@ -886,24 +888,10 @@ requestAnimationFrame(() => {
     // // temp generate sitemap
     // const URL_BASE = 'https://ssirrikh.github.io/wikchamni';
     // let sitemapPages = [
-    //     // site pages
     //     `${URL_BASE}`,
     //     `${URL_BASE}/about`,
     //     `${URL_BASE}/language`,
     //     `${URL_BASE}/lexicon`,
-    //     // debug pages
-    //     `${URL_BASE}/lexicon-test-nojs-notemplate-anchors`, // fully-static page, no templates
-    //     `${URL_BASE}/lexicon-test-nojs-buttons`, // fully-static pages with templates
-    //     `${URL_BASE}/lexicon-test-nojs-anchors`,
-    //     `${URL_BASE}/lexicon-test-static-buttons`, // static pages w/ minimal JS
-    //     `${URL_BASE}/lexicon-test-static-anchors`,
-    //     `${URL_BASE}/lexicon-test-dynamic20-anchors`, // dynamically-built pages w/ few elements
-    //     `${URL_BASE}/lexicon-test-dynamic500-anchors`,
-    //     `${URL_BASE}/lexicon-test-longjs-static`, // page with expensive JS, but few elements
-    //     `${URL_BASE}/lexicon-test-full-nojs-notemplate-anchors`, // fully-static page w/ no JS, but many elements (static full eng dictionary)
-    //     // crawler tester pages
-    //     `${URL_BASE}/lexicon-test-unlinked`, // stub page included in sitemap, but never linked to by another page
-    //     // `${URL_BASE}/lexicon-test-unmapped`, // stub page linked to by another page, but not included in sitemap
     // ];
     // for (let lang of ['en','wk']) {
     //     const activeIndex = (lang === 'wk') ? indexL2 : indexL1;

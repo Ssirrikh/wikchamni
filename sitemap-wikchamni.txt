@@ -2,6 +2,16 @@ https://ssirrikh.github.io/wikchamni
 https://ssirrikh.github.io/wikchamni/about
 https://ssirrikh.github.io/wikchamni/language
 https://ssirrikh.github.io/wikchamni/lexicon
+https://ssirrikh.github.io/wikchamni/lexicon-test-nojs-notemplate-anchors
+https://ssirrikh.github.io/wikchamni/lexicon-test-nojs-buttons
+https://ssirrikh.github.io/wikchamni/lexicon-test-nojs-anchors
+https://ssirrikh.github.io/wikchamni/lexicon-test-static-buttons
+https://ssirrikh.github.io/wikchamni/lexicon-test-static-anchors
+https://ssirrikh.github.io/wikchamni/lexicon-test-dynamic20-anchors
+https://ssirrikh.github.io/wikchamni/lexicon-test-dynamic500-anchors
+https://ssirrikh.github.io/wikchamni/lexicon-test-longjs-static
+https://ssirrikh.github.io/wikchamni/lexicon-test-full-nojs-notemplate-anchors
+https://ssirrikh.github.io/wikchamni/lexicon-test-unlinked
 https://ssirrikh.github.io/wikchamni/lexicon?lang=en&entry=0
 https://ssirrikh.github.io/wikchamni/lexicon?lang=en&entry=1
 https://ssirrikh.github.io/wikchamni/lexicon?lang=en&entry=2
