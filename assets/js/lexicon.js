@@ -325,6 +325,7 @@ const populateIndexDOMElementsFor = (lang=LANG_ENG) => {
         const e = card.domElement;
         e.href = `lexicon?lang=${(lang===LANG_WIK)?'wk':'en'}&entry=${i}`;
         e.querySelector('.search-result-catg').textContent = CATG_ABBRS[card.catg] ?? capitalize(card.catg);
+        e.querySelector('.search-result-catg').title = (card.catg == 'n') ? 'Noun' : capitalize(card.catg);
         e.querySelector('.search-result-word').textContent = card.word;
         if (card.hasImages) {
             e.querySelector('.icon:nth-of-type(1)').classList.add('icon-image');
@@ -344,7 +345,7 @@ const populateIndexDOMElementsFor = (lang=LANG_ENG) => {
             focusEntry();
         };
         // manually build ARIA-accessible description, since multiple spans inside button is freaking out some screen readers
-        e.ariaLabel = `${card.catg} ${card.word} ${(card.hasImages)?'Has image':''} ${(card.hasAudio)?'Has audio':''}`;
+        e.ariaLabel = `${(card.catg == 'n') ? 'Noun' : capitalize(card.catg)}, ${card.word}, ${(card.hasImages)?'Has image':''} ${(card.hasAudio)?'Has audio':''}`;
     }
 };
 
@@ -873,46 +874,61 @@ requestAnimationFrame(() => {
     console.log(`${Math.round(t6_page-t5_page)} ms of work was deferred by ${Math.round(t5_page-t4_page)} ms to allow for final contentful render.`);
     console.log(`All loading done in ${Math.round(t6_page-t0_page)} ms`);
 
-    // const triggerDownload = (filename,contents='') => {
-    //     let e = document.createElement('a');
-    //     e.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(contents));
-    //     e.setAttribute('download', filename);
-    //     e.style.display = 'none';
-    //     document.body.appendChild(e);
-    //     e.click();
-    //     document.body.removeChild(e);
-    // };
+    let numL1EntriesWithAudio = 0;
+    for (let card of indexL1) {
+        if (card.hasAudio) numL1EntriesWithAudio++;
+    }
+    console.log(`${numL1EntriesWithAudio} / ${indexL1.length} entries have audio`);
 
-    // // temp generate sitemap
-    // const URL_BASE = 'https://ssirrikh.github.io/wikchamni';
-    // let sitemapPages = [
-    //     // site pages
-    //     `${URL_BASE}`,
-    //     `${URL_BASE}/about`,
-    //     `${URL_BASE}/language`,
-    //     `${URL_BASE}/lexicon`,
-    //     // debug pages
-    //     `${URL_BASE}/lexicon-test-nojs-notemplate-anchors`, // fully-static page, no templates
-    //     `${URL_BASE}/lexicon-test-nojs-buttons`, // fully-static pages with templates
-    //     `${URL_BASE}/lexicon-test-nojs-anchors`,
-    //     `${URL_BASE}/lexicon-test-static-buttons`, // static pages w/ minimal JS
-    //     `${URL_BASE}/lexicon-test-static-anchors`,
-    //     `${URL_BASE}/lexicon-test-dynamic20-anchors`, // dynamically-built pages w/ few elements
-    //     `${URL_BASE}/lexicon-test-dynamic500-anchors`,
-    //     `${URL_BASE}/lexicon-test-longjs-static`, // page with expensive JS, but few elements
-    //     `${URL_BASE}/lexicon-test-full-nojs-notemplate-anchors`, // fully-static page w/ no JS, but many elements (static full eng dictionary)
-    //     // crawler tester pages
-    //     `${URL_BASE}/lexicon-test-unlinked`, // stub page included in sitemap, but never linked to by another page
-    //     // `${URL_BASE}/lexicon-test-unmapped`, // stub page linked to by another page, but not included in sitemap
-    // ];
-    // for (let lang of ['en','wk']) {
-    //     const activeIndex = (lang === 'wk') ? indexL2 : indexL1;
-    //     for (let i = 0; i < activeIndex.length; i++) {
-    //         sitemapPages.push(`${URL_BASE}/lexicon?lang=${lang}&entry=${i}`);
-    //     }
-    // }
-    // console.log(`Sitemap contains ${sitemapPages.length} pages: 4 base pages + ${indexL1.length} eng entries + ${indexL2.length} wik entries`);
-    // triggerDownload('sitemap-wikchamni.txt', sitemapPages.join('\n'));
+    const triggerDownload = (filename,contents='') => {
+        let e = document.createElement('a');
+        e.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(contents));
+        e.setAttribute('download', filename);
+        e.style.display = 'none';
+        document.body.appendChild(e);
+        e.click();
+        document.body.removeChild(e);
+    };
+
+    // temp generate sitemap
+    const URL_BASE = 'https://ssirrikh.github.io/wikchamni';
+    let sitemapPages = [
+        // site pages
+        `${URL_BASE}`,
+        `${URL_BASE}/about`,
+        `${URL_BASE}/language`,
+        `${URL_BASE}/lexicon`,
+        // debug pages
+        `${URL_BASE}/lexicon-test-nojs-notemplate-anchors`, // fully-static page, no templates
+        `${URL_BASE}/lexicon-test-nojs-buttons`, // fully-static pages with templates
+        `${URL_BASE}/lexicon-test-nojs-anchors`,
+        `${URL_BASE}/lexicon-test-static-buttons`, // static pages w/ minimal JS
+        `${URL_BASE}/lexicon-test-static-anchors`,
+        `${URL_BASE}/lexicon-test-dynamic20-anchors`, // dynamically-built pages w/ few elements
+        `${URL_BASE}/lexicon-test-dynamic500-anchors`,
+        `${URL_BASE}/lexicon-test-longjs-static`, // page with expensive JS, but few elements
+        `${URL_BASE}/lexicon-test-full-nojs-notemplate-anchors`, // fully-static page w/ no JS, but many elements (static full eng dictionary)
+        // crawler tester pages
+        `${URL_BASE}/lexicon-test-unlinked`, // stub page included in sitemap, but never linked to by another page
+        // `${URL_BASE}/lexicon-test-unmapped`, // stub page linked to by another page, but not included in sitemap
+    ];
+    for (let lang of ['en','wk']) {
+        const activeIndex = (lang === 'wk') ? indexL2 : indexL1;
+        for (let i = 0; i < activeIndex.length; i++) {
+            // sitemap urls must escape &, single/double quotes, and <>
+            sitemapPages.push(`${URL_BASE}/lexicon?lang=${lang}&amp;entry=${i}`);
+        }
+    }
+    console.log(`Sitemap contains ${sitemapPages.length} pages: 4 base pages + ${indexL1.length} eng entries + ${indexL2.length} wik entries`);
+    // triggerDownload('sitemap-wikchamni.txt', // download sitemap.txt
+    //     sitemapPages.join('\n')
+    // );
+    // triggerDownload('sitemap-wikchamni.xml', [ // download sitemap.xml
+    //     `<?xml version="1.0" encoding="UTF-8"?>`,
+    //     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
+    //     sitemapPages.map(url => `\t<url>\n\t\t<loc>${url}</loc>\n\t</url>`).join('\n'),
+    //     `</urlset>`,
+    // ].join('\n'));
 
     // // temp generate static page elems
     // let strStaticResults = '';
