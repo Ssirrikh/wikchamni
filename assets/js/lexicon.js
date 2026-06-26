@@ -10,8 +10,8 @@ const IMG_404 = `assets/images/404.png`;
 // enum
 const CARD_TYPE_ENTRY = false;
 const CARD_TYPE_LEXEME = true;
-const LANG_WIK = true;
-const LANG_ENG = false;
+const LANG_WIK = 'wk';
+const LANG_ENG = 'en';
 
 // regex
 const RE_SYNONYM_SPLITTER = /;\s*/;
@@ -19,10 +19,46 @@ const SYNONYM_JOIN = '; ';
 
 // ling data
 const CATG_ABBRS = Object.freeze({
+    'Part of Speech' : '',
+    'exclamation' : 'Excl',
+    'interjection' : 'Intj',
+    'interjection ' : 'Intj',
+    'n-proper' : 'PN',
     'n-theme' : 'N-Thm',
     'prn-theme' : 'P-Thm',
-    'v-theme' : 'V-Thm',
+    'prt.imit' : 'ImitP',
     'v-base' : 'VB',
+    'v-phrase' : 'VP',
+    'v-theme' : 'V-Thm',
+});
+const CATG_NAMES = Object.freeze({
+    '' : 'No part of speech given',
+    'Part of Speech' : 'No part of speech given',
+    'adv' : 'Adverb',
+    'afx' : 'Affix',
+    'conj' : 'Conjugation',
+    'dem-prn' : 'Demonstrative Pronoun',
+    'exclamation' : 'Exclamation',
+    'int-prn' : 'Interrogative Pronoun',
+    'interjection' : 'Interjection',
+    'interjection ' : 'Interjection',
+    'n' : 'Noun',
+    'n ' : 'Noun',
+    'n-proper' : 'Proper Noun',
+    'n-theme' : 'Noun Theme',
+    'n-theme ' : 'Noun Theme',
+    'prn' : 'Pronoun',
+    'prn-theme' : 'Pronoun Theme',
+    'prt' : 'Particle',
+    'prt.imit' : 'Imitative Particle',
+    'v' : 'Verb',
+    'v ' : 'Verb',
+    'V' : 'Verb',
+    'v-base' : 'Verb Base',
+    'v-base ' : 'Verb Base',
+    'v-phrase' : 'Verb Phrase',
+    'v-theme' : 'Verb Theme',
+    'v-theme ' : 'Verb Theme',
 });
 const MSG_COPYCHAR_DEFAULT = `Click to insert.`;
 const MSG_COPYCHAR_TEMPLATE = `Click to insert, or type`;
@@ -158,10 +194,10 @@ const tryGetEntryFromParams = () => {
     };
     console.log(params);
     // check lang
-    if (params.lang !== 'wk' && params.lang !== 'en') {
+    if (params.lang !== LANG_WIK && params.lang !== LANG_ENG) {
         console.log( (params.lang === '')
             ? 'No language specified.'
-            : `"${params.lang}" is not a recognized language. Options are "en" for English or "wk" for Wikchamni.`
+            : `"${params.lang}" is not a recognized language. Options are "${LANG_ENG}" for English or "${LANG_WIK}" for Wikchamni.`
         );
         return null;
     }
@@ -170,7 +206,7 @@ const tryGetEntryFromParams = () => {
         console.log('Detected request for default entry.');
         return null;
     }
-    const activeIndex = (params.lang === 'wk') ? indexL2 : indexL1;
+    const activeIndex = (params.lang === LANG_WIK) ? indexL2 : indexL1;
     if (activeIndex.length === 0) {
         console.log('No entries in specified language.');
         return null;
@@ -178,11 +214,11 @@ const tryGetEntryFromParams = () => {
     return activeIndex[Math.min(params.entry, activeIndex.length-1)];
 };
 const setParamsFromEntry = (lang,entryId=0) => {
-    if (lang !== 'wk' && lang !== 'en') {
-        console.error(`"${lang}" is not a recognized language. Options are "en" for English or "wk" for Wikchamni.`);
+    if (lang !== LANG_WIK && lang !== LANG_ENG) {
+        console.error(`"${lang}" is not a recognized language. Options are "${LANG_ENG}" for English or "${LANG_WIK}" for Wikchamni.`);
         return false;
     }
-    const activeIndex = (lang === 'wk') ? indexL2 : indexL1;
+    const activeIndex = (lang === LANG_WIK) ? indexL2 : indexL1;
     // check for out of bounds entry
     if (activeIndex.length === 0 || entryId < 0) {
         entryId = -1;
@@ -250,7 +286,7 @@ const indexEntries = (parse) => {
         // scan words
         for (let raw of parse.entries[i].L1 ?? []) {
             const synonyms = raw.split(RE_SYNONYM_SPLITTER);
-            if (synonyms.length > 1) console.error(`The word "${raw}" in L1 of entry ${i} conatined semicolon-separated words.`);
+            if (synonyms.length > 1) console.error(`The word "${raw}" in L1 of entry ${i} contained semicolon-separated words.`);
             for (let L1 of synonyms) {
                 indexL1.push(
                     IndexCard(CARD_TYPE_ENTRY,i,L1,parse.entries[i].catg,hasAudio,hasImages)
@@ -259,7 +295,7 @@ const indexEntries = (parse) => {
         }
         for (let raw of parse.entries[i].L2 ?? []) {
             const synonyms = raw.L2.split(RE_SYNONYM_SPLITTER);
-            if (synonyms.length > 1) console.error(`The word "${raw}" in L2 of entry ${i} conatined semicolon-separated words.`);
+            if (synonyms.length > 1) console.error(`The word "${raw}" in L2 of entry ${i} contained semicolon-separated words.`);
             for (let L2 of synonyms) {
                 indexL2.push(
                     IndexCard(CARD_TYPE_ENTRY,i,L2,parse.entries[i].catg,hasAudio,hasImages)
@@ -312,7 +348,11 @@ const indexEntries = (parse) => {
     }
 };
 const populateIndexDOMElementsFor = (lang=LANG_ENG) => {
-    console.log(`Populating index DOM elements for "${lang?'wk':'en'}"`);
+    if (lang !== LANG_WIK && lang != LANG_ENG) {
+        console.error(`"${lang}" is not a recognized language. Options are "${LANG_ENG}" for English or "${LANG_WIK}" for Wikchamni.`);
+        return false;
+    }
+    console.log(`Populating index DOM elements for "${lang}"`);
     const index = (lang === LANG_WIK) ? indexL2 : indexL1;
     for (let i = 0; i < index.length; i++) {
         const card = index[i];
@@ -323,10 +363,11 @@ const populateIndexDOMElementsFor = (lang=LANG_ENG) => {
         }
         card.domElement = document.getElementById('tpl-search-result').content.firstElementChild.cloneNode(true);
         const e = card.domElement;
-        e.href = `lexicon?lang=${(lang===LANG_WIK)?'wk':'en'}&entry=${i}`;
+        e.href = `lexicon?lang=${lang}&entry=${i}`;
         e.querySelector('.search-result-catg').textContent = CATG_ABBRS[card.catg] ?? capitalize(card.catg);
-        e.querySelector('.search-result-catg').title = (card.catg == 'n') ? 'Noun' : capitalize(card.catg);
+        e.querySelector('.search-result-catg').title = CATG_NAMES[card.catg] ?? capitalize(card.catg);
         e.querySelector('.search-result-word').textContent = card.word;
+        e.querySelector('.search-result-word').title = `${(lang === LANG_WIK)?'Wikchamni':'English'} entry ${i}`;
         if (card.hasImages) {
             e.querySelector('.icon:nth-of-type(1)').classList.add('icon-image');
             e.querySelector('.icon:nth-of-type(1)').title = 'Has image(s)';
@@ -338,15 +379,19 @@ const populateIndexDOMElementsFor = (lang=LANG_ENG) => {
         e.onclick = (evt) => {
             evt.preventDefault(); // if JS is enabled, block normal <a> nav in favor of fast SPA nav
             console.log(`Rendering ${(card.isLexeme?'lexeme ':'')}entry ${card.id} for "${card.word}" (${card.catg})`);
-            // console.log(`Url params would be ?lang=${(lang===LANG_WIK)?'wk':'en'}&entry=${i}`);
-            setParamsFromEntry((lang===LANG_WIK)?'wk':'en', i);
+            setParamsFromEntry(lang, i);
             eSearchGotoEntryButton.textContent = card.word;
             renderEntryFor(card);
             focusEntry();
         };
-        // manually build ARIA-accessible description, since multiple spans inside button is freaking out some screen readers
-        e.ariaLabel = `${(card.catg == 'n') ? 'Noun' : capitalize(card.catg)}, ${card.word}, ${(card.hasImages)?'Has image':''} ${(card.hasAudio)?'Has audio':''}`;
+        // manually build ARIA-accessible description
+        // this gives customizable read-order and avoids screenreader issues with focus management, double-reading, and wrongful reading of icons with title hovertext
+        let ariaFrags = [card.word, CATG_NAMES[card.catg] ?? card.catg];
+        if (card.hasImages) ariaFrags.push('has image');
+        if (card.hasAudio) ariaFrags.push('has audio');
+        e.ariaLabel = ariaFrags.join(', ');
     }
+    return true;
 };
 
 
@@ -812,6 +857,7 @@ const focusSearch = () => {
         // unknown how to prevent entirely, since failures are dependent on browser implementation and device lag
         // failure does not give error, so we must rely on fact that button isn't clickable unless focus transfer failed
         // re-adding and re-removing activation class with two separate user actions resets panel (chaining and requestAnimationFrame() don't trigger refresh)
+        // hope is that user clicks (first input primes), thinks they missed when nothing visible happens, then clicks again (second input clears)
         eEntryDisplay.classList.add('focus');
         console.log('entry got stuck open; performed reset');
     }
@@ -874,52 +920,65 @@ requestAnimationFrame(() => {
     console.log(`${Math.round(t6_page-t5_page)} ms of work was deferred by ${Math.round(t5_page-t4_page)} ms to allow for final contentful render.`);
     console.log(`All loading done in ${Math.round(t6_page-t0_page)} ms`);
 
+    // statistics and self-analysis
+    let unhandledCatgs = {};
     let numL1EntriesWithAudio = 0;
+    let numL1EntriesWithImage = 0;
     for (let card of indexL1) {
         if (card.hasAudio) numL1EntriesWithAudio++;
+        if (card.hasImages) numL1EntriesWithImage++;
+        if (!CATG_NAMES[card.catg]) unhandledCatgs[card.catg] = true;
+        // if (card.catg == 'prt.imit') console.log(card);
     }
     console.log(`${numL1EntriesWithAudio} / ${indexL1.length} entries have audio`);
-
-    const triggerDownload = (filename,contents='') => {
-        let e = document.createElement('a');
-        e.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(contents));
-        e.setAttribute('download', filename);
-        e.style.display = 'none';
-        document.body.appendChild(e);
-        e.click();
-        document.body.removeChild(e);
-    };
-
-    // temp generate sitemap
-    const URL_BASE = 'https://ssirrikh.github.io/wikchamni';
-    let sitemapPages = [
-        // site pages
-        `${URL_BASE}`,
-        `${URL_BASE}/about`,
-        `${URL_BASE}/language`,
-        `${URL_BASE}/lexicon`,
-        // debug pages
-        `${URL_BASE}/lexicon-test-nojs-notemplate-anchors`, // fully-static page, no templates
-        `${URL_BASE}/lexicon-test-nojs-buttons`, // fully-static pages with templates
-        `${URL_BASE}/lexicon-test-nojs-anchors`,
-        `${URL_BASE}/lexicon-test-static-buttons`, // static pages w/ minimal JS
-        `${URL_BASE}/lexicon-test-static-anchors`,
-        `${URL_BASE}/lexicon-test-dynamic20-anchors`, // dynamically-built pages w/ few elements
-        `${URL_BASE}/lexicon-test-dynamic500-anchors`,
-        `${URL_BASE}/lexicon-test-longjs-static`, // page with expensive JS, but few elements
-        `${URL_BASE}/lexicon-test-full-nojs-notemplate-anchors`, // fully-static page w/ no JS, but many elements (static full eng dictionary)
-        // crawler tester pages
-        `${URL_BASE}/lexicon-test-unlinked`, // stub page included in sitemap, but never linked to by another page
-        // `${URL_BASE}/lexicon-test-unmapped`, // stub page linked to by another page, but not included in sitemap
-    ];
-    for (let lang of ['en','wk']) {
-        const activeIndex = (lang === 'wk') ? indexL2 : indexL1;
-        for (let i = 0; i < activeIndex.length; i++) {
-            // sitemap urls must escape &, single/double quotes, and <>
-            sitemapPages.push(`${URL_BASE}/lexicon?lang=${lang}&amp;entry=${i}`);
-        }
+    console.log(`${numL1EntriesWithImage} / ${indexL1.length} entries have images`);
+    if (Object.keys(unhandledCatgs).length > 0) {
+        console.warn(`The followings catgs don't have prettyprint names: [${Object.keys(unhandledCatgs).join(', ')}]. Add them to the CATG_NAMES lookup table.`);
     }
-    console.log(`Sitemap contains ${sitemapPages.length} pages: 4 base pages + ${indexL1.length} eng entries + ${indexL2.length} wik entries`);
+
+    
+
+
+    // const triggerDownload = (filename,contents='') => {
+    //     let e = document.createElement('a');
+    //     e.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(contents));
+    //     e.setAttribute('download', filename);
+    //     e.style.display = 'none';
+    //     document.body.appendChild(e);
+    //     e.click();
+    //     document.body.removeChild(e);
+    // };
+
+    // // temp generate sitemap
+    // const URL_BASE = 'https://ssirrikh.github.io/wikchamni';
+    // let sitemapPages = [
+    //     // site pages
+    //     `${URL_BASE}`,
+    //     `${URL_BASE}/about`,
+    //     `${URL_BASE}/language`,
+    //     `${URL_BASE}/lexicon`,
+    //     // debug pages
+    //     `${URL_BASE}/lexicon-test-nojs-notemplate-anchors`, // fully-static page, no templates
+    //     `${URL_BASE}/lexicon-test-nojs-buttons`, // fully-static pages with templates
+    //     `${URL_BASE}/lexicon-test-nojs-anchors`,
+    //     `${URL_BASE}/lexicon-test-static-buttons`, // static pages w/ minimal JS
+    //     `${URL_BASE}/lexicon-test-static-anchors`,
+    //     `${URL_BASE}/lexicon-test-dynamic20-anchors`, // dynamically-built pages w/ few elements
+    //     `${URL_BASE}/lexicon-test-dynamic500-anchors`,
+    //     `${URL_BASE}/lexicon-test-longjs-static`, // page with expensive JS, but few elements
+    //     `${URL_BASE}/lexicon-test-full-nojs-notemplate-anchors`, // fully-static page w/ no JS, but many elements (static full eng dictionary)
+    //     // crawler tester pages
+    //     `${URL_BASE}/lexicon-test-unlinked`, // stub page included in sitemap, but never linked to by another page
+    //     // `${URL_BASE}/lexicon-test-unmapped`, // stub page linked to by another page, but not included in sitemap
+    // ];
+    // for (let lang of [LANG_ENG,LANG_WIK]) {
+    //     const activeIndex = (lang === LANG_WIK) ? indexL2 : indexL1;
+    //     for (let i = 0; i < activeIndex.length; i++) {
+    //         // sitemap urls must escape &, single/double quotes, and <>
+    //         sitemapPages.push(`${URL_BASE}/lexicon?lang=${lang}&amp;entry=${i}`);
+    //     }
+    // }
+    // console.log(`Sitemap contains ${sitemapPages.length} pages: 4 base pages + ${indexL1.length} eng entries + ${indexL2.length} wik entries`);
     // triggerDownload('sitemap-wikchamni.txt', // download sitemap.txt
     //     sitemapPages.join('\n')
     // );
@@ -939,7 +998,7 @@ requestAnimationFrame(() => {
     //     const entry = (card.isLexeme) ? parse.lexemes[card.id] : parse.entries[card.id];
 
     //     const e = document.getElementById('tpl-search-result').content.firstElementChild.cloneNode(true);
-    //     e.href = `lexicon?lang=${(lang===LANG_WIK)?'wk':'en'}&entry=${i}`;
+    //     e.href = `lexicon?lang=${(lang===LANG_WIK)?LANG_WIK:LANG_ENG}&entry=${i}`;
     //     e.querySelector('.search-result-catg').textContent = CATG_ABBRS[card.catg] ?? capitalize(card.catg);
     //     e.querySelector('.search-result-word').textContent = card.word;
     //     if (card.hasImages) {

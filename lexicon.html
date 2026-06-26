@@ -899,7 +899,6 @@
 		</div>
 
 		<!-- templates -->
-		<template id='tpl-search-result'>
 				<!-- if button has aria-label and all contents are aria-hidden, then label gets read twice -->
 				<!-- if text spans are visible and div/span icon is hidden, icon will still get focused by screen reader -->
 				<!-- if all button contents are visible, icons get read as "Has audio group", then get focused and read a second time -->
@@ -910,25 +909,34 @@
 				<div class='icon' aria-hidden='true'></div>
 			</button> -->
 			<!-- <a> with evt.preventDefault() in onclick will do fast SPA nav w/ JS, but is usable by crawlers and still acts as link if JS fails -->
-			<a class='flex-row-centered search-result'>
+			<!-- <a class='flex-row-centered search-result'>
 				<span class='search-result-catg' aria-hidden='true'>catg</span>
 				<span class='search-result-word' aria-hidden='true'>word</span>
 				<div class='icon' aria-hidden='true'></div>
 				<div class='icon' aria-hidden='true'></div>
+			</a> -->
+		<template id='tpl-search-result'>
+			<a class='search-result'>
+				<div class='flex-row-centered'>
+					<span class='search-result-catg' aria-hidden='true'>catg</span>
+					<span class='search-result-word' aria-hidden='true'>word</span>
+					<div class='icon' aria-hidden='true'></div>
+					<div class='icon' aria-hidden='true'></div>
+				</div>
 			</a>
 		</template>
 		<template id='tpl-entry-L2'>
 			<div class='flex-row-centered entry-L2'>
-				<p class='entry-L2-form'>form</p>
-				<p class='entry-L2-word flex-shrink'>[no Wikchamni translation]</p>
+				<p class='entry-L2-form' lang='en'>form</p>
+				<p class='entry-L2-word flex-shrink' lang='yok'>[no Wikchamni translation]</p>
 			</div>
 		</template>
 		<template id='tpl-entry-example'>
 			<div class='flex-col entry-example'>
 				<div class='flex-row-centered'>
-					<p class='entry-example-L2'>[no Wikchamni translation]</p>
+					<p class='entry-example-L2' lang='yok'>[no Wikchamni translation]</p>
 				</div>
-				<p class='entry-example-L1'>[no English translation]</p>
+				<p class='entry-example-L1' lang='en'>[no English translation]</p>
 			</div>
 		</template>
 		<!-- <template id='tpl-audio-button'>
