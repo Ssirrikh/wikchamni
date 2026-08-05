@@ -118,7 +118,7 @@ logbuff = ''
 def log(text='', quiet=False):
     if not quiet: print(text)
     if USE_BUFFER_LOG:
-        logbuff += f'{text}\n'
+        logbuff = f'{logbuff}{text}\n'
     else:
         logfile.write(f'{text}\n')
 
