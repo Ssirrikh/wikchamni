@@ -1024,8 +1024,9 @@ def git_status():
             num_files_updated = 0
             lines = re.split('\n', stdout)
             for line in lines:
+                if line == '': continue
                 match = re.fullmatch(RE_GIT_STATUS, line)
-                if line != '' and match == None:
+                if match == None:
                     log(f'Regex failed to match git status output line "{line}". Aborting...')
                     return { 'success': False, 'error': f'Regex failed to match git status output line "{line}".' }
                 (x,y,file) = match.groups()
