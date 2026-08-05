@@ -997,6 +997,7 @@ def git_fetch():
         else:
             log(f'ERROR\n{stderr}')
             return { 'success': False, 'error': stderr }
+    return { 'success': True }
 # add all files in manifest
 def git_add_all(files=[]):
     log(f'Adding {len(files)} files from manifest...')
