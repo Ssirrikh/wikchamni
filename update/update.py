@@ -1230,6 +1230,7 @@ def main(IN):
     # push newly-generated files to the cloud
     git_output = git_add_all(GIT_MANIFEST_CONTENT)
     if not git_output['success']: return # exit on error
+    git_output = git_status()
     git_output = git_commit('automated database update')
     if not git_output['success']: return # exit on error
     git_output = git_push()
