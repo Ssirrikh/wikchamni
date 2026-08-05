@@ -1,6 +1,6 @@
 ////////
 //// WIKCHAMNI AUTO-UPDATE SCRIPT
-//// Last run Aug 05 2026 15:38
+//// Last run Aug 05 2026 15:42
 //// For web domain https://ssirrikh.github.io/wikchamni
 ////////
 
@@ -17,7 +17,7 @@ Checking for updates to code...
 DONE
 >> git reset --hard origin/auto-update-test
 
-HEAD is now at b39f4a7 correctly detect lack of changes to database; close logfile to release lock before committing it
+HEAD is now at f694a05 clean up final console output
 
 
 
@@ -28,7 +28,7 @@ Normalizing characters and whitespace...
 Rejoining multiline datafields...
 Scrubbing PID from filepaths...
 
-DONE in 89.4 ms
+DONE in 73.1 ms
 
 82 unique field markers encountered across 44497 tokens.
 0 tokens were ill-formed, and 6 tokens were blank.
@@ -37,7 +37,7 @@ Scrubbed 5507 absolute filepaths of potential PID.
 
 === Tokenizing data... ===
 
-DONE in 41.8 ms.
+DONE in 43.9 ms.
 
 0 tokens were ill-formed, and 6 tokens were blank.
 81 unique field markers encountered across all 44491 tokens in tokenstream.
@@ -261,7 +261,7 @@ Parsing runs into entries...
     WARN Headless \xe " 20/Feb/2019" has no \xv to attach to in entry "English" of catg "Part of Speech"
     Attach point was: {'L2': 'Contact:Geoff Gamble -- ggamble@mail.fresnostate.edu', 'form': None}
 
-DONE in 46.1 ms.
+DONE in 53.7 ms.
 
 Detected 4609 standard entries and 712 lexeme entries.
 Detected 9 non-run-starting tokens:
@@ -296,20 +296,20 @@ Indexing standard entries...
 Indexing lexeme entries...
 Sorting entries...
 
-DONE in 72.0 ms.
+DONE in 76.6 ms.
 
 Sorted 5710 L1 words and 13053 L2 words.
 
 === Generating output files... ===
 
 Writing sterilized data back to Toolbox SF...
-DONE in 14.7 ms
+DONE in 14.6 ms
 Baking database into web-compatible JSON...
-DONE in 12.3 ms
+DONE in 12.8 ms
 Building sitemap for 14 static pages, 5710 English words, and 13053 Wikchamni words...
     Builing sitemap.txt...
     Builing sitemap.xml...
-DONE in 14.4 ms
+DONE in 13.6 ms
 
 === Pushing changes to cloud... ===
 
@@ -322,17 +322,27 @@ All files added.
 >> git status --porcelain=v1 -b
 
 ## auto-update-test...origin/auto-update-test
+M  assets/data/toolbox-output-clean
+M  assets/data/toolbox-output-clean.json
+ M update/log.txt
 ?? "! metrics/"
 ?? "assets/data/Wikchamni Dictionary update 8-09-26"
 ?? "assets/data/Windows WAV to MP3.txt"
 ?? update/toolbox-output
 
-0 files have been modified and are ready to be committed.
+2 files have been modified and are ready to be committed.
+>> git commit -m "automated database update"
 
-No changes detected. Nothing to commit or push.
+AUTO GIT COMMIT
+[auto-update-test 490d4a5] automated database update
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+>> git push
+
 
 
 === SUMMARY OF TASKS ===
 
 
-All tasks DONE in 1430.4 ms
+All tasks DONE in 4263.1 ms
+
