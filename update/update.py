@@ -1044,6 +1044,7 @@ def git_commit(message='automated update'):
         stdout_raw, stderr_raw = process.communicate()
         stdout, stderr = stdout_raw.decode(), stderr_raw.decode()
         if process.returncode == 0:
+            log('AUTO GIT COMMIT')
             log(stdout)
             # empty commit => print human-readable `git status`, then "no changes added to commit"
             if 'no changes added to commit' in stdout:
