@@ -112,10 +112,15 @@ RE_SYNONYM_SPLITTER = re.compile(r';\s*')
 SYNONYM_JOIN = '; '
 
 # helpers
+USE_BUFFER_LOG = False
 logfile = open(f'{FILE_LOG}.txt', 'w', encoding='utf-8')
+logbuff = ''
 def log(text='', quiet=False):
     if not quiet: print(text)
-    logfile.write(f'{text}\n')
+    if USE_BUFFER_LOG:
+        logbuff += f'{text}\n'
+    else:
+        logfile.write(f'{text}\n')
 
 
 ###############################################################################
@@ -1118,6 +1123,9 @@ def git_sync_log():
 
 today = datetime.datetime.now()
 
+# log to buffer until repo has reset
+USE_BUFFER_LOG = True
+
 log(f'////////')
 log(f'//// WIKCHAMNI AUTO-UPDATE SCRIPT')
 log(f'//// Last run {today.strftime('%b %d %Y %H:%M')}')
@@ -1135,6 +1143,10 @@ def main(IN):
     log('Checking for updates to code...')
     git_output = git_fetch()
     if not git_output['success']: return # exit on error
+
+    # switch to main log file once repo reset complete
+    USE_BUFFER_LOG = False
+    log(logbuff)
 
     # process data
     lines_clean = scrub(IN.read())
