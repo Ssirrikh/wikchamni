@@ -1040,7 +1040,7 @@ def git_status():
 # commit changes
 def git_commit(message='automated update'):
     log(f'>> git commit -m "{message}"\n')
-    with subprocess.Popen(['git', 'commit', '-m', f'"message"'], cwd='..', stdout=subprocess.PIPE, stderr=subprocess.PIPE) as process:
+    with subprocess.Popen(['git', 'commit', '-m', f'"{message}"'], cwd='..', stdout=subprocess.PIPE, stderr=subprocess.PIPE) as process:
         stdout_raw, stderr_raw = process.communicate()
         stdout, stderr = stdout_raw.decode(), stderr_raw.decode()
         if process.returncode == 0:
