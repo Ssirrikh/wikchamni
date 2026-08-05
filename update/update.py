@@ -1053,6 +1053,7 @@ def git_commit(message='automated update'):
             else:
                 return { 'success': True }
         else:
+            log(f'AUTO GIT COMMIT STDOUT\n{stderr}')
             log(f'ERROR\n{stderr}')
             return { 'success': False, 'error': stderr }
 # push changes
