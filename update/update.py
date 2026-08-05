@@ -1025,7 +1025,7 @@ def git_status():
             lines = re.split('\n', stdout)
             for line in lines:
                 match = re.fullmatch(RE_GIT_STATUS, line)
-                if match == None:
+                if line != '' and match == None:
                     log(f'Regex failed to match git status output line "{line}". Aborting...')
                     return { 'success': False, 'error': f'Regex failed to match git status output line "{line}".' }
                 (x,y,file) = match.groups()
