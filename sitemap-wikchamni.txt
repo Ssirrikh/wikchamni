@@ -5720,6 +5720,7 @@ https://ssirrikh.github.io/wikchamni/lexicon?lang=en&amp;entry=5704
 https://ssirrikh.github.io/wikchamni/lexicon?lang=en&amp;entry=5705
 https://ssirrikh.github.io/wikchamni/lexicon?lang=en&amp;entry=5706
 https://ssirrikh.github.io/wikchamni/lexicon?lang=en&amp;entry=5707
+https://ssirrikh.github.io/wikchamni/lexicon?lang=en&amp;entry=5708
 https://ssirrikh.github.io/wikchamni/lexicon?lang=wk&amp;entry=0
 https://ssirrikh.github.io/wikchamni/lexicon?lang=wk&amp;entry=1
 https://ssirrikh.github.io/wikchamni/lexicon?lang=wk&amp;entry=2
@@ -18771,3 +18772,4 @@ https://ssirrikh.github.io/wikchamni/lexicon?lang=wk&amp;entry=13047
 https://ssirrikh.github.io/wikchamni/lexicon?lang=wk&amp;entry=13048
 https://ssirrikh.github.io/wikchamni/lexicon?lang=wk&amp;entry=13049
 https://ssirrikh.github.io/wikchamni/lexicon?lang=wk&amp;entry=13050
+https://ssirrikh.github.io/wikchamni/lexicon?lang=wk&amp;entry=13051
