@@ -1041,7 +1041,7 @@ def git_status():
 # commit changes
 def git_commit(message='automated update'):
     log(f'>> git commit -m "{message}"\n')
-    with subprocess.Popen(['git', 'commit', '-m', f'"{message}"'], cwd='..', stdout=subprocess.PIPE, stderr=subprocess.PIPE) as process:
+    with subprocess.Popen(['git', 'commit', '-m', message], cwd='..', stdout=subprocess.PIPE, stderr=subprocess.PIPE) as process:
         stdout_raw, stderr_raw = process.communicate()
         stdout, stderr = stdout_raw.decode(), stderr_raw.decode()
         if process.returncode == 0:
@@ -1095,7 +1095,7 @@ def git_sync_log():
     # commit
     message = 'automated database update (log file)'
     print(f'>> git commit -m "{message}"\n')
-    with subprocess.Popen(['git', 'commit', '-m', f'"message"'], cwd='..', stdout=subprocess.PIPE, stderr=subprocess.PIPE) as process:
+    with subprocess.Popen(['git', 'commit', '-m', message], cwd='..', stdout=subprocess.PIPE, stderr=subprocess.PIPE) as process:
         stdout_raw, stderr_raw = process.communicate()
         stdout, stderr = stdout_raw.decode(), stderr_raw.decode()
         if process.returncode == 0:
@@ -1166,7 +1166,7 @@ def main(IN):
     log(f'\n=== Generating output files... ===\n')
 
     # write clean Toolbox SF output
-    with open(f'..\\assets\\data\\{FILE_DATABASE_OUTPUT}.txt', 'w', encoding='utf-8') as OUT:
+    with open(f'..\\assets\\data\\{FILE_DATABASE_OUTPUT}', 'w', encoding='utf-8') as OUT:
         T0_WRITE = 1000 * time.perf_counter() # in ms
         log(f'Writing sterilized data back to Toolbox SF...')
         for i,line in enumerate(lines_clean):
