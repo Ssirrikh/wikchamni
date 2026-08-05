@@ -1031,7 +1031,7 @@ def git_status():
                     return { 'success': False, 'error': f'Regex failed to match git status output line "{line}".' }
                 (x,y,file) = match.groups()
                 log(f'X=[{x}],Y=[{y}],FILE=[{file}]')
-                if y == 'M' and file in GIT_MANIFEST_CONTENT:
+                if x == 'M' and file in GIT_MANIFEST_CONTENT:
                     num_files_updated += 1 # local modification that needs to be pushed
             log(f'{num_files_updated} files have been modified and are ready to be committed.')
             return { 'success': True, 'num_files_updated': num_files_updated }
