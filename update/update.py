@@ -912,9 +912,9 @@ def git_version():
             return { 'success': False, 'error': stderr }
 # check remote for new commits
 def git_fetch():
-    log(f'STUB >> git fetch')
-    log(f'STUB >> git reset --hard origin/main\n')
-    return { 'success': True }
+    # log(f'STUB >> git fetch')
+    # log(f'STUB >> git reset --hard origin/main\n')
+    # return { 'success': True }
 
     # automated updates to data should generally be performed from main branch
     # however, the check enforcing this as a hard requirement has been disabled for flexibility
@@ -1144,7 +1144,7 @@ def main(IN):
     log(f'\n=== Generating output files... ===\n')
 
     # write clean Toolbox SF output
-    with open(f'..\\assets\\data\\{FILE_DATABASE_OUTPUT}', 'w', encoding='utf-8') as OUT:
+    with open(f'..\\assets\\data\\{FILE_DATABASE_OUTPUT}.txt', 'w', encoding='utf-8') as OUT:
         T0_WRITE = 1000 * time.perf_counter() # in ms
         log(f'Writing sterilized data back to Toolbox SF...')
         for i,line in enumerate(lines_clean):
