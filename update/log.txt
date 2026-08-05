@@ -1,6 +1,6 @@
 ////////
 //// WIKCHAMNI AUTO-UPDATE SCRIPT
-//// Last run Aug 05 2026 15:42
+//// Last run Aug 05 2026 16:38
 //// For web domain https://ssirrikh.github.io/wikchamni
 ////////
 
@@ -17,7 +17,7 @@ Checking for updates to code...
 DONE
 >> git reset --hard origin/auto-update-test
 
-HEAD is now at f694a05 clean up final console output
+HEAD is now at c6fb996 automated database update (log file)
 
 
 
@@ -28,19 +28,19 @@ Normalizing characters and whitespace...
 Rejoining multiline datafields...
 Scrubbing PID from filepaths...
 
-DONE in 73.1 ms
+DONE in 195.6 ms
 
-82 unique field markers encountered across 44497 tokens.
+82 unique field markers encountered across 44501 tokens.
 0 tokens were ill-formed, and 6 tokens were blank.
 Rejoined 836 multiline tokens.
 Scrubbed 5507 absolute filepaths of potential PID.
 
 === Tokenizing data... ===
 
-DONE in 43.9 ms.
+DONE in 88.4 ms.
 
 0 tokens were ill-formed, and 6 tokens were blank.
-81 unique field markers encountered across all 44491 tokens in tokenstream.
+81 unique field markers encountered across all 44495 tokens in tokenstream.
 
 === Parsing tokenstream... ===
 
@@ -261,12 +261,12 @@ Parsing runs into entries...
     WARN Headless \xe " 20/Feb/2019" has no \xv to attach to in entry "English" of catg "Part of Speech"
     Attach point was: {'L2': 'Contact:Geoff Gamble -- ggamble@mail.fresnostate.edu', 'form': None}
 
-DONE in 53.7 ms.
+DONE in 133.1 ms.
 
-Detected 4609 standard entries and 712 lexeme entries.
+Detected 4610 standard entries and 712 lexeme entries.
 Detected 9 non-run-starting tokens:
-    "ps" : 5321 occurences
-    "ge" : 5655 occurences
+    "ps" : 5322 occurences
+    "ge" : 5656 occurences
     "sf" : 3347 occurences
     "xe" : 2266 occurences
     "sfx" : 2122 occurences
@@ -275,7 +275,7 @@ Detected 9 non-run-starting tokens:
     "pd" : 5 occurences
     "pdv" : 89 occurences
 14 token types were completely unhandled:
-    "dt" : 5284 occurences
+    "dt" : 5285 occurences
     "nt" : 719 occurences (PRUNED NOTE)
     "sc" : 35 occurences (PRUNED NOTE)
     "nd" : 1 occurences (PRUNED NOTE)
@@ -296,20 +296,20 @@ Indexing standard entries...
 Indexing lexeme entries...
 Sorting entries...
 
-DONE in 76.6 ms.
+DONE in 120.3 ms.
 
-Sorted 5710 L1 words and 13053 L2 words.
+Sorted 5711 L1 words and 13054 L2 words.
 
 === Generating output files... ===
 
 Writing sterilized data back to Toolbox SF...
-DONE in 14.6 ms
+DONE in 18.1 ms
 Baking database into web-compatible JSON...
-DONE in 12.8 ms
-Building sitemap for 14 static pages, 5710 English words, and 13053 Wikchamni words...
+DONE in 15.8 ms
+Building sitemap for 14 static pages, 5711 English words, and 13054 Wikchamni words...
     Builing sitemap.txt...
     Builing sitemap.xml...
-DONE in 13.6 ms
+DONE in 23.3 ms
 
 === Pushing changes to cloud... ===
 
@@ -324,18 +324,20 @@ All files added.
 ## auto-update-test...origin/auto-update-test
 M  assets/data/toolbox-output-clean
 M  assets/data/toolbox-output-clean.json
+M  sitemap-wikchamni.txt
+M  sitemap-wikchamni.xml
  M update/log.txt
 ?? "! metrics/"
 ?? "assets/data/Wikchamni Dictionary update 8-09-26"
 ?? "assets/data/Windows WAV to MP3.txt"
 ?? update/toolbox-output
 
-2 files have been modified and are ready to be committed.
+4 files have been modified and are ready to be committed.
 >> git commit -m "automated database update"
 
 AUTO GIT COMMIT
-[auto-update-test 490d4a5] automated database update
- 2 files changed, 2 insertions(+), 2 deletions(-)
+[auto-update-test 0923984] automated database update
+ 4 files changed, 15 insertions(+), 2 deletions(-)
 
 >> git push
 
@@ -344,5 +346,5 @@ AUTO GIT COMMIT
 === SUMMARY OF TASKS ===
 
 
-All tasks DONE in 4263.1 ms
+All tasks DONE in 5246.1 ms
 
