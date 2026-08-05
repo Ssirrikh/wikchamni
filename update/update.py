@@ -113,7 +113,8 @@ SYNONYM_JOIN = '; '
 
 # helpers
 USE_BUFFER_LOG = False
-logfile = open(f'{FILE_LOG}.txt', 'w', encoding='utf-8')
+# logfile = open(f'{FILE_LOG}.txt', 'w', encoding='utf-8')
+logfile = None
 logbuff = ''
 def log(text='', quiet=False):
     if not quiet: print(text)
@@ -1146,7 +1147,10 @@ def main(IN):
     if not git_output['success']: return # exit on error
 
     # switch to main log file once repo reset complete
+    global USE_BUFFER_LOG
     USE_BUFFER_LOG = False
+    global logfile
+    logfile = open(f'{FILE_LOG}.txt', 'w', encoding='utf-8')
     log(logbuff)
 
     # process data
