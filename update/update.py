@@ -113,9 +113,14 @@ SYNONYM_JOIN = '; '
 
 # helpers
 USE_BUFFER_LOG = False
-# logfile = open(f'{FILE_LOG}.txt', 'w', encoding='utf-8')
 logfile = None
 logbuff = ''
+def open_logfile():
+    global logfile
+    logfile = open(f'{FILE_LOG}.txt', 'w', encoding='utf-8')
+def close_logfile():
+    global logfile
+    logfile.close()
 def log(text='', quiet=False):
     if not quiet: print(text)
     if USE_BUFFER_LOG:
@@ -1030,7 +1035,7 @@ def git_status():
                     log(f'Regex failed to match git status output line "{line}". Aborting...')
                     return { 'success': False, 'error': f'Regex failed to match git status output line "{line}".' }
                 (x,y,file) = match.groups()
-                log(f'X=[{x}],Y=[{y}],FILE=[{file}]')
+                # log(f'X=[{x}],Y=[{y}],FILE=[{file}]')
                 if x == 'M' and file in GIT_MANIFEST_CONTENT:
                     num_files_updated += 1 # local modification that needs to be pushed
             log(f'{num_files_updated} files have been modified and are ready to be committed.')
@@ -1154,7 +1159,7 @@ def main(IN):
     global USE_BUFFER_LOG
     USE_BUFFER_LOG = False
     global logfile
-    logfile = open(f'{FILE_LOG}.txt', 'w', encoding='utf-8')
+    open_logfile()
     log(logbuff)
 
     # process data
@@ -1232,20 +1237,24 @@ def main(IN):
     git_output = git_add_all(GIT_MANIFEST_CONTENT)
     if not git_output['success']: return # exit on error
     git_output = git_status()
-    git_output = git_commit('automated database update')
-    if not git_output['success']: return # exit on error
-    git_output = git_push()
-    if not git_output['success']: return # exit on error
+    if git_output['num_files_updated'] == 0:
+        log('\nNo changes detected. Nothing to commit or push.\n')
+    else:
+        git_output = git_commit('automated database update')
+        if not git_output['success']: return # exit on error
+        git_output = git_push()
+        if not git_output['success']: return # exit on error
     
     T1_TOTAL = 1000 * time.perf_counter() # in ms
 
     log(f'\n=== SUMMARY OF TASKS ===\n')
 
-    # print summary
-    # TODO: print summary to log file
+    # print summary of work
+    # TODO: print summary of work
     log(f'\nAll tasks DONE in {(T1_TOTAL-T0_TOTAL):.1f} ms')
 
     # update succeeded, so terminate log file and push it in a second commit
+    close_logfile()
     git_output = git_sync_log()
     if not git_output['success']: return # exit on error
 
