@@ -1144,7 +1144,7 @@ def main(IN):
     log(f'\n=== Generating output files... ===\n')
 
     # write clean Toolbox SF output
-    with open(f'..\\assets\\data\\{FILE_DATABASE_OUTPUT}.txt', 'w', encoding='utf-8') as OUT:
+    with open(f'..\\assets\\data\\{FILE_DATABASE_OUTPUT}', 'w', encoding='utf-8') as OUT:
         T0_WRITE = 1000 * time.perf_counter() # in ms
         log(f'Writing sterilized data back to Toolbox SF...')
         for i,line in enumerate(lines_clean):
