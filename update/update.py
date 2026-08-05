@@ -1251,12 +1251,15 @@ def main(IN):
 
     # print summary of work
     # TODO: print summary of work
-    log(f'\nAll tasks DONE in {(T1_TOTAL-T0_TOTAL):.1f} ms')
+    log(f'\nAll tasks DONE in {(T1_TOTAL-T0_TOTAL):.1f} ms\n')
 
     # update succeeded, so terminate log file and push it in a second commit
     close_logfile()
     git_output = git_sync_log()
     if not git_output['success']: return # exit on error
+
+    print('\nALL WORK DONE')
+    print('PROGRAM TERMINATES SUCCESSFULLY')
 
     
 
