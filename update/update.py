@@ -1074,6 +1074,7 @@ def git_push():
                 log('No changes committed. Nothing to push.')
                 return { 'success': False, 'error': 'No changes committed. Nothing to push.' }
             else:
+                log('DONE')
                 return { 'success': True }
         else:
             log(f'ERROR\n{stderr}')
@@ -1122,6 +1123,9 @@ def git_sync_log():
             if stdout == 'Everything up-to-date':
                 print('No changes committed. Nothing to push.')
                 return { 'success': False, 'error': 'No changes committed. Nothing to push.' }
+            else:
+                print('DONE')
+                return { 'success': True }
         else:
             print(f'ERROR\n{stderr}')
             return { 'success': False, 'error': stderr }
@@ -1260,8 +1264,6 @@ def main(IN):
 
     print('\nALL WORK DONE')
     print('PROGRAM TERMINATES SUCCESSFULLY')
-
-    
 
     
 
